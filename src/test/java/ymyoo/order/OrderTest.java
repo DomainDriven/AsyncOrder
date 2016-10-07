@@ -28,6 +28,7 @@ public class OrderTest {
         // When
         // 주문 하기!!
         String orderId = order.placeOrder(mockListener);
+        System.out.println("주문 시작 - 주문 아이디 : " + orderId);
 
         // Then
         // 주문 ID 반환 확인(Synchronized)
@@ -35,12 +36,13 @@ public class OrderTest {
 
         // 비동기 처리 대기
         synchronized (mockListener) {
-            mockListener.wait(2000);
+            mockListener.wait(6000);
         }
 
         // 비동기 처리 확인
         OrderCompleteEvent event = mockListener.getOrderCompleteEvent();
         // 반환 받은 주문 ID로 검증
         Assert.assertEquals(orderId, event.getOrderId());
+        System.out.println("주문 완료- 주문 아이디 : " + event.getOrderId());
     }
 }
