@@ -3,6 +3,8 @@ package ymyoo.order;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import ymyoo.order.event.OrderCompleteEvent;
+import ymyoo.order.event.listener.OrderCompleteEventListener;
 
 /**
  * Created by 유영모 on 2016-10-07.
@@ -18,11 +20,11 @@ public class OrderTest {
      *  구현 복잡도를 낮추기 위해서 Process 수준에서 비동기 처리를 구현 한다.
      */
     @Test
-    public void testPlaceOrder() {
+    public void testPlaceOrder() throws Exception {
         // Given
         Order order = Order.makeOrder();
         // 주문 완료 이벤트 수신자
-        OrderCompleteEventListener mockListener = new MockOrderCompleteEventListener();
+        MockOrderCompleteEventListener mockListener = new MockOrderCompleteEventListener();
 
         // When
         // 주문 하기!!
@@ -40,6 +42,6 @@ public class OrderTest {
         // 비동기 처리 확인
         OrderCompleteEvent event = mockListener.getOrderCompleteEvent();
         // 반환 받은 주문 ID로 검증
-        Assert.assertEquals(orderId, event.getOrderId);
+        Assert.assertEquals(orderId, event.getOrderId());
     }
 }
