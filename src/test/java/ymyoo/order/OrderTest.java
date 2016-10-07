@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import ymyoo.order.event.OrderCompleteEvent;
-import ymyoo.order.event.listener.OrderCompleteEventListener;
 
 /**
  * Created by 유영모 on 2016-10-07.
@@ -22,7 +21,7 @@ public class OrderTest {
     @Test
     public void testPlaceOrder() throws Exception {
         // Given
-        Order order = Order.makeOrder();
+        Order order = OrderFactory.create();
         // 주문 완료 이벤트 수신자
         MockOrderCompleteEventListener mockListener = new MockOrderCompleteEventListener();
 
