@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
  */
 public class Order {
     public String placeOrder(OrderCompleteEventListener listener) {
-        String orderId = "12345678";
+        String orderId = OrderIdGenerator.generate();
 
         // TODO : 비동기로 수행할 작업 추가(결제 인증/승인, 재고 확인/확보)
         ExecutorService executor = Executors.newSingleThreadExecutor();
