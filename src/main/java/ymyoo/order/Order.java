@@ -14,8 +14,6 @@ import java.util.concurrent.CompletableFuture;
 public class Order {
     private OrderItem orderItem;
     private OrderPayment orderPayment;
-    private OrderCompleteEventListener listener;
-    private String orderId;
 
     public Order(OrderItem orderItem, OrderPayment orderPayment) {
         this.orderItem = orderItem;
@@ -23,8 +21,7 @@ public class Order {
     }
 
     public String placeOrder(OrderCompleteEventListener listener) {
-        this.listener = listener;
-        this.orderId =  OrderIdGenerator.generate();
+        String orderId =  OrderIdGenerator.generate();
 
         // 비동기 작업
         // 1. 재고 확인/예약 작업
@@ -39,10 +36,10 @@ public class Order {
             PurchaseOrder.create(this, approvalOrderPayment);
 
             // 주문 완료 이벤트 발행
-            this.listener.setOrderCompleted(new OrderCompleteEvent(this.orderId));
+            listener.setOrderCompleted(new OrderCompleteEvent(orderId));
             return null;
         });
 
-        return this.orderId;
+        return orderId;
     }
 }
