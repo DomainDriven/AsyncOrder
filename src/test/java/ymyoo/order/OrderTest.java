@@ -20,8 +20,10 @@ public class OrderTest {
      */
     @Test
     public void testPlaceOrder() throws Exception {
+        System.out.println("Client 시작...");
+
         // Given
-        Order order = OrderFactory.create();
+        Order order = OrderFactory.create(new OrderItem("prd-123", 2),  new OrderPayment(2000, "123-456-0789"));
         // 주문 완료 이벤트 수신자
         MockOrderCompleteEventListener mockListener = new MockOrderCompleteEventListener();
 
@@ -44,5 +46,7 @@ public class OrderTest {
         // 반환 받은 주문 ID로 검증
         Assert.assertEquals(orderId, event.getOrderId());
         System.out.println("주문 완료- 주문 아이디 : " + event.getOrderId());
+
+        System.out.println("Client 종료...");
     }
 }

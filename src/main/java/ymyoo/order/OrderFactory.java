@@ -8,11 +8,8 @@ package ymyoo.order;
  * Created by 유영모 on 2016-10-07.
  */
 public class OrderFactory {
-    static public Order create() {
+    static public Order create(OrderItem orderItem, OrderPayment orderPayment) {
         // 상품, 배송지, 할인, 결제 수단 등은 현재 검증 대상이 아니므로 Skip...
-        OrderItem orderItem = new OrderItem("prd-123", 2);
-        OrderPayment orderPayment = new OrderPayment(2000, "123-456-0789");
-
         return new Order(orderItem, orderPayment);
     }
 }
