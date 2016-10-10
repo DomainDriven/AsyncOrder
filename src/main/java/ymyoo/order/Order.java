@@ -1,38 +1,48 @@
 package ymyoo.order;
 
 import ymyoo.order.event.OrderCompleteEvent;
-import ymyoo.order.event.listener.OrderCompleteEventListener;
+import ymyoo.order.event.OrderCompleteEventListener;
+import ymyoo.order.inventory.InventoryTask;
+import ymyoo.order.paymentgateway.ApprovalOrderPayment;
+import ymyoo.order.paymentgateway.PaymentGatewayTask;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by 유영모 on 2016-10-07.
  */
 public class Order {
+    private OrderItem orderItem;
+    private OrderPayment orderPayment;
+    private OrderCompleteEventListener listener;
+    private String orderId;
+
+    public Order(OrderItem orderItem, OrderPayment orderPayment) {
+        this.orderItem = orderItem;
+        this.orderPayment = orderPayment;
+    }
+
     public String placeOrder(OrderCompleteEventListener listener) {
-        String orderId = OrderIdGenerator.generate();
+        this.listener = listener;
+        this.orderId =  OrderIdGenerator.generate();
 
-        // TODO : 비동기로 수행할 작업 추가(결제 인증/승인, 재고 확인/확보)
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        CompletableFuture.runAsync(() -> {
-            try {
-                // 일단 Sleep으로 작업을 대신함.
-                Thread.sleep(500);
-                System.out.println("결제 인증.....");
-                Thread.sleep(500);
-                System.out.println("결제 승인.....");
-                Thread.sleep(500);
-                System.out.println("재고 확인.....");
-                Thread.sleep(500);
-                System.out.println("재고 확보.....");
-                Thread.sleep(500);
-                System.out.println("구매 주문 생성 ....");
-            }
-            catch(InterruptedException e) { }
-        },executor).thenRun(() -> listener.setOrderCompleted(new OrderCompleteEvent(orderId)));
+        // 비동기 작업
+        // 1. 재고 확인/예약 작업
+        CompletableFuture<Void> inventoryFuture = CompletableFuture.supplyAsync(new InventoryTask(this.orderItem));
+        // 2. 결제 인증/승인 작업
+        CompletableFuture<ApprovalOrderPayment> paymentGatewayFuture =
+                CompletableFuture.supplyAsync(new PaymentGatewayTask(this.orderPayment));
 
-        return orderId;
+        // 3. 재고 확인/예약 작업 및 결제 인증/승인 작업 완료 시 구매 주문 생성!!
+        inventoryFuture.thenCombineAsync(paymentGatewayFuture, (Void, approvalOrderPayment) -> {
+            // 구매 주문 생성
+            PurchaseOrder.create(this, approvalOrderPayment);
+
+            // 주문 완료 이벤트 발행
+            this.listener.setOrderCompleted(new OrderCompleteEvent(this.orderId));
+            return null;
+        });
+
+        return this.orderId;
     }
 }

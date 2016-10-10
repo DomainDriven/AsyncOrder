@@ -1,7 +1,7 @@
 package ymyoo.order;
 
 import ymyoo.order.event.OrderCompleteEvent;
-import ymyoo.order.event.listener.OrderCompleteEventListener;
+import ymyoo.order.event.OrderCompleteEventListener;
 
 /**
  * 주문 완료 이벤트 리스너 테스트 구현체

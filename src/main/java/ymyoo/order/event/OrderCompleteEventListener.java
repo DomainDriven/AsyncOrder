@@ -1,4 +1,4 @@
-package ymyoo.order.event.listener;
+package ymyoo.order.event;
 
 import ymyoo.order.event.OrderCompleteEvent;
 

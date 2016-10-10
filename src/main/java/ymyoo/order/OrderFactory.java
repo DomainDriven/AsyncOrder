@@ -10,6 +10,9 @@ package ymyoo.order;
 public class OrderFactory {
     static public Order create() {
         // 상품, 배송지, 할인, 결제 수단 등은 현재 검증 대상이 아니므로 Skip...
-        return new Order();
+        OrderItem orderItem = new OrderItem("prd-123", 2);
+        OrderPayment orderPayment = new OrderPayment(2000, "123-456-0789");
+
+        return new Order(orderItem, orderPayment);
     }
 }
