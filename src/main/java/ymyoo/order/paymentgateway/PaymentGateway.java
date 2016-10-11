@@ -4,6 +4,7 @@ import ymyoo.order.OrderPayment;
 
 /**
  * 결제
+ *
  * Created by 유영모 on 2016-10-07.
  */
 public class PaymentGateway {
@@ -21,7 +22,7 @@ public class PaymentGateway {
     public ApprovalOrderPayment approve(OrderPayment orderPayment) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
         System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "][PaymentGateway Task]" + "결제 금액 " + orderPayment.getOrderAmount() + "-> 결제 승인");
-        return new ApprovalOrderPayment();
+        return new ApprovalOrderPayment("tid:10232");
     }
 
 }
