@@ -32,8 +32,6 @@ public class OrderTest {
      */
     @Test
     public void testPlaceOrder() throws Exception {
-        System.out.println("<Client> 시작...");
-
         // Given
         Order order = OrderFactory.create(new OrderItem("P0001", 2),  new OrderPayment(2000, "123-456-0789"));
 
@@ -57,6 +55,7 @@ public class OrderTest {
 
         // When
         // 주문 하기!!
+        System.out.println("<Client> 주문 시작...");
         orderId = order.placeOrder();
         System.out.println("<Client> 주문 아이디 반환 받음 - 주문 아이디 : " + orderId);
 
@@ -70,13 +69,11 @@ public class OrderTest {
         }
         Assert.assertTrue("이벤트 미 수신", eventAccepted);
 
-        System.out.println("<Client> 종료...");
+        System.out.println("<Client> 주문 종료...");
     }
 
     @Test
     public void testPlaceOrder_예외_재고_없음() throws Exception {
-        System.out.println("<Client> 시작...");
-
         // Given
         Order order = OrderFactory.create(new OrderItem("P0002", 2),  new OrderPayment(2000, "123-456-0789"));
 
@@ -101,6 +98,7 @@ public class OrderTest {
 
         // When
         // 주문 하기!!
+        System.out.println("<Client> 주문 시작...");
         orderId = order.placeOrder();
         System.out.println("<Client> 주문 아이디 반환 받음 - 주문 아이디 : " + orderId);
 
@@ -114,7 +112,7 @@ public class OrderTest {
         }
         Assert.assertTrue("이벤트 미 수신", eventAccepted);
 
-        System.out.println("<Client> 종료...");
+        System.out.println("<Client> 주문 종료...");
 
     }
 }
