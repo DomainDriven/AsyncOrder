@@ -1,7 +1,7 @@
 package ymyoo.order;
 
-import ymyoo.order.event.OrderCompleteEvent;
-import ymyoo.order.event.OrderCompleteEventListener;
+import ymyoo.order.event.OrderCompleted;
+import ymyoo.order.event.messaging.EventPublisher;
 import ymyoo.order.inventory.InventoryTask;
 import ymyoo.order.paymentgateway.ApprovalOrderPayment;
 import ymyoo.order.paymentgateway.PaymentGatewayTask;
@@ -20,7 +20,7 @@ public class Order {
         this.orderPayment = orderPayment;
     }
 
-    public String placeOrder(OrderCompleteEventListener listener) {
+    public String placeOrder() {
         String orderId =  OrderIdGenerator.generate();
         System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" + "주문 아이디 생성 : " + orderId);
 
@@ -41,10 +41,11 @@ public class Order {
             // 구매 주문 생성
             PurchaseOrder.create(this, approvalOrderPayment);
 
-            // 주문 완료 이벤트 발행
-            listener.setOrderCompleted(new OrderCompleteEvent(orderId));
-
             System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" + "주문 완료....");
+
+            // 주문 완료 이벤트 발행
+            EventPublisher.instance().publish(new OrderCompleted(orderId));
+
             return null;
         });
 
