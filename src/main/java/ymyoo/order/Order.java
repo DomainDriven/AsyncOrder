@@ -7,6 +7,7 @@ import ymyoo.order.inventory.InventoryTask;
 import ymyoo.order.inventory.exception.StockOutException;
 import ymyoo.order.paymentgateway.ApprovalOrderPayment;
 import ymyoo.order.paymentgateway.PaymentGatewayTask;
+import ymyoo.util.PrettySystemOut;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -24,7 +25,7 @@ public class Order {
 
     public String placeOrder() {
         String orderId =  OrderIdGenerator.generate();
-        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" + "주문 아이디 생성 : " + orderId);
+        PrettySystemOut.println(this.getClass(), "주문 아이디 생성 : " + orderId);
 
         /**
          * 비동기 작업 순서
@@ -43,18 +44,16 @@ public class Order {
         inventoryFuture.thenCombineAsync(paymentGatewayFuture, (Void, approvalOrderPayment) -> {
             // 구매 주문 생성
             PurchaseOrder.create(this, approvalOrderPayment);
-
-            System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" + "주문 완료....");
+            PrettySystemOut.println(this.getClass(), "주문 완료....");
 
             // 주문 완료 이벤트 발행
             EventPublisher.instance().publish(new OrderCompleted(orderId));
 
             return null;
         }).exceptionally(throwable -> {
-            System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" +  "예외 발생!!!!");
             // 주문 실패 이벤트 발행
             if(throwable.getCause() instanceof StockOutException) {
-                System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" + "재고 없음 예외");
+                PrettySystemOut.println(this.getClass(), "재고 없음 예외 발생");
                 EventPublisher.instance().publish(new OrderFailed(orderId, "Stockout"));
             }
             return null;

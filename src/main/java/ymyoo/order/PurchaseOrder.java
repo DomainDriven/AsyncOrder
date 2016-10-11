@@ -1,6 +1,7 @@
 package ymyoo.order;
 
 import ymyoo.order.paymentgateway.ApprovalOrderPayment;
+import ymyoo.util.PrettySystemOut;
 
 /**
  * 구매 주문
@@ -9,6 +10,6 @@ import ymyoo.order.paymentgateway.ApprovalOrderPayment;
 public class PurchaseOrder {
 
     public static void create(Order order, ApprovalOrderPayment approvalOrderPayment) {
-        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "] 구매 주문 생성....");
+        PrettySystemOut.println(PurchaseOrder.class, "구매 주문 생성....");
     }
 }

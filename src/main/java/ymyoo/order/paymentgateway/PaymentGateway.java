@@ -1,6 +1,7 @@
 package ymyoo.order.paymentgateway;
 
 import ymyoo.order.OrderPayment;
+import ymyoo.util.PrettySystemOut;
 
 /**
  * 결제
@@ -13,7 +14,7 @@ public class PaymentGateway {
      */
     public void authenticate(OrderPayment orderPayment) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "][PaymentGateway Task]-결제 인증-" + "신용 카드 " + orderPayment.getCreditCardNo());
+        PrettySystemOut.println(this.getClass(), "결제 인증-" + "신용 카드 " + orderPayment.getCreditCardNo());
     }
 
     /**
@@ -21,7 +22,7 @@ public class PaymentGateway {
      */
     public ApprovalOrderPayment approve(OrderPayment orderPayment) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "][PaymentGateway Task]-결제 승인-" + "결제 금액 " + orderPayment.getOrderAmount());
+        PrettySystemOut.println(this.getClass(), "결제 인증-" + "결제 승인-" + "결제 금액 " + orderPayment.getOrderAmount());
         return new ApprovalOrderPayment("tid:10232");
     }
 

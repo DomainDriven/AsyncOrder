@@ -2,6 +2,7 @@ package ymyoo.order.inventory;
 
 import ymyoo.order.OrderItem;
 import ymyoo.order.inventory.exception.StockOutException;
+import ymyoo.util.PrettySystemOut;
 
 /**
  * 재고
@@ -21,8 +22,7 @@ public class Inventory {
         }
 
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "][Inventory Task]-재고 확인-" +
-                "상품 번호" + product.getProductId());
+        PrettySystemOut.println(this.getClass(), "재고 확인-" + "상품 번호" + product.getProductId());
     }
 
     /**
@@ -31,7 +31,6 @@ public class Inventory {
      */
     public void reserve(OrderItem product) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "][Inventory Task]-재고 확보-" +
-                "상품 번호" + product.getProductId() + " " + product.getOrderCount() + "개");
+        PrettySystemOut.println(this.getClass(), "재고 확보-" + "상품 번호" + product.getProductId());
     }
 }
