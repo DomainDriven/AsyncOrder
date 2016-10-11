@@ -14,7 +14,7 @@ import ymyoo.order.event.messaging.EventSubscriber;
  */
 public class OrderTest {
     private String orderId;
-    private boolean eventAccepted = false;
+    private boolean eventAccepted;
 
     @Before
     public void setUp() throws Exception {

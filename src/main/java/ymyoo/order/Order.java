@@ -1,8 +1,10 @@
 package ymyoo.order;
 
 import ymyoo.order.event.OrderCompleted;
+import ymyoo.order.event.OrderFailed;
 import ymyoo.order.event.messaging.EventPublisher;
 import ymyoo.order.inventory.InventoryTask;
+import ymyoo.order.inventory.exception.StockOutException;
 import ymyoo.order.paymentgateway.ApprovalOrderPayment;
 import ymyoo.order.paymentgateway.PaymentGatewayTask;
 
@@ -32,6 +34,7 @@ public class Order {
          */
         // 재고 확인/예약 작업
         CompletableFuture<Void> inventoryFuture = CompletableFuture.supplyAsync(new InventoryTask(this.orderItem));
+
         // 결제 인증/승인 작업
         CompletableFuture<ApprovalOrderPayment> paymentGatewayFuture =
                 CompletableFuture.supplyAsync(new PaymentGatewayTask(this.orderPayment));
@@ -46,6 +49,14 @@ public class Order {
             // 주문 완료 이벤트 발행
             EventPublisher.instance().publish(new OrderCompleted(orderId));
 
+            return null;
+        }).exceptionally(throwable -> {
+            System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" +  "예외 발생!!!!");
+            // 주문 실패 이벤트 발행
+            if(throwable.getCause() instanceof StockOutException) {
+                System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" + "재고 없음 예외");
+                EventPublisher.instance().publish(new OrderFailed(orderId, "Stockout"));
+            }
             return null;
         });
 

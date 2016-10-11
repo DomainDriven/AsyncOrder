@@ -1,6 +1,7 @@
 package ymyoo.order.inventory;
 
 import ymyoo.order.OrderItem;
+import ymyoo.order.inventory.exception.StockOutException;
 
 /**
  * 재고
@@ -14,6 +15,11 @@ public class Inventory {
      * @return
      */
     public void check(OrderItem product) {
+        // 재고 없음 예외
+        if(product.getProductId().equals("P0002")) {
+            throw new StockOutException();
+        }
+
         try { Thread.sleep(250); } catch (InterruptedException e) {}
         System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "][Inventory Task]-재고 확인-" +
                 "상품 번호" + product.getProductId());
