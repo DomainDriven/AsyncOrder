@@ -22,6 +22,7 @@ public class Order {
 
     public String placeOrder(OrderCompleteEventListener listener) {
         String orderId =  OrderIdGenerator.generate();
+        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" + "주문 아이디 생성 : " + orderId);
 
         // 비동기 작업
         // 1. 재고 확인/예약 작업
@@ -37,6 +38,8 @@ public class Order {
 
             // 주문 완료 이벤트 발행
             listener.setOrderCompleted(new OrderCompleteEvent(orderId));
+
+            System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "]" + "주문 완료....");
             return null;
         });
 

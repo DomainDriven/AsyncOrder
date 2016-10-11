@@ -18,13 +18,9 @@ public class PaymentGatewayTask implements Supplier<ApprovalOrderPayment> {
 
     @Override
     public ApprovalOrderPayment get() {
-        System.out.println("결제 관련 작업 시작...");
-
         PaymentGateway paymentGateway = new PaymentGateway();
         paymentGateway.authenticate(this.orderPayment);
         ApprovalOrderPayment approvalOrderPayment = paymentGateway.approve(this.orderPayment);
-
-        System.out.println("결제 관련 작업 끝...");
 
         return approvalOrderPayment;
     }

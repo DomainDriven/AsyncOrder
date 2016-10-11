@@ -12,7 +12,7 @@ public class PaymentGateway {
      */
     public void authenticate(OrderPayment orderPayment) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        System.out.println("신용 카드 " + orderPayment.getCreditCardNo() + "-> 인증");
+        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "][PaymentGateway Task]" + "신용 카드 " + orderPayment.getCreditCardNo() + "-> 인증");
     }
 
     /**
@@ -20,7 +20,7 @@ public class PaymentGateway {
      */
     public ApprovalOrderPayment approve(OrderPayment orderPayment) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        System.out.println("결제 금액 " + orderPayment.getOrderAmount() + "-> 결제 승인");
+        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "][PaymentGateway Task]" + "결제 금액 " + orderPayment.getOrderAmount() + "-> 결제 승인");
         return new ApprovalOrderPayment();
     }
 

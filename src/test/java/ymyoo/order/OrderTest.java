@@ -20,7 +20,7 @@ public class OrderTest {
      */
     @Test
     public void testPlaceOrder() throws Exception {
-        System.out.println("Client 시작...");
+        System.out.println("<Client> 시작...");
 
         // Given
         Order order = OrderFactory.create(new OrderItem("prd-123", 2),  new OrderPayment(2000, "123-456-0789"));
@@ -30,7 +30,7 @@ public class OrderTest {
         // When
         // 주문 하기!!
         String orderId = order.placeOrder(mockListener);
-        System.out.println("주문 시작 - 주문 아이디 : " + orderId);
+        System.out.println("<Client> 주문 아이디 반환 받음 - 주문 아이디 : " + orderId);
 
         // Then
         // 주문 ID 반환 확인(Synchronized)
@@ -41,12 +41,12 @@ public class OrderTest {
             mockListener.wait(6000);
         }
 
+
         // 비동기 처리 확인
         OrderCompleteEvent event = mockListener.getOrderCompleteEvent();
         // 반환 받은 주문 ID로 검증
         Assert.assertEquals(orderId, event.getOrderId());
-        System.out.println("주문 완료- 주문 아이디 : " + event.getOrderId());
-
-        System.out.println("Client 종료...");
+        System.out.println("<Client> 주문 완료 이벤트 수신 - 주문 아이디 : " + orderId);
+        System.out.println("<Client> 종료...");
     }
 }

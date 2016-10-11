@@ -17,13 +17,9 @@ public class InventoryTask implements Supplier<Void> {
 
     @Override
     public Void get() {
-        System.out.println("재고 관련 작업 시작...");
-
         Inventory inventory = new Inventory();
         inventory.check(this.orderItem);
         inventory.reserve(this.orderItem);
-
-        System.out.println("재고 관련 작업 끝..");
         return null;
     }
 }

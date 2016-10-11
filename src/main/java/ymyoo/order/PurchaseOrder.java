@@ -9,6 +9,6 @@ import ymyoo.order.paymentgateway.ApprovalOrderPayment;
 public class PurchaseOrder {
 
     public static void create(Order order, ApprovalOrderPayment approvalOrderPayment) {
-        System.out.println("---> 구매 주문 생성.....");
+        System.out.println("[Current Thread ID - " + Thread.currentThread().getId() + "] 구매 주문 생성....");
     }
 }
