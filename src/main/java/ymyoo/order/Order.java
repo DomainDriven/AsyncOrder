@@ -3,10 +3,16 @@ package ymyoo.order;
 import ymyoo.order.event.OrderCompleted;
 import ymyoo.order.event.OrderFailed;
 import ymyoo.order.event.messaging.EventPublisher;
+import ymyoo.order.inventory.AgencyDeliveryInventory;
+import ymyoo.order.inventory.DirectDeliveryInventory;
 import ymyoo.order.inventory.InventoryTransaction;
 import ymyoo.order.inventory.exception.StockOutException;
+import ymyoo.order.inventory.exception.UnSupportedDeliveryTypeException;
 import ymyoo.order.paymentgateway.ApprovalOrderPayment;
 import ymyoo.order.paymentgateway.PaymentGatewayTransaction;
+import ymyoo.order.purchaseorder.DefaultPurchaseOrder;
+import ymyoo.order.purchaseorder.DirectDeliveryPurchaseOrder;
+import ymyoo.order.purchaseorder.PurchaseOrder;
 import ymyoo.util.PrettySystemOut;
 
 import java.util.concurrent.CompletableFuture;
@@ -51,7 +57,15 @@ public class Order {
         // 재고 확인/예약 작업 및 결제 인증/승인 작업 완료 시 구매 주문 생성!!
         inventoryFuture.thenCombineAsync(paymentGatewayFuture, (Void, approvalOrderPayment) -> {
             // 구매 주문 생성
-            PurchaseOrder.create(this, approvalOrderPayment);
+            PurchaseOrder purchaseOrder;
+
+            if(this.getOrderItem().getDeliveryType() == OrderItemDeliveryType.DIRECTING) {
+                purchaseOrder = new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder());
+            } else {
+                purchaseOrder = new DefaultPurchaseOrder();
+            }
+
+            purchaseOrder.create(this, approvalOrderPayment);
             PrettySystemOut.println(this.getClass(), "주문 완료....");
 
             // 주문 완료 이벤트 발행
