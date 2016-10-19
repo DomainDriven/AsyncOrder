@@ -33,7 +33,7 @@ public class OrderTest {
     @Test
     public void testPlaceOrder() throws Exception {
         // Given
-        Order order = OrderFactory.create(new OrderItem("P0001", 2),  new OrderPayment(2000, "123-456-0789"));
+        Order order = OrderFactory.create(new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
 
         // 주문 완료 이벤트 구독
         EventSubscriber subscriber = new EventSubscriber<OrderCompleted>() {
@@ -75,7 +75,7 @@ public class OrderTest {
     @Test
     public void testPlaceOrder_예외_재고_없음() throws Exception {
         // Given
-        Order order = OrderFactory.create(new OrderItem("P0002", 2),  new OrderPayment(2000, "123-456-0789"));
+        Order order = OrderFactory.create(new OrderItem("P0002", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
 
         // 주문 실패 이벤트 구독
         EventSubscriber subscriber = new EventSubscriber<OrderFailed>() {
@@ -114,5 +114,47 @@ public class OrderTest {
 
         System.out.println("<Client> 주문 종료...");
 
+    }
+
+    @Test
+    public void testPlaceOrder_자사배송상품() throws Exception {
+        // Given
+        Order order = OrderFactory.create(new OrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
+                new OrderPayment(2000, "123-456-0789"));
+
+        // 주문 완료 이벤트 구독
+        EventSubscriber subscriber = new EventSubscriber<OrderCompleted>() {
+            @Override
+            public void handleEvent(OrderCompleted event) {
+                // Then - 주문 완료 확인(Async)
+                eventAccepted = true;
+                Assert.assertEquals(orderId, event.getOrderId());
+                System.out.println("<Client> 주문 완료 이벤트 수신 - 주문 아이디 : " + event.getOrderId());
+            }
+
+            @Override
+            public Class<OrderCompleted> subscribedToEventType() {
+                return OrderCompleted.class;
+            }
+        };
+
+        EventPublisher.instance().subscribe(subscriber);
+
+        // When
+        System.out.println("<Client> 주문 시작...");
+        orderId = order.placeOrder();
+        System.out.println("<Client> 주문 아이디 반환 받음 - 주문 아이디 : " + orderId);
+
+        // Then
+        // 주문 ID 반환 확인(Synchronized)
+        Assert.assertTrue(StringUtils.isNotBlank(orderId));
+
+        // 비동기 처리 대기
+        synchronized (subscriber) {
+            subscriber.wait(4000);
+        }
+        Assert.assertTrue("이벤트 미 수신", eventAccepted);
+
+        System.out.println("<Client> 주문 종료...");
     }
 }
