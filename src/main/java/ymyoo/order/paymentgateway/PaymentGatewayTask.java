@@ -1,5 +1,6 @@
 package ymyoo.order.paymentgateway;
 
+import ymyoo.order.Order;
 import ymyoo.order.OrderPayment;
 
 import java.util.function.Supplier;
@@ -13,17 +14,17 @@ import java.util.function.Supplier;
  * Created by 유영모 on 2016-10-10.
  */
 public class PaymentGatewayTask implements Supplier<ApprovalOrderPayment> {
-    OrderPayment orderPayment;
+    private Order order;
 
-    public PaymentGatewayTask(OrderPayment orderPayment) {
-        this.orderPayment = orderPayment;
+    public PaymentGatewayTask(Order order) {
+        this.order = order;
     }
 
     @Override
     public ApprovalOrderPayment get() {
         PaymentGateway paymentGateway = new PaymentGateway();
-        paymentGateway.authenticate(this.orderPayment);
-        ApprovalOrderPayment approvalOrderPayment = paymentGateway.approve(this.orderPayment);
+        paymentGateway.authenticate(this.order.getOrderPayment());
+        ApprovalOrderPayment approvalOrderPayment = paymentGateway.approve(this.order.getOrderPayment());
 
         return approvalOrderPayment;
     }

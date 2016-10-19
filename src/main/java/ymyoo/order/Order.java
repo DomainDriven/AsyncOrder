@@ -18,6 +18,14 @@ public class Order {
     private OrderItem orderItem;
     private OrderPayment orderPayment;
 
+    public OrderItem getOrderItem() {
+        return orderItem;
+    }
+
+    public OrderPayment getOrderPayment() {
+        return orderPayment;
+    }
+
     public Order(OrderItem orderItem, OrderPayment orderPayment) {
         this.orderItem = orderItem;
         this.orderPayment = orderPayment;
@@ -34,11 +42,11 @@ public class Order {
          * 2. 두개 작업 완료 시 구매 주문 생성 실행
          */
         // 재고 확인/예약 작업
-        CompletableFuture<Void> inventoryFuture = CompletableFuture.supplyAsync(new InventoryTask(this.orderItem));
+        CompletableFuture<Void> inventoryFuture = CompletableFuture.supplyAsync(new InventoryTask(this));
 
         // 결제 인증/승인 작업
         CompletableFuture<ApprovalOrderPayment> paymentGatewayFuture =
-                CompletableFuture.supplyAsync(new PaymentGatewayTask(this.orderPayment));
+                CompletableFuture.supplyAsync(new PaymentGatewayTask(this));
 
         // 재고 확인/예약 작업 및 결제 인증/승인 작업 완료 시 구매 주문 생성!!
         inventoryFuture.thenCombineAsync(paymentGatewayFuture, (Void, approvalOrderPayment) -> {

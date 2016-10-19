@@ -1,5 +1,6 @@
 package ymyoo.order.inventory;
 
+import ymyoo.order.Order;
 import ymyoo.order.OrderItem;
 
 import java.util.function.Supplier;
@@ -14,17 +15,17 @@ import java.util.function.Supplier;
  */
 public class InventoryTask implements Supplier<Void> {
 
-    private OrderItem orderItem;
+    private Order order;
 
-    public InventoryTask(OrderItem orderItem) {
-        this.orderItem = orderItem;
+    public InventoryTask(Order order) {
+        this.order = order;
     }
 
     @Override
     public Void get() {
         Inventory inventory = new Inventory();
-        inventory.check(this.orderItem);
-        inventory.reserve(this.orderItem);
+        inventory.check(this.order.getOrderItem());
+        inventory.reserve(this.order.getOrderItem());
         return null;
     }
 }
