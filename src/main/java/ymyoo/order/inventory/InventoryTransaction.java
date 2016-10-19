@@ -13,11 +13,11 @@ import java.util.function.Supplier;
  *
  * Created by 유영모 on 2016-10-10.
  */
-public class InventoryTask implements Supplier<Void> {
+public class InventoryTransaction implements Supplier<Void> {
 
     private Order order;
 
-    public InventoryTask(Order order) {
+    public InventoryTransaction(Order order) {
         this.order = order;
     }
 

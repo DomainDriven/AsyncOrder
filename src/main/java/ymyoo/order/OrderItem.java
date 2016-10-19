@@ -11,14 +11,14 @@ public class OrderItem {
     private String productId;
 
     /** 주문 수량 **/
-    private int orderCount;
+    private int orderQty;
 
     /** 배송 유형 **/
     private OrderItemDeliveryType deliveryType;
 
-    public OrderItem(String productId, int orderCount, OrderItemDeliveryType deliveryType) {
+    public OrderItem(String productId, int orderQty, OrderItemDeliveryType deliveryType) {
         this.productId = productId;
-        this.orderCount = orderCount;
+        this.orderQty = orderQty;
         this.deliveryType = deliveryType;
     }
 
@@ -26,8 +26,8 @@ public class OrderItem {
         return productId;
     }
 
-    public int getOrderCount() {
-        return orderCount;
+    public int getOrderQty() {
+        return orderQty;
     }
 
     public OrderItemDeliveryType getDeliveryType() {

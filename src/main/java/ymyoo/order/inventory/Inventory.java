@@ -33,4 +33,13 @@ public class Inventory {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
         PrettySystemOut.println(this.getClass(), "재고 확보-" + "상품 번호" + product.getProductId());
     }
+
+    /**
+     * 재고 차감
+     * @param product
+     */
+    public void reduction(OrderItem product) {
+        try { Thread.sleep(250); } catch (InterruptedException e) {}
+        PrettySystemOut.println(this.getClass(), "재고 차감-" + "상품 번호" + product.getProductId() + ", 수량 : " + product.getOrderQty());
+    }
 }

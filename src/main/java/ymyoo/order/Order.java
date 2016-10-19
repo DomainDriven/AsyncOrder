@@ -3,10 +3,10 @@ package ymyoo.order;
 import ymyoo.order.event.OrderCompleted;
 import ymyoo.order.event.OrderFailed;
 import ymyoo.order.event.messaging.EventPublisher;
-import ymyoo.order.inventory.InventoryTask;
+import ymyoo.order.inventory.InventoryTransaction;
 import ymyoo.order.inventory.exception.StockOutException;
 import ymyoo.order.paymentgateway.ApprovalOrderPayment;
-import ymyoo.order.paymentgateway.PaymentGatewayTask;
+import ymyoo.order.paymentgateway.PaymentGatewayTransaction;
 import ymyoo.util.PrettySystemOut;
 
 import java.util.concurrent.CompletableFuture;
@@ -42,11 +42,11 @@ public class Order {
          * 2. 두개 작업 완료 시 구매 주문 생성 실행
          */
         // 재고 확인/예약 작업
-        CompletableFuture<Void> inventoryFuture = CompletableFuture.supplyAsync(new InventoryTask(this));
+        CompletableFuture<Void> inventoryFuture = CompletableFuture.supplyAsync(new InventoryTransaction(this));
 
         // 결제 인증/승인 작업
         CompletableFuture<ApprovalOrderPayment> paymentGatewayFuture =
-                CompletableFuture.supplyAsync(new PaymentGatewayTask(this));
+                CompletableFuture.supplyAsync(new PaymentGatewayTransaction(this));
 
         // 재고 확인/예약 작업 및 결제 인증/승인 작업 완료 시 구매 주문 생성!!
         inventoryFuture.thenCombineAsync(paymentGatewayFuture, (Void, approvalOrderPayment) -> {

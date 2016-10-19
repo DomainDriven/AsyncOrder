@@ -13,10 +13,10 @@ import java.util.function.Supplier;
  *
  * Created by 유영모 on 2016-10-10.
  */
-public class PaymentGatewayTask implements Supplier<ApprovalOrderPayment> {
+public class PaymentGatewayTransaction implements Supplier<ApprovalOrderPayment> {
     private Order order;
 
-    public PaymentGatewayTask(Order order) {
+    public PaymentGatewayTransaction(Order order) {
         this.order = order;
     }
 
