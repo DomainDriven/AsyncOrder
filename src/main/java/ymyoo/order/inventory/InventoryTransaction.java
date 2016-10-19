@@ -1,7 +1,8 @@
 package ymyoo.order.inventory;
 
 import ymyoo.order.Order;
-import ymyoo.order.OrderItem;
+import ymyoo.order.OrderItemDeliveryType;
+import ymyoo.order.inventory.exception.UnSupportedDeliveryType;
 
 import java.util.function.Supplier;
 
@@ -23,9 +24,19 @@ public class InventoryTransaction implements Supplier<Void> {
 
     @Override
     public Void get() {
-        Inventory inventory = new Inventory();
+        Inventory inventory;
+
+        if(order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.DIRECTING) {
+            inventory = new DirectDeliveryInventory();
+        } else if (order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.AGENCY) {
+            inventory = new AgencyDeliveryInventory();
+        } else {
+            throw new UnSupportedDeliveryType();
+        }
+
         inventory.check(this.order.getOrderItem());
         inventory.reserve(this.order.getOrderItem());
+
         return null;
     }
 }

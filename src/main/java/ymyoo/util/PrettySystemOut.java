@@ -5,6 +5,6 @@ package ymyoo.util;
  */
 public class PrettySystemOut {
     public static void println(Class<?> clazz, String msg) {
-        System.out.println(String.format("[Current Thread ID - %2s][%-42s] %s", Thread.currentThread().getId(), clazz.getName(), msg));
+        System.out.println(String.format("[Current Thread ID - %2s][%-46s] %s", Thread.currentThread().getId(), clazz.getName(), msg));
     }
 }
