@@ -16,6 +16,6 @@ public class DirectDeliveryPurchaseOrder extends PurchaseOrderDecorator {
     @Override
     public void create(Order order, ApprovalOrderPayment approvalOrderPayment) {
         super.create(order, approvalOrderPayment);
-        PrettySystemOut.println(DefaultPurchaseOrder.class, "물류 창고 번호와 구매 주문을 매핑..");
+        PrettySystemOut.println(DirectDeliveryPurchaseOrder.class, "물류 창고 번호와 구매 주문을 매핑..");
     }
 }
