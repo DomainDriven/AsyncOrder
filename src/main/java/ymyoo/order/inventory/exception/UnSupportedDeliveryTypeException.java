@@ -5,5 +5,5 @@ package ymyoo.order.inventory.exception;
  *
  * Created by 유영모 on 2016-10-19.
  */
-public class UnSupportedDeliveryType extends RuntimeException {
+public class UnSupportedDeliveryTypeException extends RuntimeException {
 }

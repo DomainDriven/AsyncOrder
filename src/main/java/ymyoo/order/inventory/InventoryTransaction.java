@@ -2,7 +2,7 @@ package ymyoo.order.inventory;
 
 import ymyoo.order.Order;
 import ymyoo.order.OrderItemDeliveryType;
-import ymyoo.order.inventory.exception.UnSupportedDeliveryType;
+import ymyoo.order.inventory.exception.UnSupportedDeliveryTypeException;
 
 import java.util.function.Supplier;
 
@@ -31,7 +31,7 @@ public class InventoryTransaction implements Supplier<Void> {
         } else if (order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.AGENCY) {
             inventory = new AgencyDeliveryInventory();
         } else {
-            throw new UnSupportedDeliveryType();
+            throw new UnSupportedDeliveryTypeException();
         }
 
         inventory.check(this.order.getOrderItem());
