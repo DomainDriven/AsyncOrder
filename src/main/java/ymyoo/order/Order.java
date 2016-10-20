@@ -1,7 +1,7 @@
 package ymyoo.order;
 
 import ymyoo.order.event.OrderFailed;
-import ymyoo.order.event.messaging.EventPublisher;
+import ymyoo.messaging.EventPublisher;
 import ymyoo.order.inventory.InventoryTransaction;
 import ymyoo.order.inventory.exception.StockOutException;
 import ymyoo.order.payment.ApprovalOrderPayment;

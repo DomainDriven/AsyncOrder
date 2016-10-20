@@ -3,7 +3,7 @@ package ymyoo.order.purchase;
 import ymyoo.order.Order;
 import ymyoo.order.OrderItemDeliveryType;
 import ymyoo.order.event.OrderCompleted;
-import ymyoo.order.event.messaging.EventPublisher;
+import ymyoo.messaging.EventPublisher;
 import ymyoo.order.payment.ApprovalOrderPayment;
 import ymyoo.util.PrettySystemOut;
 

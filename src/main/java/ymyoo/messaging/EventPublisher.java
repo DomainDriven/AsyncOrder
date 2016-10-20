@@ -1,4 +1,4 @@
-package ymyoo.order.event.messaging;
+package ymyoo.messaging;
 
 import ymyoo.order.event.OrderEvent;
 

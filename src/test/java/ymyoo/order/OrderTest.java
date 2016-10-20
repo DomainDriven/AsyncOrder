@@ -6,8 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import ymyoo.order.event.OrderCompleted;
 import ymyoo.order.event.OrderFailed;
-import ymyoo.order.event.messaging.EventPublisher;
-import ymyoo.order.event.messaging.EventSubscriber;
+import ymyoo.messaging.EventPublisher;
+import ymyoo.messaging.EventSubscriber;
 
 /**
  * Created by 유영모 on 2016-10-07.

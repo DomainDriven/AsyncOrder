@@ -1,4 +1,4 @@
-package ymyoo.order.event.messaging;
+package ymyoo.messaging;
 
 /**
  * 이벤트 구독자
