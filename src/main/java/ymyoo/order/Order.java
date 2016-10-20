@@ -2,11 +2,11 @@ package ymyoo.order;
 
 import ymyoo.order.event.OrderFailed;
 import ymyoo.messaging.EventPublisher;
-import ymyoo.order.inventory.InventoryTransaction;
+import ymyoo.order.inventory.InventoryTransactionActivity;
 import ymyoo.order.inventory.exception.StockOutException;
 import ymyoo.order.payment.ApprovalOrderPayment;
-import ymyoo.order.payment.PaymentGatewayTransaction;
-import ymyoo.order.purchase.PurchaseOrderTransaction;
+import ymyoo.order.payment.PaymentGatewayTransactionActivity;
+import ymyoo.order.purchase.PurchaseOrderTransactionActivity;
 import ymyoo.util.PrettySystemOut;
 
 import java.util.concurrent.CompletableFuture;
@@ -49,16 +49,16 @@ public class Order {
          * 2. 두개 작업 완료 시 구매 주문 생성 실행
          */
         // 재고 확인/예약 작업
-        CompletableFuture<Void> inventoryTransaction = CompletableFuture.supplyAsync(new InventoryTransaction(this));
+        CompletableFuture<Void> inventoryTransactionActivity = CompletableFuture.supplyAsync(new InventoryTransactionActivity(this));
 
         // 결제 인증/승인 작업
-        CompletableFuture<ApprovalOrderPayment> paymentGatewayTransaction =
-                CompletableFuture.supplyAsync(new PaymentGatewayTransaction(this));
+        CompletableFuture<ApprovalOrderPayment> paymentGatewayTransactionActivity =
+                CompletableFuture.supplyAsync(new PaymentGatewayTransactionActivity(this));
 
         // 구매 주문 생성 작업
-        BiFunction<Void, ApprovalOrderPayment, Void> purchaseOrderTransaction = new PurchaseOrderTransaction(this);
+        BiFunction<Void, ApprovalOrderPayment, Void> purchaseOrderTransactionActivity = new PurchaseOrderTransactionActivity(this);
 
-        inventoryTransaction.thenCombineAsync(paymentGatewayTransaction, purchaseOrderTransaction)
+        inventoryTransactionActivity.thenCombineAsync(paymentGatewayTransactionActivity, purchaseOrderTransactionActivity)
                 .exceptionally(throwable -> {
                     // 주문 실패 이벤트 발행
                     if(throwable.getCause() instanceof StockOutException) {

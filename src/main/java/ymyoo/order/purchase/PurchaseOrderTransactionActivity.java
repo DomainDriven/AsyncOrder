@@ -12,10 +12,10 @@ import java.util.function.BiFunction;
 /**
  * Created by 유영모 on 2016-10-20.
  */
-public class PurchaseOrderTransaction implements BiFunction<Void, ApprovalOrderPayment, Void> {
+public class PurchaseOrderTransactionActivity implements BiFunction<Void, ApprovalOrderPayment, Void> {
     private Order order;
 
-    public PurchaseOrderTransaction(Order order) {
+    public PurchaseOrderTransactionActivity(Order order) {
         this.order = order;
     }
 
