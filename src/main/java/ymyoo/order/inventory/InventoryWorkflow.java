@@ -12,11 +12,11 @@ import java.util.function.Supplier;
  *
  * Created by 유영모 on 2016-10-10.
  */
-public class InventorySequence implements Supplier<Void> {
+public class InventoryWorkflow implements Supplier<Void> {
 
     private Order order;
 
-    public InventorySequence(Order order) {
+    public InventoryWorkflow(Order order) {
         this.order = order;
     }
 

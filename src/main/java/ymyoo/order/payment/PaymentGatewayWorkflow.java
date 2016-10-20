@@ -12,10 +12,10 @@ import java.util.function.Supplier;
  *
  * Created by 유영모 on 2016-10-10.
  */
-public class PaymentGatewaySequence implements Supplier<ApprovalOrderPayment> {
+public class PaymentGatewayWorkflow implements Supplier<ApprovalOrderPayment> {
     private Order order;
 
-    public PaymentGatewaySequence(Order order) {
+    public PaymentGatewayWorkflow(Order order) {
         this.order = order;
     }
 
