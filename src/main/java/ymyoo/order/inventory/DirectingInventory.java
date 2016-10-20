@@ -8,7 +8,7 @@ import ymyoo.util.PrettySystemOut;
  *
  * Created by 유영모 on 2016-10-19.
  */
-public class DirectDeliveryInventory implements Inventory {
+public class DirectingInventory implements Inventory {
 
     @Override
     public void check(OrderItem product) {

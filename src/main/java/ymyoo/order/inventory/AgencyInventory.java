@@ -9,7 +9,7 @@ import ymyoo.util.PrettySystemOut;
  *
  * Created by 유영모 on 2016-10-19.
  */
-public class AgencyDeliveryInventory implements Inventory {
+public class AgencyInventory implements Inventory {
 
     @Override
     public void check(OrderItem product) {

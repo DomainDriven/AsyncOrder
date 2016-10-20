@@ -11,9 +11,9 @@ import ymyoo.order.inventory.exception.UnSupportedDeliveryTypeException;
 public class InventoryFactory {
     public static Inventory create(OrderItemDeliveryType deliveryType) {
         if(deliveryType == OrderItemDeliveryType.DIRECTING) {
-            return new DirectDeliveryInventory();
+            return new DirectingInventory();
         } else if (deliveryType == OrderItemDeliveryType.AGENCY) {
-            return new AgencyDeliveryInventory();
+            return new AgencyInventory();
         } else {
             throw new UnSupportedDeliveryTypeException();
         }
