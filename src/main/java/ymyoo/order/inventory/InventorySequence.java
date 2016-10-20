@@ -1,8 +1,6 @@
 package ymyoo.order.inventory;
 
 import ymyoo.order.Order;
-import ymyoo.order.OrderItemDeliveryType;
-import ymyoo.order.inventory.exception.UnSupportedDeliveryTypeException;
 
 import java.util.function.Supplier;
 
@@ -24,19 +22,9 @@ public class InventorySequence implements Supplier<Void> {
 
     @Override
     public Void get() {
-        Inventory inventory;
-
-        if(order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.DIRECTING) {
-            inventory = new DirectDeliveryInventory();
-        } else if (order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.AGENCY) {
-            inventory = new AgencyDeliveryInventory();
-        } else {
-            throw new UnSupportedDeliveryTypeException();
-        }
-
+        Inventory inventory = InventoryFactory.create(order.getOrderItem().getDeliveryType());
         inventory.check(this.order.getOrderItem());
         inventory.reserve(this.order.getOrderItem());
-
         return null;
     }
 }

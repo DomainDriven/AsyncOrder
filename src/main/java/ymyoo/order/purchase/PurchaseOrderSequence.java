@@ -22,13 +22,7 @@ public class PurchaseOrderSequence implements BiFunction<Void, ApprovalOrderPaym
     @Override
     public Void apply(Void aVoid, ApprovalOrderPayment approvalOrderPayment) {
         // 구매 주문 생성
-        PurchaseOrder purchaseOrder;
-
-        if(order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.DIRECTING) {
-            purchaseOrder = new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder());
-        } else {
-            purchaseOrder = new DefaultPurchaseOrder();
-        }
+        PurchaseOrder purchaseOrder = PurchaseOrderFactory.create(order.getOrderItem().getDeliveryType());
 
         purchaseOrder.create(order,  approvalOrderPayment);
         PrettySystemOut.println(order.getClass(), "주문 완료....");
