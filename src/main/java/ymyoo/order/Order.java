@@ -2,11 +2,11 @@ package ymyoo.order;
 
 import ymyoo.order.event.OrderFailed;
 import ymyoo.messaging.EventPublisher;
-import ymyoo.order.inventory.InventoryTransactionActivity;
+import ymyoo.order.inventory.InventorySequence;
 import ymyoo.order.inventory.exception.StockOutException;
 import ymyoo.order.payment.ApprovalOrderPayment;
-import ymyoo.order.payment.PaymentGatewayTransactionActivity;
-import ymyoo.order.purchase.PurchaseOrderTransactionActivity;
+import ymyoo.order.payment.PaymentGatewaySequence;
+import ymyoo.order.purchase.PurchaseOrderSequence;
 import ymyoo.util.PrettySystemOut;
 
 import java.util.concurrent.CompletableFuture;
@@ -49,16 +49,16 @@ public class Order {
          * 2. 두개 작업 완료 시 구매 주문 생성 실행
          */
         // 재고 확인/예약 작업
-        CompletableFuture<Void> inventoryTransactionActivity = CompletableFuture.supplyAsync(new InventoryTransactionActivity(this));
+        CompletableFuture<Void> inventorySequence = CompletableFuture.supplyAsync(new InventorySequence(this));
 
         // 결제 인증/승인 작업
-        CompletableFuture<ApprovalOrderPayment> paymentGatewayTransactionActivity =
-                CompletableFuture.supplyAsync(new PaymentGatewayTransactionActivity(this));
+        CompletableFuture<ApprovalOrderPayment> paymentGatewaySequence =
+                CompletableFuture.supplyAsync(new PaymentGatewaySequence(this));
 
         // 구매 주문 생성 작업
-        BiFunction<Void, ApprovalOrderPayment, Void> purchaseOrderTransactionActivity = new PurchaseOrderTransactionActivity(this);
+        BiFunction<Void, ApprovalOrderPayment, Void> purchaseOrderSequence = new PurchaseOrderSequence(this);
 
-        inventoryTransactionActivity.thenCombineAsync(paymentGatewayTransactionActivity, purchaseOrderTransactionActivity)
+        inventorySequence.thenCombineAsync(paymentGatewaySequence, purchaseOrderSequence)
                 .exceptionally(throwable -> {
                     // 주문 실패 이벤트 발행
                     if(throwable.getCause() instanceof StockOutException) {
