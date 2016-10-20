@@ -1,7 +1,7 @@
-package ymyoo.order.purchaseorder;
+package ymyoo.order.purchase;
 
 import ymyoo.order.Order;
-import ymyoo.order.paymentgateway.ApprovalOrderPayment;
+import ymyoo.order.payment.ApprovalOrderPayment;
 import ymyoo.util.PrettySystemOut;
 
 /**

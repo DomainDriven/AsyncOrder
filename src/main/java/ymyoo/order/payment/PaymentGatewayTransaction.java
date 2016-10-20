@@ -1,7 +1,6 @@
-package ymyoo.order.paymentgateway;
+package ymyoo.order.payment;
 
 import ymyoo.order.Order;
-import ymyoo.order.OrderPayment;
 
 import java.util.function.Supplier;
 

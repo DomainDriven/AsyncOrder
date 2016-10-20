@@ -1,7 +1,7 @@
-package ymyoo.order.purchaseorder;
+package ymyoo.order.purchase;
 
 import ymyoo.order.Order;
-import ymyoo.order.paymentgateway.ApprovalOrderPayment;
+import ymyoo.order.payment.ApprovalOrderPayment;
 
 /**
  * 구매 주문 인터페이스

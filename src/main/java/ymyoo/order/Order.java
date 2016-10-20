@@ -1,26 +1,23 @@
 package ymyoo.order;
 
-import ymyoo.order.event.OrderCompleted;
 import ymyoo.order.event.OrderFailed;
 import ymyoo.order.event.messaging.EventPublisher;
-import ymyoo.order.inventory.AgencyDeliveryInventory;
-import ymyoo.order.inventory.DirectDeliveryInventory;
 import ymyoo.order.inventory.InventoryTransaction;
 import ymyoo.order.inventory.exception.StockOutException;
-import ymyoo.order.inventory.exception.UnSupportedDeliveryTypeException;
-import ymyoo.order.paymentgateway.ApprovalOrderPayment;
-import ymyoo.order.paymentgateway.PaymentGatewayTransaction;
-import ymyoo.order.purchaseorder.DefaultPurchaseOrder;
-import ymyoo.order.purchaseorder.DirectDeliveryPurchaseOrder;
-import ymyoo.order.purchaseorder.PurchaseOrder;
+import ymyoo.order.payment.ApprovalOrderPayment;
+import ymyoo.order.payment.PaymentGatewayTransaction;
+import ymyoo.order.purchase.PurchaseOrderTransaction;
 import ymyoo.util.PrettySystemOut;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 
 /**
  * Created by 유영모 on 2016-10-07.
  */
 public class Order {
+    private String orderId;
+
     private OrderItem orderItem;
     private OrderPayment orderPayment;
 
@@ -32,13 +29,17 @@ public class Order {
         return orderPayment;
     }
 
+    public String getOrderId() {
+        return orderId;
+    }
+
     public Order(OrderItem orderItem, OrderPayment orderPayment) {
         this.orderItem = orderItem;
         this.orderPayment = orderPayment;
     }
 
     public String placeOrder() {
-        String orderId =  OrderIdGenerator.generate();
+        this.orderId = OrderIdGenerator.generate();
         PrettySystemOut.println(this.getClass(), "주문 아이디 생성 : " + orderId);
 
         /**
@@ -48,38 +49,24 @@ public class Order {
          * 2. 두개 작업 완료 시 구매 주문 생성 실행
          */
         // 재고 확인/예약 작업
-        CompletableFuture<Void> inventoryFuture = CompletableFuture.supplyAsync(new InventoryTransaction(this));
+        CompletableFuture<Void> inventoryTransaction = CompletableFuture.supplyAsync(new InventoryTransaction(this));
 
         // 결제 인증/승인 작업
-        CompletableFuture<ApprovalOrderPayment> paymentGatewayFuture =
+        CompletableFuture<ApprovalOrderPayment> paymentGatewayTransaction =
                 CompletableFuture.supplyAsync(new PaymentGatewayTransaction(this));
 
-        // 재고 확인/예약 작업 및 결제 인증/승인 작업 완료 시 구매 주문 생성!!
-        inventoryFuture.thenCombineAsync(paymentGatewayFuture, (Void, approvalOrderPayment) -> {
-            // 구매 주문 생성
-            PurchaseOrder purchaseOrder;
+        // 구매 주문 생성 작업
+        BiFunction<Void, ApprovalOrderPayment, Void> purchaseOrderTransaction = new PurchaseOrderTransaction(this);
 
-            if(this.getOrderItem().getDeliveryType() == OrderItemDeliveryType.DIRECTING) {
-                purchaseOrder = new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder());
-            } else {
-                purchaseOrder = new DefaultPurchaseOrder();
-            }
-
-            purchaseOrder.create(this, approvalOrderPayment);
-            PrettySystemOut.println(this.getClass(), "주문 완료....");
-
-            // 주문 완료 이벤트 발행
-            EventPublisher.instance().publish(new OrderCompleted(orderId));
-
-            return null;
-        }).exceptionally(throwable -> {
-            // 주문 실패 이벤트 발행
-            if(throwable.getCause() instanceof StockOutException) {
-                PrettySystemOut.println(this.getClass(), "재고 없음 예외 발생");
-                EventPublisher.instance().publish(new OrderFailed(orderId, "Stockout"));
-            }
-            return null;
-        });
+        inventoryTransaction.thenCombineAsync(paymentGatewayTransaction, purchaseOrderTransaction)
+                .exceptionally(throwable -> {
+                    // 주문 실패 이벤트 발행
+                    if(throwable.getCause() instanceof StockOutException) {
+                        PrettySystemOut.println(this.getClass(), "재고 없음 예외 발생");
+                        EventPublisher.instance().publish(new OrderFailed(orderId, "Stockout"));
+                    }
+                    return null;
+                });
 
         return orderId;
     }

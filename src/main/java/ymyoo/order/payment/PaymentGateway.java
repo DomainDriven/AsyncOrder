@@ -1,4 +1,4 @@
-package ymyoo.order.paymentgateway;
+package ymyoo.order.payment;
 
 import ymyoo.order.OrderPayment;
 import ymyoo.util.PrettySystemOut;
