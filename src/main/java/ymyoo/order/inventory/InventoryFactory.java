@@ -2,6 +2,8 @@ package ymyoo.order.inventory;
 
 import ymyoo.order.OrderItemDeliveryType;
 import ymyoo.order.inventory.exception.UnSupportedDeliveryTypeException;
+import ymyoo.order.inventory.impl.AgencyInventory;
+import ymyoo.order.inventory.impl.DirectingInventory;
 
 /**
  * 재고 팩토리

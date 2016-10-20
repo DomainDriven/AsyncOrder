@@ -1,23 +1,18 @@
-package ymyoo.order.inventory;
+package ymyoo.order.inventory.impl;
 
 import ymyoo.order.OrderItem;
-import ymyoo.order.inventory.exception.StockOutException;
+import ymyoo.order.inventory.Inventory;
 import ymyoo.util.PrettySystemOut;
 
 /**
- * 배송 대행 상품 재고 구현체
+ * 자사 배송 상품 재고 구현체
  *
  * Created by 유영모 on 2016-10-19.
  */
-public class AgencyInventory implements Inventory {
+public class DirectingInventory implements Inventory {
 
     @Override
     public void check(OrderItem product) {
-        // 재고 없음 예외
-        if(product.getProductId().equals("P0002")) {
-            throw new StockOutException();
-        }
-
         try { Thread.sleep(250); } catch (InterruptedException e) {}
         PrettySystemOut.println(this.getClass(), "재고 확인-" + "상품 번호" + product.getProductId());
     }

@@ -1,6 +1,8 @@
 package ymyoo.order.purchase;
 
 import ymyoo.order.OrderItemDeliveryType;
+import ymyoo.order.purchase.impl.DefaultPurchaseOrder;
+import ymyoo.order.purchase.impl.DirectDeliveryPurchaseOrder;
 
 /**
  * 구매 주문 팩토리

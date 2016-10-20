@@ -1,7 +1,8 @@
-package ymyoo.order.purchase;
+package ymyoo.order.purchase.impl;
 
 import ymyoo.order.Order;
 import ymyoo.order.payment.ApprovalOrderPayment;
+import ymyoo.order.purchase.PurchaseOrder;
 
 /**
  * 구매 주문 데코레이터
