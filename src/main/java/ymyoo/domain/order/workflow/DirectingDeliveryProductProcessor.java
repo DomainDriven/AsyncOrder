@@ -25,6 +25,7 @@ public class DirectingDeliveryProductProcessor implements OrderProcess<Order> {
 
     @Override
     public void runWorkflow(Order order) {
+        // Activity를 조합하여 Workflow를 만든다.
         /**
          * 비동기 Workflow
          *
