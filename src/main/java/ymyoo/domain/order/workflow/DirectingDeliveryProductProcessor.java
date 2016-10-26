@@ -21,7 +21,7 @@ import java.util.function.BiFunction;
  *
  * Created by 유영모 on 2016-10-24.
  */
-public class DirectingDeliveryProductProcessor implements OrderProcess<Order> {
+public class DirectingDeliveryProductProcessor implements OrderProcessor {
 
     @Override
     public void runWorkflow(Order order) {

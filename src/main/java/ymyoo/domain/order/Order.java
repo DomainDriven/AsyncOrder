@@ -1,9 +1,7 @@
 package ymyoo.domain.order;
 
-import ymyoo.domain.order.exception.UnSupportedDeliveryTypeException;
-import ymyoo.domain.order.workflow.AgencyDeliveryProductProcessor;
-import ymyoo.domain.order.workflow.DirectingDeliveryProductProcessor;
-import ymyoo.domain.order.workflow.OrderProcess;
+import ymyoo.domain.order.workflow.OrderProcessor;
+import ymyoo.domain.order.workflow.OrderProcessorFactory;
 import ymyoo.util.PrettySystemOut;
 
 /**
@@ -36,15 +34,8 @@ public class Order {
         this.orderId = OrderIdGenerator.generate();
         PrettySystemOut.println(this.getClass(), "주문 아이디 생성 : " + orderId);
 
-        if(orderItem.getDeliveryType() == OrderItemDeliveryType.DIRECTING) {
-            OrderProcess<Order> orderProcess = new DirectingDeliveryProductProcessor();
-            orderProcess.runWorkflow(this);
-        } else if(orderItem.getDeliveryType() == OrderItemDeliveryType.AGENCY) {
-            OrderProcess<Order> orderProcess = new AgencyDeliveryProductProcessor();
-            orderProcess.runWorkflow(this);
-        } else {
-            throw new UnSupportedDeliveryTypeException();
-        }
+        OrderProcessor orderProcessor = OrderProcessorFactory.create(this);
+        orderProcessor.runWorkflow(this);
 
         return orderId;
     }

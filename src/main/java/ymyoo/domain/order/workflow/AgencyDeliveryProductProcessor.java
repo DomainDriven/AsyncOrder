@@ -2,7 +2,6 @@ package ymyoo.domain.order.workflow;
 
 import ymyoo.domain.inventory.exception.StockOutException;
 import ymyoo.domain.inventory.impl.AgencyInventory;
-import ymyoo.domain.inventory.impl.DirectingInventory;
 import ymyoo.domain.order.Order;
 import ymyoo.domain.order.event.OrderFailed;
 import ymyoo.domain.order.workflow.activity.InventorySequenceActivity;
@@ -10,7 +9,6 @@ import ymyoo.domain.order.workflow.activity.PaymentGatewaySequenceActivity;
 import ymyoo.domain.order.workflow.activity.PurchaseOrderSequenceActivity;
 import ymyoo.domain.payment.ApprovalOrderPayment;
 import ymyoo.domain.purchaseorder.impl.DefaultPurchaseOrder;
-import ymyoo.domain.purchaseorder.impl.DirectDeliveryPurchaseOrder;
 import ymyoo.infra.messaging.EventPublisher;
 import ymyoo.util.PrettySystemOut;
 
@@ -22,7 +20,7 @@ import java.util.function.BiFunction;
  *
  * Created by 유영모 on 2016-10-24.
  */
-public class AgencyDeliveryProductProcessor implements OrderProcess<Order> {
+public class AgencyDeliveryProductProcessor implements OrderProcessor {
 
     @Override
     public void runWorkflow(Order order) {
