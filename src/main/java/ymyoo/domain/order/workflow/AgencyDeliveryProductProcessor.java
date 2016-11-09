@@ -1,14 +1,19 @@
 package ymyoo.domain.order.workflow;
 
+import rx.Observable;
+import rx.Subscriber;
 import ymyoo.domain.inventory.exception.StockOutException;
 import ymyoo.domain.inventory.impl.AgencyInventory;
+import ymyoo.domain.inventory.impl.DirectingInventory;
 import ymyoo.domain.order.Order;
 import ymyoo.domain.order.event.OrderFailed;
 import ymyoo.domain.order.workflow.activity.InventorySequenceActivity;
 import ymyoo.domain.order.workflow.activity.PaymentGatewaySequenceActivity;
 import ymyoo.domain.order.workflow.activity.PurchaseOrderSequenceActivity;
+import ymyoo.domain.order.workflow.activity.SequenceActivity;
 import ymyoo.domain.payment.ApprovalOrderPayment;
 import ymyoo.domain.purchaseorder.impl.DefaultPurchaseOrder;
+import ymyoo.domain.purchaseorder.impl.DirectDeliveryPurchaseOrder;
 import ymyoo.infra.messaging.EventPublisher;
 import ymyoo.util.PrettySystemOut;
 
@@ -24,7 +29,6 @@ public class AgencyDeliveryProductProcessor implements OrderProcessor {
 
     @Override
     public void runWorkflow(Order order) {
-        // Activity를 조합하여 Workflow를 만든다.
         /**
          * 비동기 Workflow
          *
@@ -32,28 +36,49 @@ public class AgencyDeliveryProductProcessor implements OrderProcessor {
          * 2. 두개 작업 완료 시 구매 주문 생성 실행
          */
         // 재고 확인/예약 작업
-        CompletableFuture<Void> inventorySequenceActivity = CompletableFuture.supplyAsync(
-                new InventorySequenceActivity(order, new AgencyInventory())
+        Observable<Void> inventorySequenceActivityObs = Observable.create((subscriber) -> {
+                    SequenceActivity<Void> activity = new InventorySequenceActivity(order, new AgencyInventory());
+                    activity.act();
+                    subscriber.onCompleted();
+                }
         );
 
         // 결제 인증/승인 작업
-        CompletableFuture<ApprovalOrderPayment> paymentGatewaySequenceActivity = CompletableFuture.supplyAsync(
-                new PaymentGatewaySequenceActivity(order)
-        );
+        Observable<ApprovalOrderPayment> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
+            SequenceActivity<ApprovalOrderPayment> activity = new PaymentGatewaySequenceActivity(order);
+            ApprovalOrderPayment approvalOrderPayment = activity.act();
+            subscriber.onNext(approvalOrderPayment);
+            subscriber.onCompleted();
+        });
 
-        // 구매 주문 생성 작업
-        BiFunction<Void, ApprovalOrderPayment, Void> purchaseOrderSequenceActivity =
-                new PurchaseOrderSequenceActivity(order,  new DefaultPurchaseOrder());
+        Observable<Object> inventoryAndPaymentCompositeActivityObs =
+                Observable.merge(inventorySequenceActivityObs, paymentGatewaySequenceActivityObs);
 
-        inventorySequenceActivity.thenCombineAsync(paymentGatewaySequenceActivity, purchaseOrderSequenceActivity)
-                .exceptionally(throwable -> {
-                    // 주문 실패 이벤트 발행
-                    if(throwable.getCause() instanceof StockOutException) {
-                        PrettySystemOut.println(this.getClass(), "재고 없음 예외 발생");
-                        EventPublisher.instance().publish(new OrderFailed(order.getOrderId(), "Stockout"));
-                    }
-                    return null;
-                });
+        Subscriber<Object> inventoryAndPaymentObsSubscriber = new Subscriber<Object>() {
+            private ApprovalOrderPayment approvalOrderPayment;
+
+            @Override
+            public void onCompleted() {
+                // 구매 주문 생성 작업
+                SequenceActivity<Void> activity =
+                        new PurchaseOrderSequenceActivity(order, new DefaultPurchaseOrder(), approvalOrderPayment);
+                activity.act();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("inventoryAndPaymentObsSubscriber - onError");
+
+                throw new RuntimeException(throwable);
+            }
+
+            @Override
+            public void onNext(Object o) {
+                System.out.println("inventoryAndPaymentObsSubscriber - onNext");
+                this.approvalOrderPayment = (ApprovalOrderPayment)o;
+            }
+        };
+        inventoryAndPaymentCompositeActivityObs.subscribe(inventoryAndPaymentObsSubscriber);
 
     }
 }

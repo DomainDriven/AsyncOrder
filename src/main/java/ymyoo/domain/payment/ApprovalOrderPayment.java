@@ -16,4 +16,11 @@ public class ApprovalOrderPayment {
     public String getTid() {
         return tid;
     }
+
+    @Override
+    public String toString() {
+        return "ApprovalOrderPayment{" +
+                "tid='" + tid + '\'' +
+                '}';
+    }
 }
