@@ -2,9 +2,12 @@ package ymyoo.domain.order.workflow;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import ymyoo.domain.inventory.exception.StockOutException;
 import ymyoo.domain.inventory.impl.DirectingInventory;
 import ymyoo.domain.order.Order;
+import ymyoo.domain.order.event.OrderCompleted;
+import ymyoo.domain.order.event.OrderFailed;
 import ymyoo.domain.order.workflow.activity.InventorySequenceActivity;
 import ymyoo.domain.order.workflow.activity.PaymentGatewaySequenceActivity;
 import ymyoo.domain.order.workflow.activity.PurchaseOrderSequenceActivity;
@@ -12,6 +15,8 @@ import ymyoo.domain.order.workflow.activity.SequenceActivity;
 import ymyoo.domain.payment.ApprovalOrderPayment;
 import ymyoo.domain.purchaseorder.impl.DefaultPurchaseOrder;
 import ymyoo.domain.purchaseorder.impl.DirectDeliveryPurchaseOrder;
+import ymyoo.infra.messaging.EventPublisher;
+import ymyoo.util.PrettySystemOut;
 
 /**
  * 자사 배송 상품 프로세서
@@ -29,20 +34,20 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
          * 2. 두개 작업 완료 시 구매 주문 생성 실행
          */
         // 재고 확인/예약 작업
-        Observable<Void> inventorySequenceActivityObs = Observable.create((subscriber) -> {
+        Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
                     SequenceActivity<Void> activity = new InventorySequenceActivity(order, new DirectingInventory());
                     activity.act();
                     subscriber.onCompleted();
                 }
-        );
+        ).subscribeOn(Schedulers.io());
 
         // 결제 인증/승인 작업
-        Observable<ApprovalOrderPayment> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
+        Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
             SequenceActivity<ApprovalOrderPayment> activity = new PaymentGatewaySequenceActivity(order);
             ApprovalOrderPayment approvalOrderPayment = activity.act();
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
-        });
+        }).subscribeOn(Schedulers.io());
 
         Observable<Object> inventoryAndPaymentCompositeActivityObs =
                 Observable.merge(inventorySequenceActivityObs, paymentGatewaySequenceActivityObs);
@@ -56,17 +61,23 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
                 SequenceActivity<Void> activity = new PurchaseOrderSequenceActivity(
                         order, new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder()), approvalOrderPayment);
                 activity.act();
+
+                // 주문 성공 이벤트 게시
+                EventPublisher.instance().publish(new OrderCompleted(order.getOrderId()));
             }
 
             @Override
             public void onError(Throwable throwable) {
-                System.out.println("inventoryAndPaymentObsSubscriber - onError");
-                throw new RuntimeException(throwable);
+                // 주문 실패 이벤트 게시
+                if(throwable.getCause() instanceof StockOutException) {
+                    PrettySystemOut.println(this.getClass(), "재고 없음 예외 발생");
+                    EventPublisher.instance().publish(new OrderFailed(order.getOrderId(), "Stockout"));
+                }
+                EventPublisher.instance().publish(new OrderFailed(order.getOrderId(), ""));
             }
 
             @Override
             public void onNext(Object o) {
-                System.out.println("inventoryAndPaymentObsSubscriber - onNext");
                 this.approvalOrderPayment = (ApprovalOrderPayment)o;
             }
         };
