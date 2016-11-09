@@ -5,7 +5,6 @@ import rx.Subscriber;
 import rx.schedulers.Schedulers;
 import ymyoo.domain.inventory.exception.StockOutException;
 import ymyoo.domain.inventory.impl.AgencyInventory;
-import ymyoo.domain.inventory.impl.DirectingInventory;
 import ymyoo.domain.order.Order;
 import ymyoo.domain.order.event.OrderCompleted;
 import ymyoo.domain.order.event.OrderFailed;
@@ -15,12 +14,8 @@ import ymyoo.domain.order.workflow.activity.PurchaseOrderSequenceActivity;
 import ymyoo.domain.order.workflow.activity.SequenceActivity;
 import ymyoo.domain.payment.ApprovalOrderPayment;
 import ymyoo.domain.purchaseorder.impl.DefaultPurchaseOrder;
-import ymyoo.domain.purchaseorder.impl.DirectDeliveryPurchaseOrder;
 import ymyoo.infra.messaging.EventPublisher;
 import ymyoo.util.PrettySystemOut;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
 
 /**
  * 배송 대행 상품 프로세서
@@ -40,7 +35,7 @@ public class AgencyDeliveryProductProcessor implements OrderProcessor {
         // 재고 확인/예약 작업
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
                     SequenceActivity<Void> activity = new InventorySequenceActivity(order, new AgencyInventory());
-                    activity.act();
+                    activity.perform();
                     subscriber.onCompleted();
                 }
         ).subscribeOn(Schedulers.io());
@@ -48,7 +43,7 @@ public class AgencyDeliveryProductProcessor implements OrderProcessor {
         // 결제 인증/승인 작업
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
             SequenceActivity<ApprovalOrderPayment> activity = new PaymentGatewaySequenceActivity(order);
-            ApprovalOrderPayment approvalOrderPayment = activity.act();
+            ApprovalOrderPayment approvalOrderPayment = activity.perform();
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
@@ -64,7 +59,7 @@ public class AgencyDeliveryProductProcessor implements OrderProcessor {
                 // 구매 주문 생성 작업
                 SequenceActivity<Void> activity =
                         new PurchaseOrderSequenceActivity(order, new DefaultPurchaseOrder(), approvalOrderPayment);
-                activity.act();
+                activity.perform();
 
                 // 주문 성공 이벤트 게시
                 EventPublisher.instance().publish(new OrderCompleted(order.getOrderId()));

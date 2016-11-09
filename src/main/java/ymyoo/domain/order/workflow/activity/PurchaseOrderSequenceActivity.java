@@ -24,7 +24,7 @@ public class PurchaseOrderSequenceActivity implements SequenceActivity<Void> {
     }
 
     @Override
-    public Void act() {
+    public Void perform() {
         purchaseOrder.create(order,  approvalOrderPayment);
         PrettySystemOut.println(order.getClass(), "주문 완료....");
 

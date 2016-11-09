@@ -19,7 +19,7 @@ public class InventorySequenceActivity implements  SequenceActivity<Void> {
     }
 
     @Override
-    public Void act() {
+    public Void perform() {
         inventory.check(this.order.getOrderItem());
         inventory.reserve(this.order.getOrderItem());
 

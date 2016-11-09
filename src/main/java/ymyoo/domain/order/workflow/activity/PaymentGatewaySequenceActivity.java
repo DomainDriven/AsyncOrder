@@ -16,10 +16,8 @@ public class PaymentGatewaySequenceActivity implements SequenceActivity<Approval
         this.order = order;
     }
 
-
-
     @Override
-    public ApprovalOrderPayment act() {
+    public ApprovalOrderPayment perform() {
         PaymentGateway paymentGateway = new PaymentGateway();
         paymentGateway.authenticate(this.order.getOrderPayment());
         ApprovalOrderPayment approvalOrderPayment = paymentGateway.approve(this.order.getOrderPayment());

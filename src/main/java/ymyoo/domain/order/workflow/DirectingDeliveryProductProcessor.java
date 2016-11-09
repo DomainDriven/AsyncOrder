@@ -36,7 +36,7 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
         // 재고 확인/예약 작업
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
                     SequenceActivity<Void> activity = new InventorySequenceActivity(order, new DirectingInventory());
-                    activity.act();
+                    activity.perform();
                     subscriber.onCompleted();
                 }
         ).subscribeOn(Schedulers.io());
@@ -44,7 +44,7 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
         // 결제 인증/승인 작업
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
             SequenceActivity<ApprovalOrderPayment> activity = new PaymentGatewaySequenceActivity(order);
-            ApprovalOrderPayment approvalOrderPayment = activity.act();
+            ApprovalOrderPayment approvalOrderPayment = activity.perform();
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
         }).subscribeOn(Schedulers.io());
@@ -60,7 +60,7 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
                 // 구매 주문 생성 작업
                 SequenceActivity<Void> activity = new PurchaseOrderSequenceActivity(
                         order, new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder()), approvalOrderPayment);
-                activity.act();
+                activity.perform();
 
                 // 주문 성공 이벤트 게시
                 EventPublisher.instance().publish(new OrderCompleted(order.getOrderId()));
