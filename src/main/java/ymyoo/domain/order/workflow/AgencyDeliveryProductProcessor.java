@@ -38,7 +38,7 @@ public class AgencyDeliveryProductProcessor implements OrderProcessor {
                     activity.perform();
                     subscriber.onCompleted();
                 }
-        ).subscribeOn(Schedulers.io());
+        ).subscribeOn(Schedulers.computation());
 
         // 결제 인증/승인 작업
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
@@ -46,7 +46,7 @@ public class AgencyDeliveryProductProcessor implements OrderProcessor {
             ApprovalOrderPayment approvalOrderPayment = activity.perform();
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
-        }).subscribeOn(Schedulers.io());
+        }).subscribeOn(Schedulers.computation());
 
         Observable<Object> inventoryAndPaymentCompositeActivityObs =
                 Observable.merge(inventorySequenceActivityObs, paymentGatewaySequenceActivityObs);
