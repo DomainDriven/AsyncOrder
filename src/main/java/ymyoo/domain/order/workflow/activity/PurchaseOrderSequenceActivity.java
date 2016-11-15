@@ -1,13 +1,9 @@
 package ymyoo.domain.order.workflow.activity;
 
 import ymyoo.domain.order.Order;
-import ymyoo.domain.order.event.OrderCompleted;
 import ymyoo.domain.payment.ApprovalOrderPayment;
 import ymyoo.domain.purchaseorder.PurchaseOrder;
-import ymyoo.infra.messaging.EventPublisher;
 import ymyoo.util.PrettySystemOut;
-
-import java.util.function.BiFunction;
 
 /**
  * Created by 유영모 on 2016-10-20.
