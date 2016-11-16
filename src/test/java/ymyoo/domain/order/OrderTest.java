@@ -8,6 +8,7 @@ import ymyoo.domain.order.event.OrderCompleted;
 import ymyoo.domain.order.event.OrderFailed;
 import ymyoo.infra.messaging.EventPublisher;
 import ymyoo.infra.messaging.EventSubscriber;
+import ymyoo.infra.messaging.queue.Replier;
 
 /**
  * Created by 유영모 on 2016-10-07.
@@ -32,6 +33,9 @@ public class OrderTest {
      */
     @Test
     public void testPlaceOrder() throws Exception {
+        Thread r = new Thread(new Replier());
+        r.start();
+
         // Given
         Order order = OrderFactory.create(new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
 
@@ -74,6 +78,9 @@ public class OrderTest {
 
     @Test
     public void testPlaceOrder_예외_재고_없음() throws Exception {
+        Thread r = new Thread(new Replier());
+        r.start();
+
         // Given
         Order order = OrderFactory.create(new OrderItem("P0002", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
 
@@ -118,6 +125,9 @@ public class OrderTest {
 
     @Test
     public void testPlaceOrder_자사배송상품() throws Exception {
+        Thread r = new Thread(new Replier());
+        r.start();
+
         // Given
         Order order = OrderFactory.create(new OrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
                 new OrderPayment(2000, "123-456-0789"));

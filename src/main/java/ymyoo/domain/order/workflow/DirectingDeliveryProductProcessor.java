@@ -35,7 +35,7 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
          */
         // 재고 확인/예약 작업
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
-                    SequenceActivity<Void> activity = new InventorySequenceActivity(order, new DirectingInventory());
+                    SequenceActivity<Void> activity = new InventorySequenceActivity(order);
                     activity.perform();
                     subscriber.onCompleted();
                 }

@@ -1,13 +1,22 @@
 package ymyoo.infra.messaging.queue;
 
-import ymyoo.infra.messaging.queue.impl.RequestBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by 유영모 on 2016-11-15.
  */
 public class MessageProducer {
+    private BlockingQueue<Message> destination;
+
+    public MessageProducer(BlockingQueue<Message> destination) {
+        this.destination = destination;
+    }
 
     public void send(Message msg) {
-        RequestBlockingQueue.getInstance().put(msg);
+        try {
+            destination.put(msg);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -8,6 +8,13 @@ public class Message {
     private MessageType type;
     private Object objectProperty;
 
+    public Message() {
+    }
+
+    public Message(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
