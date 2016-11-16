@@ -3,7 +3,7 @@ package ymyoo.order.domain.workflow.activity;
 import ymyoo.order.domain.Order;
 import ymyoo.payment.ApprovalOrderPayment;
 import ymyoo.order.domain.po.PurchaseOrder;
-import ymyoo.order.util.PrettySystemOut;
+import ymyoo.order.utility.PrettySystemOut;
 
 /**
  * Created by 유영모 on 2016-10-20.

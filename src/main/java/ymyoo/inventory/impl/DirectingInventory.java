@@ -2,7 +2,7 @@ package ymyoo.inventory.impl;
 
 import ymyoo.order.domain.OrderItem;
 import ymyoo.inventory.Inventory;
-import ymyoo.order.util.PrettySystemOut;
+import ymyoo.order.utility.PrettySystemOut;
 
 /**
  * 자사 배송 상품 재고 구현체

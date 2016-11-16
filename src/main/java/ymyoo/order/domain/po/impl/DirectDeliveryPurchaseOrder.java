@@ -3,7 +3,7 @@ package ymyoo.order.domain.po.impl;
 import ymyoo.order.domain.Order;
 import ymyoo.payment.ApprovalOrderPayment;
 import ymyoo.order.domain.po.PurchaseOrder;
-import ymyoo.order.util.PrettySystemOut;
+import ymyoo.order.utility.PrettySystemOut;
 
 /**
  * 자사 배송 상품 구매 주문

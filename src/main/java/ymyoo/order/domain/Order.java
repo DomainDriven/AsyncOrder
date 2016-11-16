@@ -2,7 +2,7 @@ package ymyoo.order.domain;
 
 import ymyoo.order.domain.workflow.OrderProcessor;
 import ymyoo.order.domain.workflow.OrderProcessorFactory;
-import ymyoo.order.util.PrettySystemOut;
+import ymyoo.order.utility.PrettySystemOut;
 
 /**
  * Created by 유영모 on 2016-10-07.

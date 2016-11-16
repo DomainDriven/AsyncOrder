@@ -1,7 +1,7 @@
 package ymyoo.payment;
 
 import ymyoo.order.domain.OrderPayment;
-import ymyoo.order.util.PrettySystemOut;
+import ymyoo.order.utility.PrettySystemOut;
 
 /**
  * 결제

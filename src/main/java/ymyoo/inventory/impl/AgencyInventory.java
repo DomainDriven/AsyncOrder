@@ -3,7 +3,7 @@ package ymyoo.inventory.impl;
 import ymyoo.order.domain.OrderItem;
 import ymyoo.inventory.Inventory;
 import ymyoo.inventory.exception.StockOutException;
-import ymyoo.order.util.PrettySystemOut;
+import ymyoo.order.utility.PrettySystemOut;
 
 /**
  * 배송 대행 상품 재고 구현체

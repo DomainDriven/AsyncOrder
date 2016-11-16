@@ -1,4 +1,4 @@
-package ymyoo.order.util;
+package ymyoo.order.utility;
 
 /**
  * Created by 유영모 on 2016-10-11.
