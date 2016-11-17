@@ -1,9 +1,9 @@
 package ymyoo.order.adapter;
 
 import ymyoo.order.domain.OrderItem;
-import ymyoo.infra.messaging.queue.Message;
-import ymyoo.infra.messaging.queue.MessageType;
-import ymyoo.infra.messaging.queue.Requester;
+import ymyoo.infra.messaging.remote.queue.Message;
+import ymyoo.infra.messaging.remote.queue.MessageType;
+import ymyoo.infra.messaging.remote.queue.Requester;
 
 /**
  * Inventory와 인터렉션을 담당하는 어뎁터

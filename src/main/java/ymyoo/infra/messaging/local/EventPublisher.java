@@ -1,4 +1,4 @@
-package ymyoo.infra.messaging;
+package ymyoo.infra.messaging.local;
 
 import ymyoo.order.domain.event.OrderEvent;
 

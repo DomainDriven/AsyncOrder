@@ -1,4 +1,4 @@
-package ymyoo.infra.messaging;
+package ymyoo.infra.messaging.local;
 
 /**
  * 이벤트 구독자

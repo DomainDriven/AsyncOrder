@@ -1,9 +1,9 @@
-package ymyoo.infra.messaging.queue;
+package ymyoo.infra.messaging.remote.queue;
 
 import ymyoo.inventory.InventoryService;
 import ymyoo.order.domain.OrderItem;
-import ymyoo.infra.messaging.queue.blockingqueue.ReplyBlockingQueue;
-import ymyoo.infra.messaging.queue.blockingqueue.RequestBlockingQueue;
+import ymyoo.infra.messaging.remote.queue.blockingqueue.ReplyBlockingQueue;
+import ymyoo.infra.messaging.remote.queue.blockingqueue.RequestBlockingQueue;
 
 import java.util.concurrent.BlockingQueue;
 

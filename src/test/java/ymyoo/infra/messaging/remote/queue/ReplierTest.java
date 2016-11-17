@@ -1,4 +1,4 @@
-package ymyoo.infra.messaging.queue;
+package ymyoo.infra.messaging.remote.queue;
 
 import org.junit.Assert;
 import org.junit.Test;

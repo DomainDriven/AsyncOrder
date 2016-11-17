@@ -14,7 +14,7 @@ import ymyoo.order.domain.workflow.activity.SequenceActivity;
 import ymyoo.payment.ApprovalOrderPayment;
 import ymyoo.order.domain.po.impl.DefaultPurchaseOrder;
 import ymyoo.order.domain.po.impl.DirectDeliveryPurchaseOrder;
-import ymyoo.infra.messaging.EventPublisher;
+import ymyoo.infra.messaging.local.EventPublisher;
 import ymyoo.order.utility.PrettySystemOut;
 
 /**
