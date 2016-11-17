@@ -6,6 +6,8 @@ import ymyoo.order.infra.messaging.queue.MessageType;
 import ymyoo.order.infra.messaging.queue.Requester;
 
 /**
+ * Inventory와 인터렉션을 담당하는 어뎁터
+ *
  * Created by 유영모 on 2016-11-17.
  */
 public class InventoryAdapter {

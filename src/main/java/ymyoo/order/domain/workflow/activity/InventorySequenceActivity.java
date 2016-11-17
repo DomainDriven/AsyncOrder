@@ -18,6 +18,7 @@ public class InventorySequenceActivity implements  SequenceActivity<Void> {
 
     @Override
     public Void perform() {
+        // 외부 인터렉션은 어뎁터를 사용
         InventoryAdapter adapter = new InventoryAdapter();
         adapter.checkAndReserveOrderItem(order.getOrderId(), order.getOrderItem());
 
