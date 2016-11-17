@@ -17,19 +17,15 @@ public class ReplierTest {
 
         Order order = OrderFactory.create(new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
 
-        Message sendMessage = new Message();
         String orderId = OrderIdGenerator.generate();
-        sendMessage.setId(orderId);
-        sendMessage.setType(MessageType.CHECK_INVENTOY);
-        sendMessage.setObjectProperty(order.getOrderItem());
+        RequestMessage requestMessage = new RequestMessage(orderId, order.getOrderItem(), RequestMessage.MessageType.CHECK_INVENTOY);
 
         // when
         Requester requester = new Requester();
-        requester.send(sendMessage);
-
+        requester.send(requestMessage);
 
         // then
-        Message receivedMessage = requester.receive(orderId);
-        Assert.assertEquals(sendMessage.getId(), receivedMessage.getId());
+        ReplyMessage replyMessage = requester.receive(orderId);
+        Assert.assertEquals(ReplyMessage.ReplyMessageStatus.SUCCESS, replyMessage.getStatus());
     }
 }

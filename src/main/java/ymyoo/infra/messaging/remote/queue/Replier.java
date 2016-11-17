@@ -17,13 +17,13 @@ public class Replier implements Runnable {
         while(true) {
             try {
                 Thread.sleep(1000);
-                Message msg = queue.take();
-                if(msg.getType() == MessageType.CHECK_INVENTOY) {
+                RequestMessage msg = (RequestMessage) queue.take();
+                if(msg.getType() == RequestMessage.MessageType.CHECK_INVENTOY) {
                     InventoryService inventoryService = new InventoryService();
-                    inventoryService.checkAndReserve((OrderItem)msg.getObjectProperty());
+                    inventoryService.checkAndReserve((OrderItem)msg.getBody());
 
                     MessageProducer messageProducer = new MessageProducer(ReplyBlockingQueue.getBlockingQueue());
-                    Message replyMsg = new Message(msg.getId());
+                    ReplyMessage replyMsg = new ReplyMessage(msg.getId(), null, ReplyMessage.ReplyMessageStatus.SUCCESS);
                     messageProducer.send(replyMsg);
                 }
             } catch (InterruptedException e) {

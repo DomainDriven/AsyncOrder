@@ -17,44 +17,32 @@ public class RequesterTest {
     public void testSend() throws InterruptedException {
         // given
         Order order = OrderFactory.create(new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
-
-        Message sendMessage = new Message();
         String orderId = OrderIdGenerator.generate();
-        sendMessage.setId(orderId);
-        sendMessage.setType(MessageType.CHECK_INVENTOY);
-        sendMessage.setObjectProperty(order.getOrderItem());
+
+        RequestMessage requestMessage = new RequestMessage(orderId, order.getOrderItem(), RequestMessage.MessageType.CHECK_INVENTOY);
 
         // when
         Requester requester = new Requester();
-        requester.send(sendMessage);
+        requester.send(requestMessage);
 
         // then
         BlockingQueue<Message> queue = RequestBlockingQueue.getBlockingQueue();
-        Message retrievedMessage = queue.take();
+        RequestMessage actual = (RequestMessage)queue.take();
 
-        Assert.assertEquals(sendMessage, retrievedMessage);
+        Assert.assertEquals(requestMessage, actual);
     }
 
     @Test
     public void testReceive() throws InterruptedException {
         // given
-        Order order = OrderFactory.create(new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
-
-        Message sendMessage = new Message();
         String orderId = OrderIdGenerator.generate();
-        sendMessage.setId(orderId);
-        sendMessage.setType(MessageType.CHECK_INVENTOY);
-        sendMessage.setObjectProperty(order.getOrderItem());
+        ReplyBlockingQueue.getBlockingQueue().add(new ReplyMessage(orderId, null, ReplyMessage.ReplyMessageStatus.SUCCESS));
 
         // when
         Requester requester = new Requester();
-        requester.send(sendMessage);
-
-        ReplyBlockingQueue.getBlockingQueue().put(new Message(orderId));
-
-        Message receivedMessage = requester.receive(orderId);
+        ReplyMessage receivedRequestMessage = requester.receive(orderId);
 
         // then
-        Assert.assertEquals(sendMessage.getId(), receivedMessage.getId());
+        Assert.assertEquals(ReplyMessage.ReplyMessageStatus.SUCCESS, receivedRequestMessage.getStatus());
     }
 }

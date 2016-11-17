@@ -1,8 +1,8 @@
 package ymyoo.order.adapter;
 
+import ymyoo.infra.messaging.remote.queue.ReplyMessage;
 import ymyoo.order.domain.OrderItem;
-import ymyoo.infra.messaging.remote.queue.Message;
-import ymyoo.infra.messaging.remote.queue.MessageType;
+import ymyoo.infra.messaging.remote.queue.RequestMessage;
 import ymyoo.infra.messaging.remote.queue.Requester;
 
 /**
@@ -12,16 +12,13 @@ import ymyoo.infra.messaging.remote.queue.Requester;
  */
 public class InventoryAdapter {
     public void checkAndReserveOrderItem(final String orderId, final OrderItem orderItem) {
-        Message sendMessage = new Message();
-        sendMessage.setId(orderId);
-        sendMessage.setType(MessageType.CHECK_INVENTOY);
-        sendMessage.setObjectProperty(orderItem);
+        RequestMessage requestMessage = new RequestMessage(orderId, orderItem, RequestMessage.MessageType.CHECK_INVENTOY);
 
         Requester requester = new Requester();
-        requester.send(sendMessage);
-        Message receivedMessage = requester.receive(orderId);
+        requester.send(requestMessage);
+        ReplyMessage replyMessage = requester.receive(orderId);
 
-        if(receivedMessage == null) {
+        if(replyMessage.getStatus() == ReplyMessage.ReplyMessageStatus.FAILURE) {
             throw new RuntimeException("재고 오류");
         }
     }

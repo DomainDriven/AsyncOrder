@@ -12,12 +12,12 @@ public class MessageConsumer {
         this.destination = destination;
     }
 
-    public Message receive(String messageId) {
+    public ReplyMessage receive(String messageId) {
         while(true) {
             try {
                 Thread.sleep(1000);
-                Message msg = destination.take();
-                if(messageId.isEmpty() || msg.getId().equals(messageId)) {
+                ReplyMessage msg = (ReplyMessage)destination.take();
+                if(msg.getId().equals(messageId)) {
                     return msg;
                 } else {
                     destination.add(msg);

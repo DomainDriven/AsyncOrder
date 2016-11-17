@@ -8,12 +8,12 @@ import ymyoo.infra.messaging.remote.queue.blockingqueue.RequestBlockingQueue;
  */
 public class Requester {
 
-    public void send(Message sendMessage) {
+    public void send(RequestMessage sendRequestMessage) {
         MessageProducer messageProducer = new MessageProducer(RequestBlockingQueue.getBlockingQueue());
-        messageProducer.send(sendMessage);
+        messageProducer.send(sendRequestMessage);
     }
 
-    public Message receive(String msgId) {
+    public ReplyMessage receive(String msgId) {
         MessageConsumer consumer = new MessageConsumer(ReplyBlockingQueue.getBlockingQueue());
         return consumer.receive(msgId);
     }
