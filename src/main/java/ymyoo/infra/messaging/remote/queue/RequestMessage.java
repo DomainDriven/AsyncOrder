@@ -5,7 +5,7 @@ package ymyoo.infra.messaging.remote.queue;
  */
 public class RequestMessage  extends Message {
     public enum MessageType {
-        CHECK_INVENTOY
+        CHECK_INVENTOY, AUTH_APV_PAYMENT
     }
 
     private MessageType type;

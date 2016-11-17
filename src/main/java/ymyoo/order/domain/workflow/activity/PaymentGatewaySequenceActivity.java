@@ -1,5 +1,6 @@
 package ymyoo.order.domain.workflow.activity;
 
+import ymyoo.order.adapter.PaymentGatewayAdapter;
 import ymyoo.order.domain.Order;
 import ymyoo.payment.ApprovalOrderPayment;
 import ymyoo.payment.PaymentGateway;
@@ -18,10 +19,7 @@ public class PaymentGatewaySequenceActivity implements SequenceActivity<Approval
 
     @Override
     public ApprovalOrderPayment perform() {
-        PaymentGateway paymentGateway = new PaymentGateway();
-        paymentGateway.authenticate(this.order.getOrderPayment());
-        ApprovalOrderPayment approvalOrderPayment = paymentGateway.approve(this.order.getOrderPayment());
-
-        return approvalOrderPayment;
+        PaymentGatewayAdapter adapter = new PaymentGatewayAdapter();
+        return adapter.authenticateAndApproval(order.getOrderId(), order.getOrderPayment());
     }
 }
