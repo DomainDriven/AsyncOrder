@@ -4,12 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import ymyoo.order.domain.*;
 import ymyoo.order.domain.event.OrderCompleted;
 import ymyoo.order.domain.event.OrderFailed;
-import ymyoo.order.infra.messaging.EventPublisher;
-import ymyoo.order.infra.messaging.EventSubscriber;
-import ymyoo.order.infra.messaging.queue.Replier;
+import ymyoo.infra.messaging.EventPublisher;
+import ymyoo.infra.messaging.EventSubscriber;
+import ymyoo.infra.messaging.queue.Replier;
 
 /**
  * Created by 유영모 on 2016-10-07.

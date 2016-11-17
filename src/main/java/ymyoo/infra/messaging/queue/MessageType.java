@@ -1,4 +1,4 @@
-package ymyoo.order.infra.messaging.queue;
+package ymyoo.infra.messaging.queue;
 
 /**
  * Created by 유영모 on 2016-11-15.

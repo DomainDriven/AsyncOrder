@@ -1,10 +1,10 @@
-package ymyoo.order.infra.messaging.queue;
+package ymyoo.infra.messaging.queue;
 
 import org.junit.Assert;
 import org.junit.Test;
 import ymyoo.order.domain.*;
-import ymyoo.order.infra.messaging.queue.blockingqueue.ReplyBlockingQueue;
-import ymyoo.order.infra.messaging.queue.blockingqueue.RequestBlockingQueue;
+import ymyoo.infra.messaging.queue.blockingqueue.ReplyBlockingQueue;
+import ymyoo.infra.messaging.queue.blockingqueue.RequestBlockingQueue;
 
 import java.util.concurrent.BlockingQueue;
 

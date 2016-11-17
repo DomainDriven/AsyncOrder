@@ -1,4 +1,4 @@
-package ymyoo.order.infra.messaging.queue;
+package ymyoo.infra.messaging.queue;
 
 import java.util.concurrent.BlockingQueue;
 
