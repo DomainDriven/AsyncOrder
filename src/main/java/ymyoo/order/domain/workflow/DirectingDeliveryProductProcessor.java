@@ -3,14 +3,17 @@ package ymyoo.order.domain.workflow;
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
+import ymyoo.infra.messaging.remote.queue.ReplyMessage;
 import ymyoo.inventory.exception.StockOutException;
+import ymyoo.order.adapter.InventoryChannelAdapter;
+import ymyoo.order.adapter.PaymentGatewayChannelAdapter;
 import ymyoo.order.domain.Order;
 import ymyoo.order.domain.event.OrderCompleted;
 import ymyoo.order.domain.event.OrderFailed;
-import ymyoo.order.domain.workflow.activity.InventorySequenceActivity;
-import ymyoo.order.domain.workflow.activity.PaymentGatewaySequenceActivity;
-import ymyoo.order.domain.workflow.activity.PurchaseOrderSequenceActivity;
-import ymyoo.order.domain.workflow.activity.SequenceActivity;
+import ymyoo.order.domain.workflow.activity.impl.InventoryAsyncActivity;
+import ymyoo.order.domain.workflow.activity.impl.PaymentGatewayAsyncActivity;
+import ymyoo.order.domain.workflow.activity.impl.PurchaseOrderSyncActivity;
+import ymyoo.order.domain.workflow.activity.SyncActivity;
 import ymyoo.payment.ApprovalOrderPayment;
 import ymyoo.order.domain.po.impl.DefaultPurchaseOrder;
 import ymyoo.order.domain.po.impl.DirectDeliveryPurchaseOrder;
@@ -34,19 +37,33 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
          */
         // 재고 확인/예약 작업
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
-                    SequenceActivity<Void> activity = new InventorySequenceActivity(order);
+                    InventoryAsyncActivity activity = new InventoryAsyncActivity(order);
                     activity.perform();
+                    subscriber.onNext(activity);
                     subscriber.onCompleted();
                 }
-        ).subscribeOn(Schedulers.computation());
+        ).flatMap(activity -> Observable.create((subscriber) -> {
+            InventoryChannelAdapter channelAdapter = new InventoryChannelAdapter();
+            ReplyMessage replyMessage = channelAdapter.listen(order.getOrderId());
+            ((InventoryAsyncActivity)activity).callback(replyMessage);
+
+            subscriber.onCompleted();
+        })).subscribeOn(Schedulers.computation());
 
         // 결제 인증/승인 작업
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
-            SequenceActivity<ApprovalOrderPayment> activity = new PaymentGatewaySequenceActivity(order);
-            ApprovalOrderPayment approvalOrderPayment = activity.perform();
+            PaymentGatewayAsyncActivity activity = new PaymentGatewayAsyncActivity(order);
+            activity.perform();
+            subscriber.onNext(activity);
+            subscriber.onCompleted();
+        }).flatMap(activity -> Observable.create(subscriber -> {
+            PaymentGatewayChannelAdapter channelAdapter = new PaymentGatewayChannelAdapter();
+            ReplyMessage replyMessage = channelAdapter.listen(order.getOrderId());
+            ApprovalOrderPayment approvalOrderPayment = ((PaymentGatewayAsyncActivity) activity).callback(replyMessage);
+
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
-        }).subscribeOn(Schedulers.computation());
+        })).subscribeOn(Schedulers.computation());
 
         Observable<Object> inventoryAndPaymentCompositeActivityObs =
                 Observable.merge(inventorySequenceActivityObs, paymentGatewaySequenceActivityObs);
@@ -57,7 +74,7 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
             @Override
             public void onCompleted() {
                 // 구매 주문 생성 작업
-                SequenceActivity<Void> activity = new PurchaseOrderSequenceActivity(
+                SyncActivity<Void> activity = new PurchaseOrderSyncActivity(
                         order, new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder()), approvalOrderPayment);
                 activity.perform();
 

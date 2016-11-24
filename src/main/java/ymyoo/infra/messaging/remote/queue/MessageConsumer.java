@@ -16,11 +16,13 @@ public class MessageConsumer {
         while(true) {
             try {
                 Thread.sleep(1000);
-                ReplyMessage msg = (ReplyMessage)destination.take();
-                if(msg.getId().equals(messageId)) {
-                    return msg;
-                } else {
-                    destination.add(msg);
+                while(!Thread.currentThread().isInterrupted()) {
+                    ReplyMessage msg = (ReplyMessage)destination.take();
+                    if(msg.getId().equals(messageId)) {
+                        return msg;
+                    } else {
+                        destination.add(msg);
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
