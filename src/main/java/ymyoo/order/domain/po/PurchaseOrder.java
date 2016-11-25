@@ -1,7 +1,7 @@
 package ymyoo.order.domain.po;
 
+import ymyoo.order.domain.ApprovalOrderPayment;
 import ymyoo.order.domain.Order;
-import ymyoo.payment.ApprovalOrderPayment;
 
 /**
  * 구매 주문 인터페이스

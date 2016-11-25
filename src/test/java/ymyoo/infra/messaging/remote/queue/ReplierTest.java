@@ -2,7 +2,12 @@ package ymyoo.infra.messaging.remote.queue;
 
 import org.junit.Assert;
 import org.junit.Test;
+import ymyoo.infra.messaging.remote.queue.message.Message;
+import ymyoo.infra.messaging.remote.queue.message.MessageHead;
 import ymyoo.order.domain.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by 유영모 on 2016-11-16.
@@ -15,17 +20,19 @@ public class ReplierTest {
         Thread r = new Thread(new Replier());
         r.start();
 
-        Order order = OrderFactory.create(new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
-
         String orderId = OrderIdGenerator.generate();
-        RequestMessage requestMessage = new RequestMessage(orderId, order.getOrderItem(), RequestMessage.MessageType.CHECK_INVENTOY);
+        MessageHead messageHead = new MessageHead(orderId, MessageHead.MessageType.CHECK_INVENTOY);
+        Map<String, String> messageBody = new HashMap<>();
+        messageBody.put("deliveryType", "aaaa");
+        messageBody.put("proudctId", "11111");
+        messageBody.put("orderQty", "1");
 
         // when
         Requester requester = new Requester();
-        requester.send(requestMessage);
+        requester.send(new Message(messageHead, messageBody));
 
         // then
-        ReplyMessage replyMessage = requester.receive(orderId);
-        Assert.assertEquals(ReplyMessage.ReplyMessageStatus.SUCCESS, replyMessage.getStatus());
+        Message receivedMessage = requester.receive(orderId);
+        Assert.assertEquals("SUCCESS", receivedMessage.getBody().get("validation"));
     }
 }

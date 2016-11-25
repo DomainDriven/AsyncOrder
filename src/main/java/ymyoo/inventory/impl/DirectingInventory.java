@@ -1,8 +1,8 @@
 package ymyoo.inventory.impl;
 
-import ymyoo.order.domain.OrderItem;
 import ymyoo.inventory.Inventory;
-import ymyoo.order.utility.PrettySystemOut;
+import ymyoo.inventory.TakingOrderItem;
+import ymyoo.utility.PrettySystemOut;
 
 /**
  * 자사 배송 상품 재고 구현체
@@ -10,22 +10,22 @@ import ymyoo.order.utility.PrettySystemOut;
  * Created by 유영모 on 2016-10-19.
  */
 public class DirectingInventory implements Inventory {
-
     @Override
-    public void check(OrderItem product) {
+    public void check(TakingOrderItem item) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        PrettySystemOut.println(this.getClass(), "재고 확인-" + "상품 번호" + product.getProductId());
+        PrettySystemOut.println(this.getClass(), "재고 확인-" + "상품 번호" + item.getProductId());
     }
 
     @Override
-    public void reserve(OrderItem product) {
+    public void reserve(TakingOrderItem item) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        PrettySystemOut.println(this.getClass(), "재고 확보-" + "상품 번호" + product.getProductId());
+        PrettySystemOut.println(this.getClass(), "재고 확보-" + "상품 번호" + item.getProductId());
     }
 
     @Override
-    public void reduction(OrderItem product) {
+    public void reduction(TakingOrderItem item) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
-        PrettySystemOut.println(this.getClass(), "재고 차감-" + "상품 번호" + product.getProductId() + ", 수량 : " + product.getOrderQty());
+        PrettySystemOut.println(this.getClass(), "재고 차감-" + "상품 번호" + item.getProductId() + ", 수량 : " + item.getOrderQty());
     }
+
 }

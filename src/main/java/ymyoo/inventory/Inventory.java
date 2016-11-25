@@ -1,7 +1,5 @@
 package ymyoo.inventory;
 
-import ymyoo.order.domain.OrderItem;
-
 /**
  * 상품 재고 인터페이스
  *
@@ -10,20 +8,20 @@ import ymyoo.order.domain.OrderItem;
 public interface Inventory {
     /**
      * 상품 재고 확인
-     * @param product
+     * @param item
      * @return
      */
-    void check(OrderItem product);
+    void check(TakingOrderItem item);
 
     /**
      * 상품 재고 확보
-     * @param product
+     * @param item
      */
-    void reserve(OrderItem product);
+    void reserve(TakingOrderItem item);
 
     /**
      * 재고 차감
-     * @param product
+     * @param item
      */
-    void reduction(OrderItem product);
+    void reduction(TakingOrderItem item);
 }

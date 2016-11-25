@@ -2,10 +2,14 @@ package ymyoo.infra.messaging.remote.queue;
 
 import org.junit.Assert;
 import org.junit.Test;
+import ymyoo.infra.messaging.remote.queue.message.Message;
+import ymyoo.infra.messaging.remote.queue.message.MessageHead;
 import ymyoo.order.domain.*;
 import ymyoo.infra.messaging.remote.queue.blockingqueue.ReplyBlockingQueue;
 import ymyoo.infra.messaging.remote.queue.blockingqueue.RequestBlockingQueue;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -16,18 +20,20 @@ public class RequesterTest {
     @Test
     public void testSend() throws InterruptedException {
         // given
-        Order order = OrderFactory.create(new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
         String orderId = OrderIdGenerator.generate();
 
-        RequestMessage requestMessage = new RequestMessage(orderId, order.getOrderItem(), RequestMessage.MessageType.CHECK_INVENTOY);
+        MessageHead head = new MessageHead(orderId, MessageHead.MessageType.CHECK_INVENTOY);
+        Map<String, String> messageBody = new HashMap<>();
+        messageBody.put("test", "test");
 
         // when
         Requester requester = new Requester();
+        Message requestMessage = new Message(head, messageBody);
         requester.send(requestMessage);
 
         // then
         BlockingQueue<Message> queue = RequestBlockingQueue.getBlockingQueue();
-        RequestMessage actual = (RequestMessage)queue.take();
+        Message actual = queue.take();
 
         Assert.assertEquals(requestMessage, actual);
     }
@@ -36,13 +42,18 @@ public class RequesterTest {
     public void testReceive() throws InterruptedException {
         // given
         String orderId = OrderIdGenerator.generate();
-        ReplyBlockingQueue.getBlockingQueue().add(new ReplyMessage(orderId, null, ReplyMessage.ReplyMessageStatus.SUCCESS));
+
+        MessageHead head = new MessageHead(orderId, MessageHead.MessageType.CHECK_INVENTOY);
+        Map<String, String> messageBody = new HashMap<>();
+        messageBody.put("test", "test");
+
+        ReplyBlockingQueue.getBlockingQueue().add(new Message(head, messageBody));
 
         // when
         Requester requester = new Requester();
-        ReplyMessage receivedRequestMessage = requester.receive(orderId);
+        Message receivedMessage = requester.receive(orderId);
 
         // then
-        Assert.assertEquals(ReplyMessage.ReplyMessageStatus.SUCCESS, receivedRequestMessage.getStatus());
+        Assert.assertEquals(receivedMessage.getBody().get("test"), "test");
     }
 }

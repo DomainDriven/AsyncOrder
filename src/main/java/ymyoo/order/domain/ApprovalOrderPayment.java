@@ -1,4 +1,4 @@
-package ymyoo.payment;
+package ymyoo.order.domain;
 
 /**
  * 결제 후 결제사로 부터 반환 받은 승인 정보

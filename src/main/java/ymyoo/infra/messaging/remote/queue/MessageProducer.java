@@ -1,5 +1,7 @@
 package ymyoo.infra.messaging.remote.queue;
 
+import ymyoo.infra.messaging.remote.queue.message.Message;
+
 import java.util.concurrent.BlockingQueue;
 
 /**

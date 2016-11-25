@@ -1,7 +1,7 @@
 package ymyoo.order.domain.po.impl;
 
+import ymyoo.order.domain.ApprovalOrderPayment;
 import ymyoo.order.domain.Order;
-import ymyoo.payment.ApprovalOrderPayment;
 import ymyoo.order.domain.po.PurchaseOrder;
 
 /**

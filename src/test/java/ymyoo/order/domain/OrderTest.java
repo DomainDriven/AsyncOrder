@@ -167,4 +167,9 @@ public class OrderTest {
 
         System.out.println("<Client> 주문 종료...");
     }
+
+    @Test
+    public void test() {
+        System.out.println(OrderItemDeliveryType.DIRECTING);
+    }
 }

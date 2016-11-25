@@ -1,5 +1,7 @@
 package ymyoo.infra.messaging.remote.queue;
 
+import ymyoo.infra.messaging.remote.queue.message.Message;
+
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -12,13 +14,13 @@ public class MessageConsumer {
         this.destination = destination;
     }
 
-    public ReplyMessage receive(String messageId) {
+    public Message receive(String messageId) {
         while(true) {
             try {
                 Thread.sleep(1000);
                 while(!Thread.currentThread().isInterrupted()) {
-                    ReplyMessage msg = (ReplyMessage)destination.take();
-                    if(msg.getId().equals(messageId)) {
+                    Message msg = (Message) destination.take();
+                    if(msg.getHead().getId().equals(messageId)) {
                         return msg;
                     } else {
                         destination.add(msg);
