@@ -17,11 +17,11 @@ import ymyoo.infra.messaging.local.EventPublisher;
 import ymyoo.utility.PrettySystemOut;
 
 /**
- * 배송 대행 상품 프로세서
+ * 배송 대행 상품 프로세스 관리자
  *
  * Created by 유영모 on 2016-10-24.
  */
-public class AgencyDeliveryProductProcessor implements OrderProcessor {
+public class AgencyDeliveryProductProcessManager implements OrderProcessManager {
 
     @Override
     public void runWorkflow(Order order) {

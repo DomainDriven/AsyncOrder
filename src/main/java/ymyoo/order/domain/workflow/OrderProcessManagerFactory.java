@@ -7,13 +7,13 @@ import ymyoo.order.domain.exception.UnSupportedDeliveryTypeException;
 /**
  * Created by 유영모 on 2016-10-26.
  */
-public class OrderProcessorFactory {
+public class OrderProcessManagerFactory {
 
-    public static OrderProcessor create(Order order) {
+    public static OrderProcessManager create(Order order) {
         if(order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.DIRECTING) {
-            return new DirectingDeliveryProductProcessor();
+            return new DirectingDeliveryProductProcessManager();
         } else if(order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.AGENCY) {
-            return new AgencyDeliveryProductProcessor();
+            return new AgencyDeliveryProductProcessManager();
         } else {
             throw new UnSupportedDeliveryTypeException();
         }

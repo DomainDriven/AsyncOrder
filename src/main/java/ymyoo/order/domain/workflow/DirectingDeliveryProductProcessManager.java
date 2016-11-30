@@ -18,11 +18,11 @@ import ymyoo.order.domain.workflow.activity.impl.PurchaseOrderBusinessActivity;
 import ymyoo.utility.PrettySystemOut;
 
 /**
- * 자사 배송 상품 프로세서
+ * 자사 배송 상품 프로세스 관리자
  *
  * Created by 유영모 on 2016-10-24.
  */
-public class DirectingDeliveryProductProcessor implements OrderProcessor {
+public class DirectingDeliveryProductProcessManager implements OrderProcessManager {
 
     @Override
     public void runWorkflow(Order order) {

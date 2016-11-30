@@ -1,7 +1,7 @@
 package ymyoo.order.domain;
 
-import ymyoo.order.domain.workflow.OrderProcessor;
-import ymyoo.order.domain.workflow.OrderProcessorFactory;
+import ymyoo.order.domain.workflow.OrderProcessManager;
+import ymyoo.order.domain.workflow.OrderProcessManagerFactory;
 import ymyoo.utility.PrettySystemOut;
 
 /**
@@ -34,8 +34,8 @@ public class Order {
         this.orderId = OrderIdGenerator.generate();
         PrettySystemOut.println(this.getClass(), "주문 아이디 생성 : " + orderId);
 
-        OrderProcessor orderProcessor = OrderProcessorFactory.create(this);
-        orderProcessor.runWorkflow(this);
+        OrderProcessManager processManager = OrderProcessManagerFactory.create(this);
+        processManager.runWorkflow(this);
         return orderId;
     }
 }
