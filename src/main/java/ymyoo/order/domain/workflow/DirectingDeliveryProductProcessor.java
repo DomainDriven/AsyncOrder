@@ -14,7 +14,7 @@ import ymyoo.order.domain.po.impl.DirectDeliveryPurchaseOrder;
 import ymyoo.order.domain.workflow.activity.BusinessActivity;
 import ymyoo.order.domain.workflow.activity.impl.InventoryBusinessActivity;
 import ymyoo.order.domain.workflow.activity.impl.PaymentGatewayBusinessActivity;
-import ymyoo.order.domain.workflow.activity.impl.PurchaseOrderSyncActivity;
+import ymyoo.order.domain.workflow.activity.impl.PurchaseOrderBusinessActivity;
 import ymyoo.utility.PrettySystemOut;
 
 /**
@@ -37,6 +37,8 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
                     BusinessActivity<Order, Void> activity = new InventoryBusinessActivity();
                     activity.perform(order);
 
+                    PrettySystemOut.println(this.getClass(), "재고 확인/예약 Activity");
+
                     subscriber.onCompleted();
                 }
         ).subscribeOn(Schedulers.computation());
@@ -45,6 +47,8 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
             BusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity();
             ApprovalOrderPayment approvalOrderPayment = activity.perform(order);
+
+            PrettySystemOut.println(this.getClass(), "결제 인증/승인 Activity");
 
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
@@ -56,14 +60,18 @@ public class DirectingDeliveryProductProcessor implements OrderProcessor {
         inventoryAndPaymentCompositeActivityObs.concatMap(approvalOrderPayment -> Observable.create(subscriber -> {
             // 구매 주문 생성 작업
             BusinessActivity<ApprovalOrderPayment, Void> activity =
-                    new PurchaseOrderSyncActivity(order, new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder()));
+                    new PurchaseOrderBusinessActivity(order, new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder()));
             activity.perform((ApprovalOrderPayment) approvalOrderPayment);
+
+            PrettySystemOut.println(this.getClass(), "구매 주문 생성 Activity");
 
             subscriber.onCompleted();
 
         })).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
+                PrettySystemOut.println(this.getClass(), "주문 성공 Subscriber");
+
                 // 주문 성공 이벤트 게시
                 EventPublisher.instance().publish(new OrderCompleted(order.getOrderId()));
             }

@@ -10,11 +10,11 @@ import ymyoo.utility.PrettySystemOut;
 /**
  * Created by 유영모 on 2016-10-20.
  */
-public class PurchaseOrderSyncActivity implements BusinessActivity<ApprovalOrderPayment, Void> {
+public class PurchaseOrderBusinessActivity implements BusinessActivity<ApprovalOrderPayment, Void> {
     private Order order;
     private PurchaseOrder purchaseOrder;
 
-    public PurchaseOrderSyncActivity(Order order, PurchaseOrder purchaseOrder) {
+    public PurchaseOrderBusinessActivity(Order order, PurchaseOrder purchaseOrder) {
         this.order = order;
         this.purchaseOrder = purchaseOrder;
     }

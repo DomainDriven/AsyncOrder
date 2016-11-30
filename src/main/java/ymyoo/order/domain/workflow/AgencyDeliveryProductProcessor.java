@@ -5,17 +5,13 @@ import rx.Subscriber;
 import rx.schedulers.Schedulers;
 import ymyoo.inventory.exception.StockOutException;
 import ymyoo.order.domain.ApprovalOrderPayment;
-import ymyoo.order.domain.po.impl.DirectDeliveryPurchaseOrder;
 import ymyoo.order.domain.workflow.activity.BusinessActivity;
-import ymyoo.order.message.endpoint.InventoryChannelAdapter;
-import ymyoo.order.message.endpoint.PaymentGatewayChannelAdapter;
 import ymyoo.order.domain.Order;
 import ymyoo.order.domain.event.OrderCompleted;
 import ymyoo.order.domain.event.OrderFailed;
 import ymyoo.order.domain.workflow.activity.impl.InventoryBusinessActivity;
 import ymyoo.order.domain.workflow.activity.impl.PaymentGatewayBusinessActivity;
-import ymyoo.order.domain.workflow.activity.impl.PurchaseOrderSyncActivity;
-import ymyoo.payment.ApprovalPayment;
+import ymyoo.order.domain.workflow.activity.impl.PurchaseOrderBusinessActivity;
 import ymyoo.order.domain.po.impl.DefaultPurchaseOrder;
 import ymyoo.infra.messaging.local.EventPublisher;
 import ymyoo.utility.PrettySystemOut;
@@ -59,7 +55,7 @@ public class AgencyDeliveryProductProcessor implements OrderProcessor {
         inventoryAndPaymentCompositeActivityObs.concatMap(approvalOrderPayment -> Observable.create(subscriber -> {
             // 구매 주문 생성 작업
             BusinessActivity<ApprovalOrderPayment, Void> activity =
-                    new PurchaseOrderSyncActivity(order, new DefaultPurchaseOrder());
+                    new PurchaseOrderBusinessActivity(order, new DefaultPurchaseOrder());
             activity.perform((ApprovalOrderPayment) approvalOrderPayment);
 
             subscriber.onCompleted();

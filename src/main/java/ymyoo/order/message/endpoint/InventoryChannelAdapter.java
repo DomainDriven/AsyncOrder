@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Inventory와 인터렉션을 담당하는 어뎁터
+ * 재고 채널 어뎁터
  *
  * Created by 유영모 on 2016-11-17.
  */
@@ -21,7 +21,7 @@ public class InventoryChannelAdapter {
         MessageHead messageHead = new MessageHead(orderId, MessageHead.MessageType.CHECK_INVENTOY);
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("deliveryType", orderItem.getDeliveryType().name());
-        messageBody.put("proudctId", orderItem.getProductId());
+        messageBody.put("productId", orderItem.getProductId());
         messageBody.put("orderQty", String.valueOf(orderItem.getOrderQty()));
         requester.send(new Message(messageHead, messageBody));
 
@@ -32,7 +32,7 @@ public class InventoryChannelAdapter {
 
     static class MessageTranslator {
         public static boolean translate(Message message) {
-            if(message.getBody().get("validation") == "SUCCESS") {
+            if(message.getBody().get("validation").equals("SUCCESS")) {
                 return true;
             } else {
                 return false;

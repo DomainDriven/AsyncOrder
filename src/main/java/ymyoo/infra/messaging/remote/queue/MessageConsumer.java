@@ -15,20 +15,20 @@ public class MessageConsumer {
     }
 
     public Message receive(String messageId) {
-        while(true) {
+        while (!Thread.currentThread().isInterrupted()) {
+            Message msg = null;
             try {
-                Thread.sleep(1000);
-                while(!Thread.currentThread().isInterrupted()) {
-                    Message msg = (Message) destination.take();
-                    if(msg.getHead().getId().equals(messageId)) {
-                        return msg;
-                    } else {
-                        destination.add(msg);
-                    }
-                }
+                msg = destination.take();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            if (msg.getHead().getId().equals(messageId)) {
+                return msg;
+            } else {
+                destination.add(msg);
+            }
         }
+
+        return null;
     }
 }

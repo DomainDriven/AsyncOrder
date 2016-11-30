@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 결제 채널 어뎁터
+ *
  * Created by 유영모 on 2016-11-17.
  */
 public class PaymentGatewayChannelAdapter {
