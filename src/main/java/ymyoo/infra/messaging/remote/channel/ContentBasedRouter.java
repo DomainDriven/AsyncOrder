@@ -1,8 +1,8 @@
-package ymyoo.infra.messaging.remote.queue;
+package ymyoo.infra.messaging.remote.channel;
 
-import ymyoo.infra.messaging.remote.queue.blockingqueue.ReplyBlockingQueue;
-import ymyoo.infra.messaging.remote.queue.message.Message;
-import ymyoo.infra.messaging.remote.queue.message.MessageHead;
+import ymyoo.infra.messaging.remote.channel.blockingqueue.ReplyBlockingQueue;
+import ymyoo.infra.messaging.remote.channel.message.Message;
+import ymyoo.infra.messaging.remote.channel.message.MessageHead;
 import ymyoo.inventory.InventoryService;
 import ymyoo.inventory.TakingOrderItem;
 import ymyoo.payment.ApprovalPayment;

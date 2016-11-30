@@ -1,8 +1,8 @@
-package ymyoo.infra.messaging.remote.queue;
+package ymyoo.infra.messaging.remote.channel;
 
-import ymyoo.infra.messaging.remote.queue.blockingqueue.ReplyBlockingQueue;
-import ymyoo.infra.messaging.remote.queue.blockingqueue.RequestBlockingQueue;
-import ymyoo.infra.messaging.remote.queue.message.Message;
+import ymyoo.infra.messaging.remote.channel.blockingqueue.ReplyBlockingQueue;
+import ymyoo.infra.messaging.remote.channel.blockingqueue.RequestBlockingQueue;
+import ymyoo.infra.messaging.remote.channel.message.Message;
 
 /**
  * Created by 유영모 on 2016-11-16.

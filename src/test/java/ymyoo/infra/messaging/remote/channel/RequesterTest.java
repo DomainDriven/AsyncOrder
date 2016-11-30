@@ -1,12 +1,12 @@
-package ymyoo.infra.messaging.remote.queue;
+package ymyoo.infra.messaging.remote.channel;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ymyoo.infra.messaging.remote.queue.message.Message;
-import ymyoo.infra.messaging.remote.queue.message.MessageHead;
+import ymyoo.infra.messaging.remote.channel.message.Message;
+import ymyoo.infra.messaging.remote.channel.message.MessageHead;
 import ymyoo.order.domain.*;
-import ymyoo.infra.messaging.remote.queue.blockingqueue.ReplyBlockingQueue;
-import ymyoo.infra.messaging.remote.queue.blockingqueue.RequestBlockingQueue;
+import ymyoo.infra.messaging.remote.channel.blockingqueue.ReplyBlockingQueue;
+import ymyoo.infra.messaging.remote.channel.blockingqueue.RequestBlockingQueue;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,9 @@
-package ymyoo.infra.messaging.remote.queue;
+package ymyoo.infra.messaging.remote.channel;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ymyoo.infra.messaging.remote.queue.message.Message;
-import ymyoo.infra.messaging.remote.queue.message.MessageHead;
+import ymyoo.infra.messaging.remote.channel.message.Message;
+import ymyoo.infra.messaging.remote.channel.message.MessageHead;
 import ymyoo.order.domain.*;
 
 import java.util.HashMap;

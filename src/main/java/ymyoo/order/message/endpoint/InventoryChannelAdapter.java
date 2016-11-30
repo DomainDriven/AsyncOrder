@@ -1,9 +1,9 @@
 package ymyoo.order.message.endpoint;
 
-import ymyoo.infra.messaging.remote.queue.message.Message;
-import ymyoo.infra.messaging.remote.queue.message.MessageHead;
+import ymyoo.infra.messaging.remote.channel.message.Message;
+import ymyoo.infra.messaging.remote.channel.message.MessageHead;
 import ymyoo.order.domain.OrderItem;
-import ymyoo.infra.messaging.remote.queue.Requester;
+import ymyoo.infra.messaging.remote.channel.Requester;
 
 import java.util.HashMap;
 import java.util.Map;

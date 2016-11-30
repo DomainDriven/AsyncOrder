@@ -1,4 +1,4 @@
-package ymyoo.infra.messaging.remote.queue.message;
+package ymyoo.infra.messaging.remote.channel.message;
 
 import java.util.Map;
 

@@ -8,7 +8,7 @@ import ymyoo.order.domain.event.OrderCompleted;
 import ymyoo.order.domain.event.OrderFailed;
 import ymyoo.infra.messaging.local.EventPublisher;
 import ymyoo.infra.messaging.local.EventSubscriber;
-import ymyoo.infra.messaging.remote.queue.Replier;
+import ymyoo.infra.messaging.remote.channel.Replier;
 
 /**
  * Created by 유영모 on 2016-10-07.

@@ -1,6 +1,6 @@
-package ymyoo.infra.messaging.remote.queue.blockingqueue;
+package ymyoo.infra.messaging.remote.channel.blockingqueue;
 
-import ymyoo.infra.messaging.remote.queue.message.Message;
+import ymyoo.infra.messaging.remote.channel.message.Message;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -8,18 +8,18 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Created by 유영모 on 2016-11-15.
  */
-public class ReplyBlockingQueue {
+public class RequestBlockingQueue {
 
-    private static ReplyBlockingQueue self = null;
+    private static RequestBlockingQueue self = null;
 
     private static BlockingQueue<Message> queue = new ArrayBlockingQueue<>(10);
 
-    private ReplyBlockingQueue() {
+    private RequestBlockingQueue() {
     }
 
     public static BlockingQueue<Message> getBlockingQueue() {
         if(self == null) {
-            self =  new ReplyBlockingQueue();
+            self =  new RequestBlockingQueue();
             return self.queue;
         } else {
             return self.queue;
