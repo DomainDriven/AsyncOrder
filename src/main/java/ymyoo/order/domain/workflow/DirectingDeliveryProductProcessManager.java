@@ -37,8 +37,6 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
                     BusinessActivity<Order, Void> activity = new InventoryBusinessActivity();
                     activity.perform(order);
 
-                    PrettySystemOut.println(this.getClass(), "재고 확인/예약 Activity");
-
                     subscriber.onCompleted();
                 }
         ).subscribeOn(Schedulers.computation());
@@ -48,8 +46,6 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
             BusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity();
             ApprovalOrderPayment approvalOrderPayment = activity.perform(order);
 
-            PrettySystemOut.println(this.getClass(), "결제 인증/승인 Activity");
-
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
         }).subscribeOn(Schedulers.computation());
@@ -57,21 +53,16 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
         Observable<Object> inventoryAndPaymentCompositeActivityObs =
                 Observable.merge(inventorySequenceActivityObs, paymentGatewaySequenceActivityObs);
 
-        inventoryAndPaymentCompositeActivityObs.concatMap(approvalOrderPayment -> Observable.create(subscriber -> {
+        inventoryAndPaymentCompositeActivityObs.last().flatMap(approvalOrderPayment -> Observable.create(subscriber -> {
             // 구매 주문 생성 작업
             BusinessActivity<ApprovalOrderPayment, Void> activity =
                     new PurchaseOrderBusinessActivity(order, new DirectDeliveryPurchaseOrder(new DefaultPurchaseOrder()));
             activity.perform((ApprovalOrderPayment) approvalOrderPayment);
 
-            PrettySystemOut.println(this.getClass(), "구매 주문 생성 Activity");
-
             subscriber.onCompleted();
-
         })).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
-                PrettySystemOut.println(this.getClass(), "주문 성공 Subscriber");
-
                 // 주문 성공 이벤트 게시
                 EventPublisher.instance().publish(new OrderCompleted(order.getOrderId()));
             }

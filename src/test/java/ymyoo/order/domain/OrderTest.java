@@ -161,7 +161,7 @@ public class OrderTest {
 
         // 비동기 처리 대기
         synchronized (subscriber) {
-            subscriber.wait(4000);
+            subscriber.wait(5000);
         }
         Assert.assertTrue("이벤트 미 수신", eventAccepted);
 

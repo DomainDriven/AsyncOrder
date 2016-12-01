@@ -1,15 +1,13 @@
 package ymyoo.infra.messaging.remote.channel.message;
 
-import java.util.Map;
-
 /**
  * Created by 유영모 on 2016-11-17.
  */
 public class Message {
     private MessageHead head;
-    private Map<String, String> body;
+    private String body;
 
-    public Message(MessageHead head, Map<String, String> body) {
+    public Message(MessageHead head, String body) {
         this.head = head;
         this.body = body;
     }
@@ -18,7 +16,15 @@ public class Message {
         return head;
     }
 
-    public Map<String, String> getBody() {
+    public String getBody() {
         return body;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "head=" + head +
+                ", body='" + body + '\'' +
+                '}';
     }
 }

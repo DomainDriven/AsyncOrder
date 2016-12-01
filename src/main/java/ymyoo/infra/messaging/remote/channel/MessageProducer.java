@@ -15,10 +15,6 @@ public class MessageProducer {
     }
 
     public void send(Message msg) {
-        try {
-            destination.put(msg);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        destination.add(msg);
     }
 }

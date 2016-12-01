@@ -1,5 +1,6 @@
 package ymyoo.order.message.endpoint;
 
+import com.google.gson.Gson;
 import ymyoo.infra.messaging.remote.channel.Requester;
 import ymyoo.infra.messaging.remote.channel.message.Message;
 import ymyoo.infra.messaging.remote.channel.message.MessageHead;
@@ -19,21 +20,21 @@ public class PaymentGatewayChannelAdapter {
 
     public ApprovalOrderPayment authenticateAndApproval(String orderId, OrderPayment orderPayment) {
         // 메시지 발신
-        MessageHead messageHead = new MessageHead(orderId, MessageHead.MessageType.AUTH_APV_PAYMENT);
+        String messageId = java.util.UUID.randomUUID().toString().toUpperCase();
+        MessageHead messageHead = new MessageHead(messageId, MessageHead.MessageType.AUTH_APV_PAYMENT);
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("creditCardNo", orderPayment.getCreditCardNo());
         messageBody.put("orderAmount", String.valueOf(orderPayment.getOrderAmount()));
-        requester.send(new Message(messageHead, messageBody));
+        requester.send(new Message(messageHead, new Gson().toJson(messageBody)));
 
         // 메시지 수신
-        Message receivedMessage = requester.receive(orderId);
+        Message receivedMessage = requester.receive(messageId);
         return MessageTranslator.translate(receivedMessage);
     }
 
     static class MessageTranslator {
         public static ApprovalOrderPayment translate(Message message) {
-            String tid = message.getBody().get("tid");
-            return new ApprovalOrderPayment(tid);
+            return new Gson().fromJson(message.getBody(), ApprovalOrderPayment.class);
         }
     }
 }

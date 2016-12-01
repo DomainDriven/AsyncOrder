@@ -1,5 +1,6 @@
 package ymyoo.infra.messaging.remote.channel;
 
+import com.google.gson.Gson;
 import ymyoo.infra.messaging.remote.channel.blockingqueue.ReplyBlockingQueue;
 import ymyoo.infra.messaging.remote.channel.message.Message;
 import ymyoo.infra.messaging.remote.channel.message.MessageHead;
@@ -33,7 +34,7 @@ public class ContentBasedRouter {
             Map<String, String> replyMessageBody = new HashMap<>();
             replyMessageBody.put("validation", "SUCCESS");
 
-            messageProducer.send(new Message(message.getHead(), replyMessageBody));
+            messageProducer.send(new Message(message.getHead(), new Gson().toJson(replyMessageBody)));
         } else if(message.getHead().getType() == MessageHead.MessageType.AUTH_APV_PAYMENT) {
             // 메시지 변환
             TakingOrderPayment takingOrderPayment = AuthApvPaymentMessageTranslator.translate(message);
@@ -46,29 +47,19 @@ public class ContentBasedRouter {
             MessageProducer messageProducer = new MessageProducer(ReplyBlockingQueue.getBlockingQueue());
             Map<String, String> replyMessageBody = new HashMap<>();
             replyMessageBody.put("tid", approvalOrderPayment.getTid());
-            messageProducer.send(new Message(message.getHead(), replyMessageBody));
+            messageProducer.send(new Message(message.getHead(), new Gson().toJson(replyMessageBody)));
         }
     }
 
     static class CheckingInventoryMessageTranslator {
         public static TakingOrderItem translate(Message message) {
-            Map<String, String> body = message.getBody();
-            String deliveryType = body.get("deliveryType");
-            String proudctId = body.get("productId");
-            int orderQty = Integer.valueOf(body.get("orderQty"));
-
-            // TODO: 배송 유형 분기 필요..
-            return new TakingOrderItem(TakingOrderItem.DeliveryType.DIRECTING, proudctId, orderQty);
+            return new Gson().fromJson(message.getBody(), TakingOrderItem.class);
         }
     }
 
     static class AuthApvPaymentMessageTranslator {
         public static TakingOrderPayment translate(Message message) {
-            Map<String, String> body = message.getBody();
-            String creditCardNo = body.get("creditCardNo");
-            int orderAmount = Integer.valueOf(body.get("orderAmount"));
-
-            return new TakingOrderPayment(orderAmount, creditCardNo);
+            return new Gson().fromJson(message.getBody(), TakingOrderPayment.class);
         }
     }
 }

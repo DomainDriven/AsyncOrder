@@ -1,11 +1,14 @@
 package ymyoo.infra.messaging.remote.channel;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.junit.Assert;
 import org.junit.Test;
 import ymyoo.infra.messaging.remote.channel.message.Message;
 import ymyoo.infra.messaging.remote.channel.message.MessageHead;
-import ymyoo.order.domain.*;
+import ymyoo.order.domain.OrderIdGenerator;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,10 +32,13 @@ public class ReplierTest {
 
         // when
         Requester requester = new Requester();
-        requester.send(new Message(messageHead, messageBody));
+        requester.send(new Message(messageHead, new Gson().toJson(messageBody)));
 
         // then
         Message receivedMessage = requester.receive(orderId);
-        Assert.assertEquals("SUCCESS", receivedMessage.getBody().get("validation"));
+
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        Map<String, String> content = new Gson().fromJson(receivedMessage.getBody(), type);
+        Assert.assertEquals("SUCCESS", content.get("validation"));
     }
 }

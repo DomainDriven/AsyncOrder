@@ -23,4 +23,12 @@ public class MessageHead {
     public String getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "MessageHead{" +
+                "type=" + type +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }

@@ -3,6 +3,7 @@ package ymyoo.infra.messaging.remote.channel;
 import ymyoo.infra.messaging.remote.channel.message.Message;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by 유영모 on 2016-11-16.
@@ -15,20 +16,27 @@ public class MessageConsumer {
     }
 
     public Message receive(String messageId) {
+        Message receivedMessage = null;
+
         while (!Thread.currentThread().isInterrupted()) {
-            Message msg = null;
             try {
-                msg = destination.take();
+                Message msg =  destination.poll(10, TimeUnit.MILLISECONDS);
+                if(msg == null) {
+                    continue;
+                } else {
+                    if (msg.getHead().getId().equals(messageId)) {
+                        receivedMessage = msg;
+                        break;
+                    } else {
+                        destination.add(msg);
+                    }
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-            if (msg.getHead().getId().equals(messageId)) {
-                return msg;
-            } else {
-                destination.add(msg);
+                Thread.currentThread().interrupt();
             }
         }
 
-        return null;
+        return receivedMessage;
     }
 }
