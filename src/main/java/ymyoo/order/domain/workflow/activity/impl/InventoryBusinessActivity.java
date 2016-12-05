@@ -2,7 +2,7 @@ package ymyoo.order.domain.workflow.activity.impl;
 
 import ymyoo.order.domain.Order;
 import ymyoo.order.domain.workflow.activity.BusinessActivity;
-import ymyoo.order.message.endpoint.InventoryChannelAdapter;
+import ymyoo.order.messaging.endpoint.InventoryChannelAdapter;
 
 /**
  * 주문시 수행 해야할 재고 관련 작업 모음

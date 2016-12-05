@@ -1,4 +1,4 @@
-package ymyoo.order.message.endpoint;
+package ymyoo.order.messaging.endpoint;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

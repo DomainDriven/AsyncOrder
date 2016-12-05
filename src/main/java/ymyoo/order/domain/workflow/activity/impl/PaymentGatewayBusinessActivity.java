@@ -3,7 +3,7 @@ package ymyoo.order.domain.workflow.activity.impl;
 import ymyoo.order.domain.ApprovalOrderPayment;
 import ymyoo.order.domain.Order;
 import ymyoo.order.domain.workflow.activity.BusinessActivity;
-import ymyoo.order.message.endpoint.PaymentGatewayChannelAdapter;
+import ymyoo.order.messaging.endpoint.PaymentGatewayChannelAdapter;
 
 /**
  * 주문시 수행 해야할 결제 관련 작업 모음
