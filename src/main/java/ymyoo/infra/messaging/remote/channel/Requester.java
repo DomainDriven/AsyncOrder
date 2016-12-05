@@ -10,7 +10,7 @@ import ymyoo.infra.messaging.remote.channel.message.Message;
 public class Requester {
 
     public void send(Message message) {
-        MessageProducer messageProducer = new MessageProducer(RequestBlockingQueue.getBlockingQueue());
+        LegacyMessageProducer messageProducer = new LegacyMessageProducer(RequestBlockingQueue.getBlockingQueue());
         messageProducer.send(message);
     }
 

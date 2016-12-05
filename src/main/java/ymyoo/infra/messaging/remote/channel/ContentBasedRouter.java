@@ -30,7 +30,7 @@ public class ContentBasedRouter {
             inventoryService.checkAndReserve(takingOrderItem);
 
             // 결과를 메시지로 전송
-            MessageProducer messageProducer = new MessageProducer(ReplyBlockingQueue.getBlockingQueue());
+            LegacyMessageProducer messageProducer = new LegacyMessageProducer(ReplyBlockingQueue.getBlockingQueue());
             Map<String, String> replyMessageBody = new HashMap<>();
             replyMessageBody.put("validation", "SUCCESS");
 
@@ -44,7 +44,7 @@ public class ContentBasedRouter {
             ApprovalPayment approvalOrderPayment = paymentGatewayService.authenticateAndApproval(takingOrderPayment);
 
             // 결과를 메시지로 전송
-            MessageProducer messageProducer = new MessageProducer(ReplyBlockingQueue.getBlockingQueue());
+            LegacyMessageProducer messageProducer = new LegacyMessageProducer(ReplyBlockingQueue.getBlockingQueue());
             Map<String, String> replyMessageBody = new HashMap<>();
             replyMessageBody.put("tid", approvalOrderPayment.getTid());
             messageProducer.send(new Message(message.getHead(), new Gson().toJson(replyMessageBody)));
