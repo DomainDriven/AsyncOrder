@@ -8,13 +8,14 @@ import java.util.Arrays;
 import java.util.Properties;
 
 /**
+ * 메시지 생산자
+ *
  * Created by 유영모 on 2016-12-05.
  */
 public class MessageProducer {
     private String requestChannel;
     private String replyChannel;
-
-    Producer<String, String> producer;
+    private Producer<String, String> producer;
 
     public MessageProducer(String requestChannel, String replyChannel) {
         this.requestChannel = requestChannel;

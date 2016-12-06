@@ -15,7 +15,7 @@ public class Requester {
     }
 
     public Message receive(String msgId) {
-        MessageConsumer consumer = new MessageConsumer(ReplyBlockingQueue.getBlockingQueue());
+        LegacyMessageConsumer consumer = new LegacyMessageConsumer(ReplyBlockingQueue.getBlockingQueue());
         return consumer.receive(msgId);
     }
 }
