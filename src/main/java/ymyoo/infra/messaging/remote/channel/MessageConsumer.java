@@ -3,7 +3,6 @@ package ymyoo.infra.messaging.remote.channel;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import ymyoo.order.messaging.Callback;
 
 import java.util.*;
 

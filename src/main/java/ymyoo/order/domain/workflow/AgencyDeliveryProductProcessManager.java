@@ -5,7 +5,7 @@ import rx.Subscriber;
 import rx.schedulers.Schedulers;
 import ymyoo.inventory.exception.StockOutException;
 import ymyoo.order.domain.ApprovalOrderPayment;
-import ymyoo.order.domain.workflow.activity.BusinessActivity;
+import ymyoo.order.domain.workflow.activity.AsyncBusinessActivity;
 import ymyoo.order.domain.Order;
 import ymyoo.order.domain.event.OrderCompleted;
 import ymyoo.order.domain.event.OrderFailed;
@@ -33,7 +33,7 @@ public class AgencyDeliveryProductProcessManager implements OrderProcessManager 
          */
         // 재고 확인/예약 작업
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
-                    BusinessActivity<Order, Void> activity = new InventoryBusinessActivity();
+                    AsyncBusinessActivity<Order, Void> activity = new InventoryBusinessActivity();
                     activity.perform(order);
 
                     subscriber.onCompleted();
@@ -42,7 +42,7 @@ public class AgencyDeliveryProductProcessManager implements OrderProcessManager 
 
         // 결제 인증/승인 작업
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
-            BusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity();
+            AsyncBusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity();
             ApprovalOrderPayment approvalOrderPayment = activity.perform(order);
 
             subscriber.onNext(approvalOrderPayment);
@@ -54,7 +54,7 @@ public class AgencyDeliveryProductProcessManager implements OrderProcessManager 
 
         inventoryAndPaymentCompositeActivityObs.concatMap(approvalOrderPayment -> Observable.create(subscriber -> {
             // 구매 주문 생성 작업
-            BusinessActivity<ApprovalOrderPayment, Void> activity =
+            AsyncBusinessActivity<ApprovalOrderPayment, Void> activity =
                     new PurchaseOrderBusinessActivity(order, new DefaultPurchaseOrder());
             activity.perform((ApprovalOrderPayment) approvalOrderPayment);
 

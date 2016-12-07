@@ -1,4 +1,4 @@
-package ymyoo.order.messaging;
+package ymyoo.infra.messaging.remote.channel;
 
 /**
  * Created by 유영모 on 2016-12-07.

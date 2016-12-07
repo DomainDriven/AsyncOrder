@@ -1,10 +1,9 @@
 package ymyoo.order.messaging.endpoint;
 
 import com.google.gson.Gson;
-import ymyoo.infra.messaging.remote.channel.Requester;
-import ymyoo.infra.messaging.remote.channel.message.Message;
-import ymyoo.infra.messaging.remote.channel.message.MessageHead;
-import ymyoo.order.domain.ApprovalOrderPayment;
+import ymyoo.infra.messaging.remote.channel.Callback;
+import ymyoo.infra.messaging.remote.channel.MessageConsumer;
+import ymyoo.infra.messaging.remote.channel.MessageProducer;
 import ymyoo.order.domain.OrderPayment;
 
 import java.util.HashMap;
@@ -16,25 +15,26 @@ import java.util.Map;
  * Created by 유영모 on 2016-11-17.
  */
 public class PaymentGatewayChannelAdapter {
-    private Requester requester = new Requester();
+    private final String REQUEST_CHANNEL = "PAYMENT_AUTH_APP_REQUEST";
+    private final String REPLY_CHANNEL = "PAYMENT_AUTH_APP_REPLY";
 
-    public ApprovalOrderPayment authenticateAndApproval(String orderId, OrderPayment orderPayment) {
-        // 메시지 발신
-        String messageId = java.util.UUID.randomUUID().toString().toUpperCase();
-        MessageHead messageHead = new MessageHead(messageId, MessageHead.MessageType.AUTH_APV_PAYMENT);
+    public void authenticateAndApproval(String id, OrderPayment orderPayment, Callback callback) {
+        // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("creditCardNo", orderPayment.getCreditCardNo());
         messageBody.put("orderAmount", String.valueOf(orderPayment.getOrderAmount()));
-        requester.send(new Message(messageHead, new Gson().toJson(messageBody)));
 
-        // 메시지 수신
-        Message receivedMessage = requester.receive(messageId);
-        return MessageTranslator.translate(receivedMessage);
+        // 메시지 발신
+        MessageProducer producer = new MessageProducer(REQUEST_CHANNEL, REPLY_CHANNEL);
+        producer.send(id, new Gson().toJson(messageBody));
+
+        // 메시지 처리 후 응답 콜백 등록
+        MessageConsumer.registerCallback(callback);
     }
 
-    static class MessageTranslator {
-        public static ApprovalOrderPayment translate(Message message) {
-            return new Gson().fromJson(message.getBody(), ApprovalOrderPayment.class);
-        }
-    }
+//    static class MessageTranslator {
+//        public static ApprovalOrderPayment translate(Message message) {
+//            return new Gson().fromJson(message.getBody(), ApprovalOrderPayment.class);
+//        }
+//    }
 }
