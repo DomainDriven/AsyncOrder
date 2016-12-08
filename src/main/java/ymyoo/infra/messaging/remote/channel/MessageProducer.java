@@ -1,5 +1,6 @@
 package ymyoo.infra.messaging.remote.channel;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -41,8 +42,13 @@ public class MessageProducer {
     }
 
     public void send(final String messageId, final String messageBody) {
-        String messageKey = String.join("::",  Arrays.asList(messageId, replyChannel));
-        producer.send(new ProducerRecord<String, String>(requestChannel, messageKey, messageBody));
+        String messageKey = messageId;
+
+        if(StringUtils.isNoneBlank(replyChannel)) {
+            messageKey = String.join("::",  Arrays.asList(messageId, replyChannel));
+        }
+
+        producer.send(new ProducerRecord<>(requestChannel, messageKey, messageBody));
         producer.close();
     }
 }

@@ -1,14 +1,19 @@
 package ymyoo.order.domain;
 
+import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ymyoo.infra.messaging.remote.channel.MessageChannel;
+import ymyoo.infra.messaging.remote.channel.MessageConsumer;
 import ymyoo.order.domain.event.OrderCompleted;
 import ymyoo.order.domain.event.OrderFailed;
 import ymyoo.infra.messaging.local.EventPublisher;
 import ymyoo.infra.messaging.local.EventSubscriber;
-import ymyoo.infra.messaging.remote.channel.Replier;
+import ymyoo.infra.messaging.remote.channel.MessageBroker;
+import ymyoo.payment.ApprovalPayment;
 
 /**
  * Created by 유영모 on 2016-10-07.
@@ -17,10 +22,24 @@ public class OrderTest {
     private String orderId;
     private boolean eventAccepted;
 
+    Thread messageBroker = null;
+    Thread inventoryReplyMessageConsumer = null;
+    Thread paymentReplyMessageConsumer = null;
+
     @Before
     public void setUp() throws Exception {
         orderId = "";
         eventAccepted = false;
+
+        // Message Consumer Subscribe
+        messageBroker = new Thread(new MessageBroker(MessageChannel.INVENTORY_REQUEST, MessageChannel.PAYMENT_AUTH_APP_REQUEST));
+        messageBroker.start();
+
+        inventoryReplyMessageConsumer = new Thread(new MessageConsumer(MessageChannel.INVENTORY_REPLY));
+        inventoryReplyMessageConsumer.start();
+
+        paymentReplyMessageConsumer = new Thread(new MessageConsumer(MessageChannel.PAYMENT_AUTH_APP_REPLY));
+        paymentReplyMessageConsumer.start();
     }
 
     /**
@@ -33,9 +52,6 @@ public class OrderTest {
      */
     @Test
     public void testPlaceOrder() throws Exception {
-        Thread r = new Thread(new Replier());
-        r.start();
-
         // Given
         Order order = OrderFactory.create(new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
 
@@ -78,9 +94,6 @@ public class OrderTest {
 
     @Test
     public void testPlaceOrder_예외_재고_없음() throws Exception {
-        Thread r = new Thread(new Replier());
-        r.start();
-
         // Given
         Order order = OrderFactory.create(new OrderItem("P0002", 2, OrderItemDeliveryType.AGENCY),  new OrderPayment(2000, "123-456-0789"));
 
@@ -125,9 +138,6 @@ public class OrderTest {
 
     @Test
     public void testPlaceOrder_자사배송상품() throws Exception {
-        Thread r = new Thread(new Replier());
-        r.start();
-
         // Given
         Order order = OrderFactory.create(new OrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
                 new OrderPayment(2000, "123-456-0789"));
@@ -166,10 +176,5 @@ public class OrderTest {
         Assert.assertTrue("이벤트 미 수신", eventAccepted);
 
         System.out.println("<Client> 주문 종료...");
-    }
-
-    @Test
-    public void test() {
-        System.out.println(OrderItemDeliveryType.DIRECTING);
     }
 }

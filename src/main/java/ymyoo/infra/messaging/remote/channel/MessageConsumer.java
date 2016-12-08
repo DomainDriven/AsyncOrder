@@ -36,6 +36,7 @@ public class MessageConsumer implements Runnable {
             while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(100);
                 for (ConsumerRecord<String, String> record : records) {
+                    //TODO : Java Stream API 변환해 보기
                     for(Callback callback : callbackList) {
                         if( (callback.getId().equals(record.key())) ) {
                             Object translatedData = callback.translate(record.value());

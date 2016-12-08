@@ -43,6 +43,7 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
         // 재고 확인/예약 작업
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
                     AsyncBusinessActivity<Order, Boolean> activity = new InventoryBusinessActivity();
+                    String activityId = activity.getId();
                     activity.perform(order, new Callback<Boolean>() {
                         @Override
                         public void call(Boolean result) {
@@ -55,6 +56,7 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
 
                         @Override
                         public Boolean translate(String data) {
+                            System.out.println("data : " + data);
                             Type type = new TypeToken<HashMap<String, String>>(){}.getType();
                             Map<String, String> content = new Gson().fromJson(data, type);
                             if(content.get("validation").equals("SUCCESS")) {
@@ -66,7 +68,7 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
 
                         @Override
                         public String getId() {
-                            return activity.getId();
+                            return activityId;
                         }
                     });
                 }
@@ -75,6 +77,7 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
         // 결제 인증/승인 작업
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
             AsyncBusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity();
+            String activityId = activity.getId();
             activity.perform(order, new Callback<ApprovalOrderPayment>() {
                 @Override
                 public void call(ApprovalOrderPayment result) {
@@ -84,12 +87,13 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
 
                 @Override
                 public ApprovalOrderPayment translate(String data) {
+                    System.out.println("data : " + data);
                     return new Gson().fromJson(data, ApprovalOrderPayment.class);
                 }
 
                 @Override
                 public String getId() {
-                    return null;
+                    return activityId;
                 }
             });
         }).subscribeOn(Schedulers.computation());
