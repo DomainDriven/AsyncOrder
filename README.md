@@ -11,4 +11,5 @@ ymyoo || 최상위 패키지
 - 8u101
 
 ## 사용 기술
-- [RxJava](https://github.com/ReactiveX/RxJava)
+- [RxJava](https://github.com/ReactiveX/RxJava) 1.1.6
+- [Apache Kafka](https://kafka.apache.org/) 0.10.1.0
