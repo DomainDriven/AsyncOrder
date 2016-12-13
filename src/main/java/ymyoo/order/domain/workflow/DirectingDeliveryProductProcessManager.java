@@ -56,7 +56,6 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
 
                         @Override
                         public Boolean translate(String data) {
-                            System.out.println("data : " + data);
                             Type type = new TypeToken<HashMap<String, String>>(){}.getType();
                             Map<String, String> content = new Gson().fromJson(data, type);
                             if(content.get("validation").equals("SUCCESS")) {
@@ -87,7 +86,6 @@ public class DirectingDeliveryProductProcessManager implements OrderProcessManag
 
                 @Override
                 public ApprovalOrderPayment translate(String data) {
-                    System.out.println("data : " + data);
                     return new Gson().fromJson(data, ApprovalOrderPayment.class);
                 }
 
