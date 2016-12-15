@@ -13,10 +13,23 @@ public class SalesOrder {
     private SalesOrderItem orderItem;
     private SalesOrderPayment orderPayment;
 
+    private OrderProcessManager processManager;
+
     public SalesOrder(Orderer orderer, SalesOrderItem orderItem, SalesOrderPayment orderPayment) {
         this.orderer = orderer;
         this.orderItem = orderItem;
         this.orderPayment = orderPayment;
+        this.orderId = SalesOrderIdGenerator.generate();
+        this.processManager = OrderProcessManagerFactory.create(this);
+    }
+
+    public SalesOrder(Orderer orderer, SalesOrderItem orderItem, SalesOrderPayment orderPayment,
+                      OrderProcessManager processManager) {
+        this.orderer = orderer;
+        this.orderItem = orderItem;
+        this.orderPayment = orderPayment;
+        this.orderId = SalesOrderIdGenerator.generate();
+        this.processManager = processManager;
     }
 
     public Orderer getOrderer() {
@@ -36,10 +49,6 @@ public class SalesOrder {
     }
 
     public String placeOrder() {
-        this.orderId = SalesOrderIdGenerator.generate();
-        PrettySystemOut.println(this.getClass(), "주문 아이디 생성 : " + orderId);
-
-        OrderProcessManager processManager = OrderProcessManagerFactory.create(this);
         processManager.runWorkflow(this);
         return orderId;
     }
