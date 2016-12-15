@@ -29,6 +29,11 @@ public class MessageBroker implements Runnable {
         this.consumer = new KafkaConsumer<>(props);
     }
 
+    public MessageBroker(KafkaConsumer<String, String> consumer, String... channels) {
+        this.channels = Arrays.asList(channels);
+        this.consumer = consumer;
+    }
+
     @Override
     public void run() {
         consumer.subscribe(channels);
