@@ -1,4 +1,4 @@
-package ymyoo.order.domain;
+package ymyoo.order.domain.so;
 
 /**
  * 주문 아이템 배송 유형

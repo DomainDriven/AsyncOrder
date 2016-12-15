@@ -1,29 +1,31 @@
 package ymyoo.order.domain.workflow.activity.impl;
 
-import ymyoo.order.domain.ApprovalOrderPayment;
-import ymyoo.order.domain.Order;
-import ymyoo.order.domain.workflow.activity.AsyncBusinessActivity;
-import ymyoo.order.domain.po.PurchaseOrder;
+import ymyoo.order.domain.po.*;
+import ymyoo.order.domain.so.SalesOrder;
 import ymyoo.order.domain.workflow.activity.SyncBusinessActivity;
+import ymyoo.order.messaging.endpoint.PurchaseOrderChannelAdapter;
 import ymyoo.utility.PrettySystemOut;
 
 /**
  * Created by 유영모 on 2016-10-20.
  */
 public class PurchaseOrderBusinessActivity implements SyncBusinessActivity<ApprovalOrderPayment, Void> {
-    private Order order;
-    private PurchaseOrder purchaseOrder;
+    private SalesOrder salesOrder;
 
-    public PurchaseOrderBusinessActivity(Order order, PurchaseOrder purchaseOrder) {
-        this.order = order;
-        this.purchaseOrder = purchaseOrder;
+    public PurchaseOrderBusinessActivity(SalesOrder salesOrder) {
+        this.salesOrder = salesOrder;
     }
 
     @Override
     public Void perform(ApprovalOrderPayment approvalOrderPayment) {
-        purchaseOrder.create(order,  approvalOrderPayment);
-        PrettySystemOut.println(order.getClass(), "주문 완료....");
+        // 구매 주문 생성
+        PurchaseOrder purchaseOrder = PurchaseOrderFactory.create("1", new PurchaseOrderItem(), new PurchaseOrderPayment());
 
+        // 구매 주문 생성 이벤트 발행
+        PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
+        channelAdapter.onPurchaseOrderCreated(purchaseOrder);
+
+        PrettySystemOut.println(salesOrder.getClass(), "주문 완료....");
         return null;
     }
 }

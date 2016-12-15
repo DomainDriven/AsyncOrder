@@ -5,7 +5,7 @@ import ymyoo.infra.messaging.remote.channel.Callback;
 import ymyoo.infra.messaging.remote.channel.MessageChannel;
 import ymyoo.infra.messaging.remote.channel.MessageConsumer;
 import ymyoo.infra.messaging.remote.channel.MessageProducer;
-import ymyoo.order.domain.OrderItem;
+import ymyoo.order.domain.so.SalesOrderItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class InventoryChannelAdapter {
 
-    public void checkAndReserveOrderItem(final String id, final OrderItem orderItem, Callback callback) {
+    public void checkAndReserveOrderItem(final String id, final SalesOrderItem orderItem, Callback callback) {
         // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("deliveryType", orderItem.getDeliveryType().name());

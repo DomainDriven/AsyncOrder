@@ -1,4 +1,4 @@
-package ymyoo.order.domain;
+package ymyoo.order.domain.so;
 
 /**
  * 결제 전 주문(Order)을 만드는 팩토리
@@ -7,9 +7,9 @@ package ymyoo.order.domain;
  *
  * Created by 유영모 on 2016-10-07.
  */
-public class OrderFactory {
-    static public Order create(OrderItem orderItem, OrderPayment orderPayment) {
+public class SalseOrderFactory {
+    static public SalesOrder create(SalesOrderItem orderItem, SalesOrderPayment orderPayment) {
         // 상품, 배송지, 할인, 결제 수단 등은 현재 검증 대상이 아니므로 Skip...
-        return new Order(orderItem, orderPayment);
+        return new SalesOrder(orderItem, orderPayment);
     }
 }

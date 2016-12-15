@@ -9,4 +9,6 @@ public class MessageChannel {
 
     public static final String PAYMENT_AUTH_APP_REQUEST = "PAYMENT-AUTH-APP-REQUEST";
     public static final String PAYMENT_AUTH_APP_REPLY = "PAYMENT-AUTH-APP-REPLY";
+
+    public static final String PURCHASE_ORDER_CREATED = "PURCHASE-ORDER-CREATED";
 }

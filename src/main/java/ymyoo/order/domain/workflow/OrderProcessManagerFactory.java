@@ -1,7 +1,7 @@
 package ymyoo.order.domain.workflow;
 
-import ymyoo.order.domain.Order;
-import ymyoo.order.domain.OrderItemDeliveryType;
+import ymyoo.order.domain.so.SalesOrder;
+import ymyoo.order.domain.so.OrderItemDeliveryType;
 import ymyoo.order.domain.exception.UnSupportedDeliveryTypeException;
 
 /**
@@ -9,13 +9,7 @@ import ymyoo.order.domain.exception.UnSupportedDeliveryTypeException;
  */
 public class OrderProcessManagerFactory {
 
-    public static OrderProcessManager create(Order order) {
-        if(order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.DIRECTING) {
-            return new DirectingDeliveryProductProcessManager();
-        } else if(order.getOrderItem().getDeliveryType() == OrderItemDeliveryType.AGENCY) {
-            return new AgencyDeliveryProductProcessManager();
-        } else {
-            throw new UnSupportedDeliveryTypeException();
-        }
+    public static OrderProcessManager create(SalesOrder order) {
+        return new DefaultOrderProcessManager();
     }
 }

@@ -5,7 +5,7 @@ import ymyoo.infra.messaging.remote.channel.Callback;
 import ymyoo.infra.messaging.remote.channel.MessageChannel;
 import ymyoo.infra.messaging.remote.channel.MessageConsumer;
 import ymyoo.infra.messaging.remote.channel.MessageProducer;
-import ymyoo.order.domain.OrderPayment;
+import ymyoo.order.domain.so.SalesOrderPayment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by 유영모 on 2016-11-17.
  */
 public class PaymentGatewayChannelAdapter {
-    public void authenticateAndApproval(String id, OrderPayment orderPayment, Callback callback) {
+    public void authenticateAndApproval(String id, SalesOrderPayment orderPayment, Callback callback) {
         // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("creditCardNo", orderPayment.getCreditCardNo());
