@@ -1,91 +1,125 @@
 package ymyoo.infra.messaging.remote.channel;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Properties;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import static org.mockito.Mockito.*;
 
 /**
- * Created by 유영모 on 2016-12-06.
+ * Created by 유영모 on 2016-12-15.
  */
 public class MessageConsumerTest {
 
-    @Test
-    public void testRun() throws InterruptedException {
-        // given
-        String channelName = "spike-reply";
-        Thread r = new Thread(new MessageConsumer(channelName));
-        r.start();
+    @Before
+    public void setUp() throws Exception {
+        TestMessageConsumer.clearCallbackList();
+    }
 
-        String callback1Key = "12345";
-        String callback1Value = "hello";
-        MessageConsumer.registerCallback(new Callback() {
+    @Test
+    public void registerCallback() throws Exception {
+        // given
+        KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
+        TestMessageConsumer consumer = new TestMessageConsumer("testChannel", mockKafkaConsumer);
+
+        // when
+        consumer.registerCallback(new Callback() {
             @Override
             public void call(Object result) {
-                // then
-                Assert.assertEquals(result, callback1Value);
+
             }
 
             @Override
             public Object translate(String data) {
-                // then
-                return callback1Value;
+                return null;
             }
 
             @Override
             public String getId() {
-                return callback1Key;
+                return null;
             }
         });
 
-        String callback2Key = "67890";
-        String callback2Value = "bye!";
-        MessageConsumer.registerCallback(new Callback() {
+        // then
+        Assert.assertEquals(1, consumer.getSizeForCallback());
+    }
+
+    @Test
+    public void unregisterCallback() throws Exception {
+        // given
+        KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
+        TestMessageConsumer consumer = new TestMessageConsumer("testChannel", mockKafkaConsumer);
+        Callback callback = new Callback() {
             @Override
             public void call(Object result) {
-                // then
-                Assert.assertEquals(result, callback2Value);
+
             }
 
             @Override
             public Object translate(String data) {
-                // then
-                Assert.assertEquals(data, callback2Value);
-                return callback2Value;
+                return null;
             }
 
             @Override
             public String getId() {
-                return callback2Key;
+                return null;
+            }
+        };
+        consumer.registerCallback(callback);
+
+        // when
+        consumer.unregisterCallback(callback);
+
+        // then
+        Assert.assertEquals(0, consumer.getSizeForCallback());
+    }
+
+    @Test
+    public void run() throws Exception {
+        // given
+        KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
+
+        Map<TopicPartition, List<ConsumerRecord<String, String>>> records = new HashMap<>();
+        records.put(new TopicPartition("test-topic", 1),
+                Arrays.asList(new ConsumerRecord("test-topic", 1, 0, "12345", "test!")));
+
+        when(mockKafkaConsumer.poll(100)).thenReturn(new ConsumerRecords(records));
+
+        MessageConsumer.registerCallback(new Callback() {
+            @Override
+            public void call(Object result) {
+                Assert.assertEquals("test!", result);
+            }
+
+            @Override
+            public Object translate(String data) {
+                return "test!";
+            }
+
+            @Override
+            public String getId() {
+                return "12345";
             }
         });
 
         // when
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
-        props.put("acks", "all");
-        props.put("retries", 0);
-        props.put("batch.size", 16384);
-        props.put("linger.ms", 1);
-        props.put("buffer.memory", 33554432);
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        Thread messageConsumer = new Thread(new MessageConsumer("test-channel", mockKafkaConsumer));
+        messageConsumer.start();
 
-        Producer<String, String> producer = new KafkaProducer<>(props);
+        Thread.sleep(1000);
 
-        producer.send(new ProducerRecord<>("spike-reply", callback1Key, callback1Value));
-        producer.send(new ProducerRecord<>("spike-reply", callback2Key, callback2Value));
+        messageConsumer.interrupt();
 
-        producer.close();
-
-        // 비동기 처리 대기
-        synchronized (r) {
-            r.wait(5000);
-        }
+        // then
+        verify(mockKafkaConsumer).subscribe(Arrays.asList("test-channel"));
     }
-
 }

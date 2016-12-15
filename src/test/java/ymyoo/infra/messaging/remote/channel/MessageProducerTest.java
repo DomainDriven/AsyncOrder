@@ -32,7 +32,7 @@ public class MessageProducerTest {
 
 
         // when
-        TestMessageProducer producer = new TestMessageProducer(requestChannel, replyChannel, mockProducer);
+        MessageProducer producer = new MessageProducer(requestChannel, replyChannel, mockProducer);
         producer.send(messageId, new Gson().toJson(messageBody));
 
         // then

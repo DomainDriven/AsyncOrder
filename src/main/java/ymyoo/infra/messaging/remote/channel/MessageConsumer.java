@@ -12,7 +12,7 @@ import java.util.*;
 public class MessageConsumer implements Runnable {
     private String channel;
     private KafkaConsumer<String, String> consumer;
-    private static List<Callback> callbackList = Collections.synchronizedList(new ArrayList());
+    protected static List<Callback> callbackList = Collections.synchronizedList(new ArrayList());
 
     public MessageConsumer(String channel) {
         this.channel = channel;
@@ -28,15 +28,19 @@ public class MessageConsumer implements Runnable {
         this.consumer = new KafkaConsumer<>(props);
     }
 
+    public MessageConsumer(String channel, KafkaConsumer<String, String> consumer) {
+        this.channel = channel;
+        this.consumer = consumer;
+    }
+
     @Override
     public void run() {
         consumer.subscribe(Arrays.asList(channel));
 
         try {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 ConsumerRecords<String, String> records = consumer.poll(100);
                 for (ConsumerRecord<String, String> record : records) {
-                    //TODO : Java Stream API 변환해 보기
                     for(Callback callback : callbackList) {
                         if( (callback.getId().equals(record.key())) ) {
                             Object translatedData = callback.translate(record.value());
