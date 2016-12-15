@@ -50,7 +50,9 @@ public class SalesOrderTest {
     @Test
     public void testPlaceOrder() throws Exception {
         // Given
-        SalesOrder order = SalseOrderFactory.create(new SalesOrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),  new SalesOrderPayment(2000, "123-456-0789"));
+        SalesOrder order = SalesOrderFactory.create(new Orderer("유영모", "010-0000-0000"),
+                new SalesOrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),
+                new SalesOrderPayment(2000, "123-456-0789"));
 
         // 주문 완료 이벤트 구독
         EventSubscriber subscriber = new EventSubscriber<OrderCompleted>() {
@@ -92,7 +94,9 @@ public class SalesOrderTest {
     @Test
     public void testPlaceOrder_예외_재고_없음() throws Exception {
         // Given
-        SalesOrder order = SalseOrderFactory.create(new SalesOrderItem("P0002", 2, OrderItemDeliveryType.AGENCY),  new SalesOrderPayment(2000, "123-456-0789"));
+        SalesOrder order = SalesOrderFactory.create(new Orderer("유영모", "010-0000-0000"),
+                new SalesOrderItem("P0002", 2, OrderItemDeliveryType.AGENCY),
+                new SalesOrderPayment(2000, "123-456-0789"));
 
         // 주문 실패 이벤트 구독
         EventSubscriber subscriber = new EventSubscriber<OrderFailed>() {
@@ -136,7 +140,7 @@ public class SalesOrderTest {
     @Test
     public void testPlaceOrder_자사배송상품() throws Exception {
         // Given
-        SalesOrder order = SalseOrderFactory.create(new SalesOrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
+        SalesOrder order = SalesOrderFactory.create(new Orderer("유영모", "010-0000-0000"), new SalesOrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
                 new SalesOrderPayment(2000, "123-456-0789"));
 
         // 주문 완료 이벤트 구독

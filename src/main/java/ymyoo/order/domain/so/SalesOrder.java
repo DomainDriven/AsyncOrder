@@ -8,10 +8,24 @@ import ymyoo.utility.PrettySystemOut;
  * Created by 유영모 on 2016-10-07.
  */
 public class SalesOrder {
+    private Orderer orderer;
     private String orderId;
-
     private SalesOrderItem orderItem;
     private SalesOrderPayment orderPayment;
+
+    public SalesOrder(Orderer orderer, SalesOrderItem orderItem, SalesOrderPayment orderPayment) {
+        this.orderer = orderer;
+        this.orderItem = orderItem;
+        this.orderPayment = orderPayment;
+    }
+
+    public Orderer getOrderer() {
+        return orderer;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
 
     public SalesOrderItem getOrderItem() {
         return orderItem;
@@ -19,15 +33,6 @@ public class SalesOrder {
 
     public SalesOrderPayment getOrderPayment() {
         return orderPayment;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public SalesOrder(SalesOrderItem orderItem, SalesOrderPayment orderPayment) {
-        this.orderItem = orderItem;
-        this.orderPayment = orderPayment;
     }
 
     public String placeOrder() {

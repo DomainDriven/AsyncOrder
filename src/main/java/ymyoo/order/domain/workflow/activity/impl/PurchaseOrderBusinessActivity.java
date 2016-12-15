@@ -19,7 +19,11 @@ public class PurchaseOrderBusinessActivity implements SyncBusinessActivity<Appro
     @Override
     public Void perform(ApprovalOrderPayment approvalOrderPayment) {
         // 구매 주문 생성
-        PurchaseOrder purchaseOrder = PurchaseOrderFactory.create("1", new PurchaseOrderItem(), new PurchaseOrderPayment());
+        PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem(salesOrder.getOrderItem().getProductId(), salesOrder.getOrderItem().getOrderQty(), salesOrder.getOrderItem().getDeliveryType());
+        PurchaseOrderPayment purchaseOrderPayment = new PurchaseOrderPayment(approvalOrderPayment.getTid());
+        Purchaser purchaser = new Purchaser(salesOrder.getOrderer().getName(), salesOrder.getOrderer().getContactNumber());
+
+        PurchaseOrder purchaseOrder = PurchaseOrderFactory.create(salesOrder.getOrderId(),purchaser, purchaseOrderItem, purchaseOrderPayment);
 
         // 구매 주문 생성 이벤트 발행
         PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();

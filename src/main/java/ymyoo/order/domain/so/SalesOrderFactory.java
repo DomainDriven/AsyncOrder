@@ -7,9 +7,9 @@ package ymyoo.order.domain.so;
  *
  * Created by 유영모 on 2016-10-07.
  */
-public class SalseOrderFactory {
-    static public SalesOrder create(SalesOrderItem orderItem, SalesOrderPayment orderPayment) {
+public class SalesOrderFactory {
+    static public SalesOrder create(Orderer orderer, SalesOrderItem orderItem, SalesOrderPayment orderPayment) {
         // 상품, 배송지, 할인, 결제 수단 등은 현재 검증 대상이 아니므로 Skip...
-        return new SalesOrder(orderItem, orderPayment);
+        return new SalesOrder(orderer, orderItem, orderPayment);
     }
 }

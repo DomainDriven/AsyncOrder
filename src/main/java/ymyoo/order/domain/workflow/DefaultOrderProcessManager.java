@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 자사 배송 상품 프로세스 관리자
+ * 주문 기본 프로세스 Manager
  *
  * Created by 유영모 on 2016-10-24.
  */
