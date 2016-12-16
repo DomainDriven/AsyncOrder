@@ -18,10 +18,25 @@ public class MessageProducer {
     private String replyChannel;
     private Producer<String, String> producer;
 
+    public MessageProducer(String requestChannel) {
+        this.requestChannel = requestChannel;
+        initKafkaProducer();
+    }
+
     public MessageProducer(String requestChannel, String replyChannel) {
         this.requestChannel = requestChannel;
         this.replyChannel = replyChannel;
 
+        initKafkaProducer();
+    }
+
+    public MessageProducer(String requestChannel, String replyChannel, Producer<String, String> producer) {
+        this.requestChannel = requestChannel;
+        this.replyChannel = replyChannel;
+        this.producer = producer;
+    }
+
+    private void initKafkaProducer() {
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
         props.put("acks", "all");
@@ -33,12 +48,6 @@ public class MessageProducer {
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
         this.producer = new KafkaProducer<>(props);
-    }
-
-    public MessageProducer(String requestChannel, String replyChannel, Producer<String, String> producer) {
-        this.requestChannel = requestChannel;
-        this.replyChannel = replyChannel;
-        this.producer = producer;
     }
 
     public void send(final String messageId, final String messageBody) {

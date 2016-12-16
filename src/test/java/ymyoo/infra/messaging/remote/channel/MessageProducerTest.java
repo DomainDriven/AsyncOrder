@@ -21,8 +21,8 @@ public class MessageProducerTest {
     @Test
     public void testSend() {
         // given
-        String requestChannel = "spike-request";
-        String replyChannel = "spike-reply";
+        String requestChannel = "TEST-REQUEST";
+        String replyChannel = "TEST-REPLY";
         String messageId = "111111";
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("test", "test");
@@ -37,8 +37,8 @@ public class MessageProducerTest {
 
         // then
         verify(mockProducer).send(argument.capture());
-        Assert.assertEquals("spike-request", argument.getValue().topic());
-        Assert.assertEquals("111111::spike-reply", argument.getValue().key());
+        Assert.assertEquals("TEST-REQUEST", argument.getValue().topic());
+        Assert.assertEquals("111111::TEST-REPLY", argument.getValue().key());
         Assert.assertEquals(new Gson().toJson(messageBody), argument.getValue().value());
     }
 }

@@ -17,7 +17,7 @@ public class MessageConsumerIntegrationTest {
     @Test
     public void testRun() throws InterruptedException {
         // given
-        String channelName = "spike-reply";
+        String channelName = "TEST-REPLY";
         Thread r = new Thread(new MessageConsumer(channelName));
         r.start();
 
@@ -77,8 +77,8 @@ public class MessageConsumerIntegrationTest {
 
         Producer<String, String> producer = new KafkaProducer<>(props);
 
-        producer.send(new ProducerRecord<>("spike-reply", callback1Key, callback1Value));
-        producer.send(new ProducerRecord<>("spike-reply", callback2Key, callback2Value));
+        producer.send(new ProducerRecord<>("TEST-REPLY", callback1Key, callback1Value));
+        producer.send(new ProducerRecord<>("TEST-REPLY", callback2Key, callback2Value));
 
         producer.close();
 

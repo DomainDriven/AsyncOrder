@@ -11,6 +11,7 @@ import ymyoo.utility.PrettySystemOut;
  */
 public class PurchaseOrderBusinessActivity implements SyncBusinessActivity<ApprovalOrderPayment, Void> {
     private SalesOrder salesOrder;
+    private String activityId = java.util.UUID.randomUUID().toString().toUpperCase();
 
     public PurchaseOrderBusinessActivity(SalesOrder salesOrder) {
         this.salesOrder = salesOrder;
@@ -27,7 +28,7 @@ public class PurchaseOrderBusinessActivity implements SyncBusinessActivity<Appro
 
         // 구매 주문 생성 이벤트 발행
         PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
-        channelAdapter.onPurchaseOrderCreated(purchaseOrder);
+        channelAdapter.onPurchaseOrderCreated(activityId, purchaseOrder);
 
         PrettySystemOut.println(salesOrder.getClass(), "주문 완료....");
         return null;
