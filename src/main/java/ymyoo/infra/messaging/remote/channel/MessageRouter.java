@@ -6,6 +6,7 @@ import ymyoo.inventory.TakingOrderItem;
 import ymyoo.payment.ApprovalPayment;
 import ymyoo.payment.PaymentGatewayService;
 import ymyoo.payment.TakingOrderPayment;
+import ymyoo.utility.PrettySystemOut;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,9 @@ public class MessageRouter {
             // 결과를 메시지로 전송
             MessageProducer producer = new MessageProducer(replyChannel, "");
             producer.send(messageId, new Gson().toJson(approvalOrderPayment));
+        } else if(channel.equals(MessageChannel.PURCHASE_ORDER_CREATED)) {
+            // 구매 주문 생성에 따른 후속 처리
+            PrettySystemOut.println(MessageRouter.class, "주문 완료 문자 발송");
         } else {
             throw new RuntimeException("라우팅 가능한 채널이 아닙니다.");
         }
@@ -68,6 +72,10 @@ public class MessageRouter {
     }
 
     private static String extractMessageId(String str) {
-        return str.substring(0, str.indexOf("::"));
+        if(str.contains("::")) {
+            return str.substring(0, str.indexOf("::"));
+        } else {
+            return str;
+        }
     }
 }

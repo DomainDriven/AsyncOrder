@@ -26,11 +26,11 @@ public class PurchaseOrderBusinessActivity implements SyncBusinessActivity<Appro
 
         PurchaseOrder purchaseOrder = PurchaseOrderFactory.create(salesOrder.getOrderId(),purchaser, purchaseOrderItem, purchaseOrderPayment);
 
+        PrettySystemOut.println(salesOrder.getClass(), "주문 완료....");
+
         // 구매 주문 생성 이벤트 발행
         PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
         channelAdapter.onPurchaseOrderCreated(activityId, purchaseOrder);
-
-        PrettySystemOut.println(salesOrder.getClass(), "주문 완료....");
         return null;
     }
 }

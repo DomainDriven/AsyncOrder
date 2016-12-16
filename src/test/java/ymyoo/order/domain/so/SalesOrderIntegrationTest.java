@@ -29,7 +29,7 @@ public class SalesOrderIntegrationTest {
         eventAccepted = false;
 
         // Message Consumer Subscribe
-        messageBroker = new Thread(new MessageBroker(MessageChannel.INVENTORY_REQUEST, MessageChannel.PAYMENT_AUTH_APP_REQUEST));
+        messageBroker = new Thread(new MessageBroker(MessageChannel.INVENTORY_REQUEST, MessageChannel.PAYMENT_AUTH_APP_REQUEST, MessageChannel.PURCHASE_ORDER_CREATED));
         messageBroker.start();
 
         inventoryReplyMessageConsumer = new Thread(new MessageConsumer(MessageChannel.INVENTORY_REPLY));
