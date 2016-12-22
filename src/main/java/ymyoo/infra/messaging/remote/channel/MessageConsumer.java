@@ -57,7 +57,7 @@ public class MessageConsumer implements Runnable {
 
     }
 
-    public static void registerCallback(Callback callback) {
+    public static void registerCallback(Callback callback)  {
         synchronized (callbackList) {
             callbackList.add(callback);
         }
