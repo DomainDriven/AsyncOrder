@@ -65,19 +65,6 @@
             <version>1.6.2</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.101tec</groupId>
-            <artifactId>zkclient</artifactId>
-            <version>0.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.11</artifactId>
-            <version>0.10.1.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <repositories>
