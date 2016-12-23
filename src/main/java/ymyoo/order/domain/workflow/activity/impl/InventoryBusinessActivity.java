@@ -1,8 +1,7 @@
 package ymyoo.order.domain.workflow.activity.impl;
 
-import ymyoo.infra.messaging.remote.channel.Callback;
 import ymyoo.order.domain.so.SalesOrder;
-import ymyoo.order.domain.workflow.activity.AsyncBusinessActivity;
+import ymyoo.order.domain.workflow.activity.BusinessActivity;
 import ymyoo.order.messaging.endpoint.channeladapter.InventoryChannelAdapter;
 
 /**
@@ -10,17 +9,11 @@ import ymyoo.order.messaging.endpoint.channeladapter.InventoryChannelAdapter;
  *
  * Created by 유영모 on 2016-10-10.
  */
-public class InventoryBusinessActivity implements AsyncBusinessActivity<SalesOrder, Boolean> {
-    private final String id = java.util.UUID.randomUUID().toString().toUpperCase();
+public class InventoryBusinessActivity implements BusinessActivity<SalesOrder, Boolean> {
 
     @Override
-    public void perform(SalesOrder order, Callback<Boolean> callback) {
+    public Boolean perform(SalesOrder salesOrder) {
         InventoryChannelAdapter channelAdapter = new InventoryChannelAdapter();
-        channelAdapter.checkAndReserveOrderItem(this.id, order.getOrderItem(), callback);
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
+        return channelAdapter.checkAndReserveOrderItem(salesOrder.getOrderItem());
     }
 }

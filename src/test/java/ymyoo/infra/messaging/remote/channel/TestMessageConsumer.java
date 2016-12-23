@@ -10,11 +10,11 @@ public class TestMessageConsumer extends MessageConsumer {
         super(channel, consumer);
     }
 
-    public int getSizeForCallback() {
-        return callbackList.size();
+    public int getListenerSize() {
+        return listeners.size();
     }
 
-    public static void clearCallbackList() {
-        callbackList.clear();
+    public static void clearListeners() {
+        listeners.clear();
     }
 }

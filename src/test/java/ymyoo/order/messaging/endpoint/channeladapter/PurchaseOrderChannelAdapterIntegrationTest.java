@@ -29,8 +29,6 @@ public class PurchaseOrderChannelAdapterIntegrationTest {
 
         PurchaseOrder purchaseOrder = PurchaseOrderFactory.create(orderId,purchaser, purchaseOrderItem, purchaseOrderPayment);
 
-        String messageId = java.util.UUID.randomUUID().toString().toUpperCase();
-
         new Thread(() -> {
             // then
             Properties props = new Properties();
@@ -48,7 +46,6 @@ public class PurchaseOrderChannelAdapterIntegrationTest {
                 while (!Thread.currentThread().isInterrupted()) {
                     ConsumerRecords<String, String> records = consumer.poll(100);
                     for (ConsumerRecord<String, String> record : records) {
-                        Assert.assertEquals(messageId, record.key());
                         Assert.assertEquals(new Gson().toJson(purchaseOrder), record.value());
                         Thread.interrupted();
                     }
@@ -60,6 +57,6 @@ public class PurchaseOrderChannelAdapterIntegrationTest {
 
         // when
         PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
-        channelAdapter.onPurchaseOrderCreated(messageId, purchaseOrder);
+        channelAdapter.onPurchaseOrderCreated(purchaseOrder);
     }
 }

@@ -12,6 +12,8 @@ import ymyoo.infra.messaging.local.EventPublisher;
 import ymyoo.infra.messaging.local.EventSubscriber;
 import ymyoo.infra.messaging.remote.channel.MessageBroker;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by 유영모 on 2016-10-07.
  */
@@ -173,7 +175,7 @@ public class SalesOrderIntegrationTest {
 
         // 비동기 처리 대기
         synchronized (subscriber) {
-            subscriber.wait(10000);
+            subscriber.wait(TimeUnit.SECONDS.toMillis(5));
         }
         Assert.assertTrue("이벤트 미 수신", eventAccepted);
 

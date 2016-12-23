@@ -7,6 +7,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ymyoo.order.messaging.endpoint.request.MessageListener;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,35 +23,30 @@ public class MessageConsumerTest {
 
     @Before
     public void setUp() throws Exception {
-        TestMessageConsumer.clearCallbackList();
+        TestMessageConsumer.clearListeners();
     }
 
     @Test
-    public void registerCallback() throws Exception {
+    public void registerListener() throws Exception {
         // given
         KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
         TestMessageConsumer consumer = new TestMessageConsumer("testChannel", mockKafkaConsumer);
 
         // when
-        consumer.registerCallback(new Callback() {
+        consumer.registerListener(new MessageListener() {
             @Override
-            public void call(Object result) {
+            public void onMessage(String message) {
 
             }
 
             @Override
-            public Object translate(String data) {
-                return null;
-            }
-
-            @Override
-            public String getId() {
+            public String getCorrelationId() {
                 return null;
             }
         });
 
         // then
-        Assert.assertEquals(1, consumer.getSizeForCallback());
+        Assert.assertEquals(1, consumer.getListenerSize());
     }
 
     @Test
@@ -58,29 +54,25 @@ public class MessageConsumerTest {
         // given
         KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
         TestMessageConsumer consumer = new TestMessageConsumer("testChannel", mockKafkaConsumer);
-        Callback callback = new Callback() {
+        MessageListener listener = new MessageListener() {
             @Override
-            public void call(Object result) {
+            public void onMessage(String message) {
 
             }
 
             @Override
-            public Object translate(String data) {
-                return null;
-            }
-
-            @Override
-            public String getId() {
+            public String getCorrelationId() {
                 return null;
             }
         };
-        consumer.registerCallback(callback);
+
+        consumer.registerListener(listener);
 
         // when
-        consumer.unregisterCallback(callback);
+        consumer.unregisterListener(listener);
 
         // then
-        Assert.assertEquals(0, consumer.getSizeForCallback());
+        Assert.assertEquals(0, consumer.getListenerSize());
     }
 
     @Test
@@ -94,19 +86,14 @@ public class MessageConsumerTest {
 
         when(mockKafkaConsumer.poll(100)).thenReturn(new ConsumerRecords(records));
 
-        MessageConsumer.registerCallback(new Callback() {
+        MessageConsumer.registerListener(new MessageListener() {
             @Override
-            public void call(Object result) {
-                Assert.assertEquals("test!", result);
+            public void onMessage(String message) {
+
             }
 
             @Override
-            public Object translate(String data) {
-                return "test!";
-            }
-
-            @Override
-            public String getId() {
+            public String getCorrelationId() {
                 return "12345";
             }
         });

@@ -3,6 +3,7 @@ package ymyoo.infra.messaging.remote.channel;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import ymyoo.order.messaging.endpoint.request.MessageListener;
 
 import java.util.*;
 
@@ -12,7 +13,7 @@ import java.util.*;
 public class MessageConsumer implements Runnable {
     private String channel;
     private KafkaConsumer<String, String> consumer;
-    protected static List<Callback> callbackList = Collections.synchronizedList(new ArrayList());
+    protected static List<MessageListener> listeners = Collections.synchronizedList(new ArrayList());
 
     public MessageConsumer(String channel) {
         this.channel = channel;
@@ -41,11 +42,10 @@ public class MessageConsumer implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 ConsumerRecords<String, String> records = consumer.poll(100);
                 for (ConsumerRecord<String, String> record : records) {
-                    for(Callback callback : callbackList) {
-                        if( (callback.getId().equals(record.key())) ) {
-                            Object translatedData = callback.translate(record.value());
-                            callback.call(translatedData);
-                            MessageConsumer.unregisterCallback(callback);
+                    for(MessageListener listener : listeners) {
+                        if( (listener.getCorrelationId().equals(record.key())) ) {
+                            listener.onMessage(record.value());
+                            MessageConsumer.unregisterListener(listener);
                             break;
                         }
                     }
@@ -54,20 +54,18 @@ public class MessageConsumer implements Runnable {
         } finally {
             consumer.close();
         }
-
     }
 
-    public static void registerCallback(Callback callback) {
-        synchronized (callbackList) {
-            callbackList.add(callback);
+    public static void registerListener(MessageListener listener) {
+        synchronized (listeners) {
+            listeners.add(listener);
         }
 
     }
 
-    public static void unregisterCallback(Callback callback) {
-        synchronized (callbackList) {
-            callbackList.remove(callback);
+    public static void unregisterListener(MessageListener listener) {
+        synchronized (listeners) {
+            listeners.remove(listener);
         }
     }
-
 }

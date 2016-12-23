@@ -5,6 +5,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.Assert;
 import org.junit.Test;
+import ymyoo.order.messaging.endpoint.request.MessageListener;
 
 import java.util.Properties;
 
@@ -23,43 +24,68 @@ public class MessageConsumerIntegrationTest {
 
         String callback1Key = "12345";
         String callback1Value = "hello";
-        MessageConsumer.registerCallback(new Callback() {
+//        MessageConsumer.registerCallback(new Callback() {
+//            @Override
+//            public void call(Object result) {
+//                // then
+//                Assert.assertEquals(result, callback1Value);
+//            }
+//
+//            @Override
+//            public Object translate(String data) {
+//                // then
+//                return callback1Value;
+//            }
+//
+//            @Override
+//            public String getId() {
+//                return callback1Key;
+//            }
+//        });
+
+        MessageConsumer.registerListener(new MessageListener() {
             @Override
-            public void call(Object result) {
+            public void onMessage(String message) {
                 // then
-                Assert.assertEquals(result, callback1Value);
+                Assert.assertEquals(message, callback1Value);
             }
 
             @Override
-            public Object translate(String data) {
-                // then
-                return callback1Value;
-            }
-
-            @Override
-            public String getId() {
+            public String getCorrelationId() {
                 return callback1Key;
             }
         });
 
         String callback2Key = "67890";
         String callback2Value = "bye!";
-        MessageConsumer.registerCallback(new Callback() {
+//        MessageConsumer.registerCallback(new Callback() {
+//            @Override
+//            public void call(Object result) {
+//                // then
+//                Assert.assertEquals(result, callback2Value);
+//            }
+//
+//            @Override
+//            public Object translate(String data) {
+//                // then
+//                Assert.assertEquals(data, callback2Value);
+//                return callback2Value;
+//            }
+//
+//            @Override
+//            public String getId() {
+//                return callback2Key;
+//            }
+//        });
+
+        MessageConsumer.registerListener(new MessageListener() {
             @Override
-            public void call(Object result) {
-                // then
-                Assert.assertEquals(result, callback2Value);
+            public void onMessage(String message) {
+                Assert.assertEquals(message, callback2Value);
             }
 
             @Override
-            public Object translate(String data) {
-                // then
-                Assert.assertEquals(data, callback2Value);
-                return callback2Value;
-            }
-
-            @Override
-            public String getId() {
+            public String getCorrelationId() {
                 return callback2Key;
             }
         });

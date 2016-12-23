@@ -1,13 +1,12 @@
 package ymyoo.order.messaging.endpoint.request;
 
-import ymyoo.infra.messaging.remote.channel.Callback;
 import ymyoo.infra.messaging.remote.channel.MessageConsumer;
 import ymyoo.infra.messaging.remote.channel.MessageProducer;
 
 /**
  * Created by 유영모 on 2016-12-20.
  */
-public class Requester implements Callback<String> {
+public class Requester implements MessageListener {
     private String requestChannel;
     private String replyChannel = "";
     private String correlationId;
@@ -30,7 +29,7 @@ public class Requester implements Callback<String> {
     }
 
     public synchronized String receive() {
-        MessageConsumer.registerCallback(this);
+        MessageConsumer.registerListener(this);
 
         try {
             this.wait();
@@ -41,18 +40,13 @@ public class Requester implements Callback<String> {
     }
 
     @Override
-    public synchronized void call(String result) {
-        replyMessage = result;
+    public synchronized void onMessage(String message) {
+        replyMessage = message;
         this.notify();
     }
 
     @Override
-    public String translate(String data) {
-        return data;
-    }
-
-    @Override
-    public String getId() {
+    public String getCorrelationId() {
         return correlationId;
     }
 }

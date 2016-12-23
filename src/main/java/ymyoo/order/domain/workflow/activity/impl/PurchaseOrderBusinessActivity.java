@@ -2,16 +2,15 @@ package ymyoo.order.domain.workflow.activity.impl;
 
 import ymyoo.order.domain.po.*;
 import ymyoo.order.domain.so.SalesOrder;
-import ymyoo.order.domain.workflow.activity.SyncBusinessActivity;
+import ymyoo.order.domain.workflow.activity.BusinessActivity;
 import ymyoo.order.messaging.endpoint.channeladapter.PurchaseOrderChannelAdapter;
 import ymyoo.utility.PrettySystemOut;
 
 /**
  * Created by 유영모 on 2016-10-20.
  */
-public class PurchaseOrderBusinessActivity implements SyncBusinessActivity<ApprovalOrderPayment, Void> {
+public class PurchaseOrderBusinessActivity implements BusinessActivity<ApprovalOrderPayment, Void> {
     private SalesOrder salesOrder;
-    private String activityId = java.util.UUID.randomUUID().toString().toUpperCase();
 
     public PurchaseOrderBusinessActivity(SalesOrder salesOrder) {
         this.salesOrder = salesOrder;
@@ -30,7 +29,9 @@ public class PurchaseOrderBusinessActivity implements SyncBusinessActivity<Appro
 
         // 구매 주문 생성 이벤트 발행
         PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
-        channelAdapter.onPurchaseOrderCreated(activityId, purchaseOrder);
+        channelAdapter.onPurchaseOrderCreated(purchaseOrder);
         return null;
     }
+
+
 }
