@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 유영모 on 2016-12-23.
  */
-public class RequesterTest {
+public class RequesterIntegrationTest {
     static boolean messageReceivedFlag = false;
 
     final String TEST_REQUEST_CHANNEL = "TEST-REQUEST";
@@ -29,14 +29,13 @@ public class RequesterTest {
 
     @Before
     public void setUp() throws Exception {
-        RequesterTest.messageReceivedFlag = false;
+        RequesterIntegrationTest.messageReceivedFlag = false;
     }
 
     @Test
     public void send() throws InterruptedException {
         // given
         String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
-
         Map<String, String> message = new HashMap<>();
         message.put("productId", "prd-1234");
         message.put("orderQty", "2");
@@ -63,7 +62,7 @@ public class RequesterTest {
                     for (ConsumerRecord<String, String> record : records) {
                         if(record.key().equals(correlationId + "::" + TEST_REPLY_CHANNEL)) {
                             Assert.assertEquals(new Gson().toJson(message), record.value());
-                            RequesterTest.messageReceivedFlag = true;
+                            RequesterIntegrationTest.messageReceivedFlag = true;
                         }
                     }
                 }
@@ -78,23 +77,42 @@ public class RequesterTest {
             obj.wait(TimeUnit.SECONDS.toMillis(5));
         }
 
-        Assert.assertTrue(RequesterTest.messageReceivedFlag);
+        Assert.assertTrue(RequesterIntegrationTest.messageReceivedFlag);
     }
 
     @Test
     public void receive() {
         // given
-        new Thread(new MessageConsumer(TEST_REPLY_CHANNEL)).start();
+        //  - 응답 채널 리스닝...
+        onListener(TEST_REPLY_CHANNEL);
 
+        //  - 메시지 송신
         String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
-
-        Map<String, String> requestMessage = new HashMap<>();
-        requestMessage.put("productId", "prd-1234");
-        requestMessage.put("orderQty", "2");
+        Map<String, String> message = new HashMap<>();
+        message.put("productId", "prd-1234");
+        message.put("orderQty", "2");
 
         Requester requester = new Requester(TEST_REQUEST_CHANNEL, TEST_REPLY_CHANNEL, correlationId);
-        requester.send(new Gson().toJson(requestMessage));
+        requester.send(new Gson().toJson(message));
 
+        //  - Reply Message 송신자 대기..
+        onFakeReplier(correlationId);
+
+        // when
+        String replyMessage = requester.receive();
+
+        // then
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        Map<String, String> content = new Gson().fromJson(replyMessage, type);
+
+        Assert.assertEquals(content.get("validation"), "SUCCESS");
+    }
+
+    private void onListener(String channel) {
+        new Thread(new MessageConsumer(channel)).start();
+    }
+
+    private void onFakeReplier(String correlationId) {
         new Thread(() -> {
             Properties props = new Properties();
             props.put("bootstrap.servers", "localhost:9092");
@@ -123,15 +141,6 @@ public class RequesterTest {
                 consumer.close();
             }
         }).start();
-
-        // when
-        String replyMessage = requester.receive();
-        System.out.println(replyMessage);
-
-        // then
-        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-        Map<String, String> content = new Gson().fromJson(replyMessage, type);
-
-        Assert.assertEquals(content.get("validation"), "SUCCESS");
     }
+
 }
