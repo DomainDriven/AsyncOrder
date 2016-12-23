@@ -3,7 +3,7 @@ package ymyoo.order.domain.workflow.activity.impl;
 import ymyoo.infra.messaging.remote.channel.Callback;
 import ymyoo.order.domain.so.SalesOrder;
 import ymyoo.order.domain.workflow.activity.AsyncBusinessActivity;
-import ymyoo.order.messaging.endpoint.InventoryChannelAdapter;
+import ymyoo.order.messaging.endpoint.channeladapter.InventoryChannelAdapter;
 
 /**
  * 주문시 수행 해야할 재고 관련 작업 모음

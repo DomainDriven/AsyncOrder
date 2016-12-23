@@ -1,4 +1,4 @@
-package ymyoo.order.messaging.endpoint;
+package ymyoo.order.messaging.endpoint.channeladapter;
 
 import com.google.gson.Gson;
 import org.junit.Test;

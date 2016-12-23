@@ -4,7 +4,7 @@ import ymyoo.infra.messaging.remote.channel.Callback;
 import ymyoo.order.domain.po.ApprovalOrderPayment;
 import ymyoo.order.domain.so.SalesOrder;
 import ymyoo.order.domain.workflow.activity.AsyncBusinessActivity;
-import ymyoo.order.messaging.endpoint.PaymentGatewayChannelAdapter;
+import ymyoo.order.messaging.endpoint.channeladapter.PaymentGatewayChannelAdapter;
 
 /**
  * 주문시 수행 해야할 결제 관련 작업 모음

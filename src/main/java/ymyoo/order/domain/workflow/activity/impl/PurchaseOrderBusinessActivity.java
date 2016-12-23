@@ -3,7 +3,7 @@ package ymyoo.order.domain.workflow.activity.impl;
 import ymyoo.order.domain.po.*;
 import ymyoo.order.domain.so.SalesOrder;
 import ymyoo.order.domain.workflow.activity.SyncBusinessActivity;
-import ymyoo.order.messaging.endpoint.PurchaseOrderChannelAdapter;
+import ymyoo.order.messaging.endpoint.channeladapter.PurchaseOrderChannelAdapter;
 import ymyoo.utility.PrettySystemOut;
 
 /**
