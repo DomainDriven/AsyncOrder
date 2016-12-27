@@ -72,7 +72,7 @@ public class RequesterIntegrationTest {
         // 비동기 대기
         Object obj = new Object();
         synchronized (obj) {
-            obj.wait(TimeUnit.SECONDS.toMillis(5));
+            obj.wait(TimeUnit.SECONDS.toMillis(7));
         }
 
         Assert.assertTrue(RequesterIntegrationTest.messageReceivedFlag);
