@@ -4,7 +4,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
 import ymyoo.app.order.domain.event.EventPublisher;
-import ymyoo.app.inventory.exception.StockOutException;
+import ymyoo.app.inventory.domain.exception.StockOutException;
 import ymyoo.app.order.domain.event.OrderCompleted;
 import ymyoo.app.order.domain.event.OrderFailed;
 import ymyoo.app.order.domain.po.ApprovalOrderPayment;

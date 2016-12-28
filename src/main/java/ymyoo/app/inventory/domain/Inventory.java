@@ -1,4 +1,4 @@
-package ymyoo.app.inventory;
+package ymyoo.app.inventory.domain;
 
 /**
  * 상품 재고 인터페이스

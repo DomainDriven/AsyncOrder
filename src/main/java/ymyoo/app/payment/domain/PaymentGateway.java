@@ -1,4 +1,4 @@
-package ymyoo.app.payment;
+package ymyoo.app.payment.domain;
 
 import ymyoo.utility.PrettySystemOut;
 

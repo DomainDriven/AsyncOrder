@@ -1,4 +1,4 @@
-package ymyoo.app.payment;
+package ymyoo.app.payment.domain;
 
 /**
  * Created by 유영모 on 2016-11-17.

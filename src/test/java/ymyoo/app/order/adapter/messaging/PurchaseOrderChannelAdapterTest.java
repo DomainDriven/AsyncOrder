@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import ymyoo.app.order.adapter.messaging.PurchaseOrderChannelAdapter;
 import ymyoo.messaging.MessageProducer;
 import ymyoo.app.order.domain.po.*;
 import ymyoo.app.order.domain.so.OrderItemDeliveryType;
@@ -20,7 +19,7 @@ import static org.mockito.Mockito.verify;
  * Created by 유영모 on 2016-12-16.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(PurchaseOrderChannelAdapter.class)
+@PrepareForTest(PurchaseOrderMessagingAdapter.class)
 public class PurchaseOrderChannelAdapterTest {
     @Test
     public void onPurchaseOrderCreated() throws Exception {
@@ -48,7 +47,7 @@ public class PurchaseOrderChannelAdapterTest {
         MessageProducer mockMessageProducer = mock(MessageProducer.class);
         String messageId = java.util.UUID.randomUUID().toString().toUpperCase();
 
-        PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
+        PurchaseOrderMessagingAdapter channelAdapter = new PurchaseOrderMessagingAdapter();
   //      channelAdapter.setMessageProducer(mockMessageProducer);
 
         // when

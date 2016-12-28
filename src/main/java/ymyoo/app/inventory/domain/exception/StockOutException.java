@@ -1,4 +1,4 @@
-package ymyoo.app.inventory.exception;
+package ymyoo.app.inventory.domain.exception;
 
 /**
  * 재고 없음 예외

@@ -1,13 +1,12 @@
 package ymyoo.messaging.intergration;
 
 import com.google.gson.Gson;
-import ymyoo.app.inventory.InventoryService;
-import ymyoo.app.inventory.TakingOrderItem;
-import ymyoo.app.payment.ApprovalPayment;
-import ymyoo.app.payment.PaymentGatewayService;
-import ymyoo.app.payment.TakingOrderPayment;
-import ymyoo.messaging.MessageChannel;
-import ymyoo.messaging.MessageProducer;
+import ymyoo.app.inventory.domain.InventoryService;
+import ymyoo.app.inventory.domain.TakingOrderItem;
+import ymyoo.app.payment.domain.ApprovalPayment;
+import ymyoo.app.payment.domain.PaymentGatewayService;
+import ymyoo.app.payment.domain.TakingOrderPayment;
+import ymyoo.messaging.MessageChannels;
 import ymyoo.utility.PrettySystemOut;
 
 import java.util.HashMap;
@@ -22,9 +21,8 @@ public class MessageRouter {
 
     public static void route(String channel, String key, String data) {
         String messageId = extractMessageId(key);
-        String replyChannel = extractReplyChannel(key);
 
-        if(channel.equals(MessageChannel.INVENTORY_REQUEST)) {
+        if(channel.equals(MessageChannels.INVENTORY_REQUEST)) {
             // 메시지를 변환
             TakingOrderItem takingOrderItem = CheckingInventoryMessageTranslator.translate(data);
 
@@ -32,13 +30,16 @@ public class MessageRouter {
             InventoryService inventoryService = new InventoryService();
             inventoryService.checkAndReserve(takingOrderItem);
 
-            // 결과를 메시지로 전송
-            Map<String, String> replyMessageBody = new HashMap<>();
-            replyMessageBody.put("validation", "SUCCESS");
+            if(isShouldReply(key)) {
+                // 결과를 메시지로 전송
+                String replyChannel = extractReplyChannel(key);
+                Map<String, String> replyMessageBody = new HashMap<>();
+                replyMessageBody.put("validation", "SUCCESS");
 
-            MessageProducer producer = new MessageProducer(replyChannel, "");
-            producer.send(messageId, new Gson().toJson(replyMessageBody));
-        } else if(channel.equals(MessageChannel.PAYMENT_AUTH_APP_REQUEST)) {
+                Replier replier = new Replier();
+                replier.reply(replyChannel, messageId, new Gson().toJson(replyMessageBody));
+            }
+        } else if(channel.equals(MessageChannels.PAYMENT_AUTH_APP_REQUEST)) {
             // 메시지 변환
             TakingOrderPayment takingOrderPayment = AuthApvPaymentMessageTranslator.translate(data);
 
@@ -46,14 +47,26 @@ public class MessageRouter {
             PaymentGatewayService paymentGatewayService = new PaymentGatewayService();
             ApprovalPayment approvalOrderPayment = paymentGatewayService.authenticateAndApproval(takingOrderPayment);
 
-            // 결과를 메시지로 전송
-            MessageProducer producer = new MessageProducer(replyChannel, "");
-            producer.send(messageId, new Gson().toJson(approvalOrderPayment));
-        } else if(channel.equals(MessageChannel.PURCHASE_ORDER_CREATED)) {
+            if(isShouldReply(key)) {
+                // 결과를 메시지로 전송
+                String replyChannel = extractReplyChannel(key);
+
+                Replier replier = new Replier();
+                replier.reply(replyChannel, messageId, new Gson().toJson(approvalOrderPayment));
+            }
+        } else if(channel.equals(MessageChannels.PURCHASE_ORDER_CREATED)) {
             // 구매 주문 생성에 따른 후속 처리
             PrettySystemOut.println(MessageRouter.class, "주문 완료 문자 발송");
         } else {
             throw new RuntimeException("라우팅 가능한 채널이 아닙니다.");
+        }
+    }
+
+    private static boolean isShouldReply(String key) {
+        if(key.contains("::")) {
+            return true;
+        } else {
+            return false;
         }
     }
 

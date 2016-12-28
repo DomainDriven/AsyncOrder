@@ -1,7 +1,7 @@
 package ymyoo.app.order.adapter.messaging;
 
 import com.google.gson.Gson;
-import ymyoo.messaging.MessageChannel;
+import ymyoo.messaging.MessageChannels;
 import ymyoo.app.order.domain.po.ApprovalOrderPayment;
 import ymyoo.app.order.domain.so.SalesOrderPayment;
 import ymyoo.messaging.Requester;
@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * Created by 유영모 on 2016-11-17.
  */
-public class PaymentGatewayChannelAdapter {
+public class PaymentGatewayMessagingAdapter {
     public ApprovalOrderPayment authenticateAndApproval(SalesOrderPayment orderPayment) {
         // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();
@@ -23,7 +23,7 @@ public class PaymentGatewayChannelAdapter {
 
         // 메시지 발신
         String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
-        Requester requester = new Requester(MessageChannel.PAYMENT_AUTH_APP_REQUEST, MessageChannel.PAYMENT_AUTH_APP_REPLY, correlationId);
+        Requester requester = new Requester(MessageChannels.PAYMENT_AUTH_APP_REQUEST, MessageChannels.PAYMENT_AUTH_APP_REPLY, correlationId);
         requester.send(new Gson().toJson(messageBody));
 
         // 메시지 수신

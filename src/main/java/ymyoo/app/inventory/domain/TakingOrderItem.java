@@ -1,4 +1,4 @@
-package ymyoo.app.inventory;
+package ymyoo.app.inventory.domain;
 
 /**
  * Created by 유영모 on 2016-11-25.

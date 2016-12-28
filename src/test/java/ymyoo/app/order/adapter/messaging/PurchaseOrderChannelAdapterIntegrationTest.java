@@ -6,8 +6,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.Assert;
 import org.junit.Test;
-import ymyoo.app.order.adapter.messaging.PurchaseOrderChannelAdapter;
-import ymyoo.messaging.MessageChannel;
+import ymyoo.messaging.MessageChannels;
 import ymyoo.app.order.domain.po.*;
 import ymyoo.app.order.domain.so.OrderItemDeliveryType;
 import ymyoo.app.order.domain.so.SalesOrderIdGenerator;
@@ -41,7 +40,7 @@ public class PurchaseOrderChannelAdapterIntegrationTest {
             props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-            consumer.subscribe(Arrays.asList(MessageChannel.PURCHASE_ORDER_CREATED));
+            consumer.subscribe(Arrays.asList(MessageChannels.PURCHASE_ORDER_CREATED));
 
             try {
                 while (!Thread.currentThread().isInterrupted()) {
@@ -57,7 +56,7 @@ public class PurchaseOrderChannelAdapterIntegrationTest {
         }).start();
 
         // when
-        PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
+        PurchaseOrderMessagingAdapter channelAdapter = new PurchaseOrderMessagingAdapter();
         channelAdapter.onPurchaseOrderCreated(purchaseOrder);
     }
 }

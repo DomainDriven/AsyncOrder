@@ -3,7 +3,7 @@ package ymyoo.messaging;
 /**
  * Created by 유영모 on 2016-12-08.
  */
-public class MessageChannel {
+public class MessageChannels {
     public static final String INVENTORY_REQUEST = "INVENTORY-REQUEST";
     public static final String INVENTORY_REPLY = "INVENTORY-REPLY";
 

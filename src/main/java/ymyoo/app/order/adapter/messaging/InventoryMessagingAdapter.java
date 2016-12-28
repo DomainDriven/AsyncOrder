@@ -2,7 +2,7 @@ package ymyoo.app.order.adapter.messaging;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import ymyoo.messaging.MessageChannel;
+import ymyoo.messaging.MessageChannels;
 import ymyoo.app.order.domain.so.SalesOrderItem;
 import ymyoo.messaging.Requester;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * Created by 유영모 on 2016-11-17.
  */
-public class InventoryChannelAdapter {
+public class InventoryMessagingAdapter {
 
     public boolean checkAndReserveOrderItem(final SalesOrderItem orderItem) {
         // 메시지 생성
@@ -26,7 +26,7 @@ public class InventoryChannelAdapter {
 
         // 메시지 발신
         String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
-        Requester requester = new Requester(MessageChannel.INVENTORY_REQUEST, MessageChannel.INVENTORY_REPLY, correlationId);
+        Requester requester = new Requester(MessageChannels.INVENTORY_REQUEST, MessageChannels.INVENTORY_REPLY, correlationId);
 
         requester.send(new Gson().toJson(messageBody));
 

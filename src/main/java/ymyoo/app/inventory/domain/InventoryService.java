@@ -1,7 +1,7 @@
-package ymyoo.app.inventory;
+package ymyoo.app.inventory.domain;
 
-import ymyoo.app.inventory.impl.AgencyInventory;
-import ymyoo.app.inventory.impl.DirectingInventory;
+import ymyoo.app.inventory.domain.impl.AgencyInventory;
+import ymyoo.app.inventory.domain.impl.DirectingInventory;
 
 /**
  * Created by 유영모 on 2016-11-16.

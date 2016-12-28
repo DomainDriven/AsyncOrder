@@ -1,8 +1,8 @@
-package ymyoo.app.inventory.impl;
+package ymyoo.app.inventory.domain.impl;
 
-import ymyoo.app.inventory.Inventory;
-import ymyoo.app.inventory.TakingOrderItem;
-import ymyoo.app.inventory.exception.StockOutException;
+import ymyoo.app.inventory.domain.Inventory;
+import ymyoo.app.inventory.domain.TakingOrderItem;
+import ymyoo.app.inventory.domain.exception.StockOutException;
 import ymyoo.utility.PrettySystemOut;
 
 /**
