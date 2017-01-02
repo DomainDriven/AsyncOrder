@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * Created by 유영모 on 2016-11-17.
  */
-public class PaymentGatewayMessagingAdapter {
+public class PaymentGatewayChannelAdapter {
     public ApprovalOrderPayment authenticateAndApproval(SalesOrderPayment orderPayment) {
         // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();

@@ -78,4 +78,8 @@ public class KafkaIntegrationTest {
         waitCurrentThread(7);
         Assert.assertTrue(KafkaIntegrationTest.messageReceivedFlag);
     }
+
+    protected String generateId() {
+        return java.util.UUID.randomUUID().toString().toUpperCase();
+    }
 }

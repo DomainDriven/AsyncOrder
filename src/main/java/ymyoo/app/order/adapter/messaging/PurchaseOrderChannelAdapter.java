@@ -8,7 +8,7 @@ import ymyoo.messaging.Requester;
 /**
  * Created by 유영모 on 2016-12-15.
  */
-public class PurchaseOrderMessagingAdapter {
+public class PurchaseOrderChannelAdapter {
 
     public void onPurchaseOrderCreated(PurchaseOrder purchaseOrder) {
         // 구매 주문 생성 완료 이벤트 송신

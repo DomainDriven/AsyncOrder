@@ -3,7 +3,7 @@ package ymyoo.app.order.domain.workflow.activity.impl;
 import ymyoo.app.order.domain.po.ApprovalOrderPayment;
 import ymyoo.app.order.domain.so.SalesOrder;
 import ymyoo.app.order.domain.workflow.activity.BusinessActivity;
-import ymyoo.app.order.adapter.messaging.PaymentGatewayMessagingAdapter;
+import ymyoo.app.order.adapter.messaging.PaymentGatewayChannelAdapter;
 
 /**
  * 주문시 수행 해야할 결제 관련 작업 모음
@@ -14,7 +14,7 @@ public class PaymentGatewayBusinessActivity implements BusinessActivity<SalesOrd
 
     @Override
     public ApprovalOrderPayment perform(SalesOrder salesOrder) {
-        PaymentGatewayMessagingAdapter channelAdapter = new PaymentGatewayMessagingAdapter();
+        PaymentGatewayChannelAdapter channelAdapter = new PaymentGatewayChannelAdapter();
         return channelAdapter.authenticateAndApproval(salesOrder.getOrderPayment());
     }
 }

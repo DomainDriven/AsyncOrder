@@ -3,7 +3,7 @@ package ymyoo.app.order.domain.workflow.activity.impl;
 import ymyoo.app.order.domain.po.*;
 import ymyoo.app.order.domain.so.SalesOrder;
 import ymyoo.app.order.domain.workflow.activity.BusinessActivity;
-import ymyoo.app.order.adapter.messaging.PurchaseOrderMessagingAdapter;
+import ymyoo.app.order.adapter.messaging.PurchaseOrderChannelAdapter;
 import ymyoo.utility.PrettySystemOut;
 
 /**
@@ -28,7 +28,7 @@ public class PurchaseOrderBusinessActivity implements BusinessActivity<ApprovalO
         PrettySystemOut.println(salesOrder.getClass(), "주문 완료....");
 
         // 구매 주문 생성 이벤트 발행
-        PurchaseOrderMessagingAdapter channelAdapter = new PurchaseOrderMessagingAdapter();
+        PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
         channelAdapter.onPurchaseOrderCreated(purchaseOrder);
         return null;
     }

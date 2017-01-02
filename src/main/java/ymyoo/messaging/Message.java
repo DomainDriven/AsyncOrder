@@ -20,6 +20,13 @@ public class Message {
         return body;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
     @Override
     public String toString() {

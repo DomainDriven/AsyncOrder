@@ -56,7 +56,7 @@ public class PurchaseOrderChannelAdapterIntegrationTest {
         }).start();
 
         // when
-        PurchaseOrderMessagingAdapter channelAdapter = new PurchaseOrderMessagingAdapter();
+        PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
         channelAdapter.onPurchaseOrderCreated(purchaseOrder);
     }
 }

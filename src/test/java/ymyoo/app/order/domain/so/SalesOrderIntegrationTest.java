@@ -4,13 +4,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import ymyoo.messaging.MessageChannels;
-import ymyoo.messaging.ReplyMessageConsumer;
-import ymyoo.app.order.domain.event.OrderCompleted;
-import ymyoo.app.order.domain.event.OrderFailed;
+import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
 import ymyoo.app.order.domain.event.EventPublisher;
 import ymyoo.app.order.domain.event.EventSubscriber;
-import ymyoo.messaging.intergration.MessageBroker;
+import ymyoo.app.order.domain.event.OrderCompleted;
+import ymyoo.app.order.domain.event.OrderFailed;
+import ymyoo.app.payment.adapter.messaging.PaymentReplier;
+import ymyoo.messaging.MessageChannels;
+import ymyoo.messaging.ReplyMessageConsumer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +22,9 @@ public class SalesOrderIntegrationTest {
     private String orderId;
     private boolean eventAccepted;
 
-    Thread messageBroker = null;
+    Thread inventoryReplier = null;
+    Thread paymentReplier = null;
+
     Thread inventoryReplyMessageConsumer = null;
     Thread paymentReplyMessageConsumer = null;
 
@@ -30,10 +33,14 @@ public class SalesOrderIntegrationTest {
         orderId = "";
         eventAccepted = false;
 
-        // Message Consumer Subscribe
-        messageBroker = new Thread(new MessageBroker(MessageChannels.INVENTORY_REQUEST, MessageChannels.PAYMENT_AUTH_APP_REQUEST, MessageChannels.PURCHASE_ORDER_CREATED));
-        messageBroker.start();
+        // setup Message Replier
+        inventoryReplier = new Thread(new InventoryReplier());
+        inventoryReplier.start();
 
+        paymentReplier = new Thread(new PaymentReplier());
+        paymentReplier.start();
+
+        // setup ReplyMessage Consumer
         inventoryReplyMessageConsumer = new Thread(new ReplyMessageConsumer(MessageChannels.INVENTORY_REPLY));
         inventoryReplyMessageConsumer.start();
 

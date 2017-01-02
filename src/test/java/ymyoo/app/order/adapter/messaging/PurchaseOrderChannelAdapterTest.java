@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
  * Created by 유영모 on 2016-12-16.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(PurchaseOrderMessagingAdapter.class)
+@PrepareForTest(PurchaseOrderChannelAdapter.class)
 public class PurchaseOrderChannelAdapterTest {
     @Test
     public void onPurchaseOrderCreated() throws Exception {
@@ -47,7 +47,7 @@ public class PurchaseOrderChannelAdapterTest {
         MessageProducer mockMessageProducer = mock(MessageProducer.class);
         String messageId = java.util.UUID.randomUUID().toString().toUpperCase();
 
-        PurchaseOrderMessagingAdapter channelAdapter = new PurchaseOrderMessagingAdapter();
+        PurchaseOrderChannelAdapter channelAdapter = new PurchaseOrderChannelAdapter();
   //      channelAdapter.setMessageProducer(mockMessageProducer);
 
         // when

@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * Created by 유영모 on 2016-11-17.
  */
-public class InventoryMessagingAdapter {
+public class InventoryChannelAdapter {
 
     public boolean checkAndReserveOrderItem(final SalesOrderItem orderItem) {
         // 메시지 생성
