@@ -18,18 +18,18 @@ import static org.mockito.Mockito.*;
 /**
  * Created by 유영모 on 2016-12-15.
  */
-public class MessageConsumerTest {
+public class ReplyMessageConsumerTest {
 
     @Before
     public void setUp() throws Exception {
-        TestMessageConsumer.clearListeners();
+        TestReplyMessageConsumer.clearListeners();
     }
 
     @Test
     public void registerListener() throws Exception {
         // given
         KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
-        TestMessageConsumer consumer = new TestMessageConsumer("testChannel", mockKafkaConsumer);
+        TestReplyMessageConsumer consumer = new TestReplyMessageConsumer("testChannel", mockKafkaConsumer);
 
         // when
         consumer.registerListener(new MessageListener() {
@@ -52,7 +52,7 @@ public class MessageConsumerTest {
     public void unregisterCallback() throws Exception {
         // given
         KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
-        TestMessageConsumer consumer = new TestMessageConsumer("testChannel", mockKafkaConsumer);
+        TestReplyMessageConsumer consumer = new TestReplyMessageConsumer("testChannel", mockKafkaConsumer);
         MessageListener listener = new MessageListener() {
             @Override
             public void onMessage(String message) {
@@ -85,7 +85,7 @@ public class MessageConsumerTest {
 
         when(mockKafkaConsumer.poll(100)).thenReturn(new ConsumerRecords(records));
 
-        MessageConsumer.registerListener(new MessageListener() {
+        ReplyMessageConsumer.registerListener(new MessageListener() {
             @Override
             public void onMessage(String message) {
 
@@ -98,7 +98,7 @@ public class MessageConsumerTest {
         });
 
         // when
-        Thread messageConsumer = new Thread(new MessageConsumer("test-intergration", mockKafkaConsumer));
+        Thread messageConsumer = new Thread(new ReplyMessageConsumer("test-intergration", mockKafkaConsumer));
         messageConsumer.start();
 
         Thread.sleep(1000);

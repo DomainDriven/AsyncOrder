@@ -14,12 +14,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by 유영모 on 2016-12-23.
  */
-public class RequesterIntegrationTest {
+public class RequesterIntegrationTest extends KafkaIntegrationTest {
     static boolean messageReceivedFlag = false;
 
     final String TEST_REQUEST_CHANNEL = "TEST-REQUEST";
@@ -43,39 +42,7 @@ public class RequesterIntegrationTest {
         requester.send(new Gson().toJson(message));
 
         // then
-        new Thread(() -> {
-            Properties props = new Properties();
-            props.put("bootstrap.servers", "localhost:9092");
-            props.put("group.id", "test");
-            props.put("enable.auto.commit", "true");
-            props.put("auto.commit.interval.ms", "1000");
-            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-
-            consumer.subscribe(Arrays.asList(TEST_REQUEST_CHANNEL));
-            try {
-                while (!Thread.currentThread().isInterrupted()) {
-                    ConsumerRecords<String, String> records = consumer.poll(100);
-                    for (ConsumerRecord<String, String> record : records) {
-                        if(record.key().equals(correlationId + "::" + TEST_REPLY_CHANNEL)) {
-                            Assert.assertEquals(new Gson().toJson(message), record.value());
-                            RequesterIntegrationTest.messageReceivedFlag = true;
-                        }
-                    }
-                }
-            } finally {
-                consumer.close();
-            }
-        }).start();
-
-        // 비동기 대기
-        Object obj = new Object();
-        synchronized (obj) {
-            obj.wait(TimeUnit.SECONDS.toMillis(7));
-        }
-
-        Assert.assertTrue(RequesterIntegrationTest.messageReceivedFlag);
+        assertSendingMessage(TEST_REQUEST_CHANNEL, correlationId + "::" + TEST_REPLY_CHANNEL, new Gson().toJson(message));
     }
 
     @Test
@@ -107,7 +74,7 @@ public class RequesterIntegrationTest {
     }
 
     private void onListener(String channel) {
-        new Thread(new MessageConsumer(channel)).start();
+        new Thread(new ReplyMessageConsumer(channel)).start();
     }
 
     private void onFakeReplier(String correlationId) {

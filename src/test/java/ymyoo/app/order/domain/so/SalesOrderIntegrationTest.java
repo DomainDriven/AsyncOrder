@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ymyoo.messaging.MessageChannels;
-import ymyoo.messaging.MessageConsumer;
+import ymyoo.messaging.ReplyMessageConsumer;
 import ymyoo.app.order.domain.event.OrderCompleted;
 import ymyoo.app.order.domain.event.OrderFailed;
 import ymyoo.app.order.domain.event.EventPublisher;
@@ -34,10 +34,10 @@ public class SalesOrderIntegrationTest {
         messageBroker = new Thread(new MessageBroker(MessageChannels.INVENTORY_REQUEST, MessageChannels.PAYMENT_AUTH_APP_REQUEST, MessageChannels.PURCHASE_ORDER_CREATED));
         messageBroker.start();
 
-        inventoryReplyMessageConsumer = new Thread(new MessageConsumer(MessageChannels.INVENTORY_REPLY));
+        inventoryReplyMessageConsumer = new Thread(new ReplyMessageConsumer(MessageChannels.INVENTORY_REPLY));
         inventoryReplyMessageConsumer.start();
 
-        paymentReplyMessageConsumer = new Thread(new MessageConsumer(MessageChannels.PAYMENT_AUTH_APP_REPLY));
+        paymentReplyMessageConsumer = new Thread(new ReplyMessageConsumer(MessageChannels.PAYMENT_AUTH_APP_REPLY));
         paymentReplyMessageConsumer.start();
     }
 
