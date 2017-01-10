@@ -5,10 +5,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
+import ymyoo.app.order.adapter.OrderStatusAdapter;
 import ymyoo.app.order.domain.event.EventPublisher;
 import ymyoo.app.order.domain.event.EventSubscriber;
 import ymyoo.app.order.domain.event.OrderCompleted;
 import ymyoo.app.order.domain.event.OrderFailed;
+import ymyoo.app.order.domain.status.OrderStatus;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.MessageChannels;
 import ymyoo.messaging.ReplyMessageConsumer;
@@ -153,24 +155,6 @@ public class SalesOrderIntegrationTest {
                 new SalesOrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
                 new SalesOrderPayment(2000, "123-456-0789"));
 
-        // 주문 완료 이벤트 구독
-        EventSubscriber subscriber = new EventSubscriber<OrderCompleted>() {
-            @Override
-            public void handleEvent(OrderCompleted event) {
-                // Then - 주문 완료 확인(Async)
-                eventAccepted = true;
-                Assert.assertEquals(orderId, event.getOrderId());
-                System.out.println("<Client> 주문 완료 이벤트 수신 - 주문 아이디 : " + event.getOrderId());
-            }
-
-            @Override
-            public Class<OrderCompleted> subscribedToEventType() {
-                return OrderCompleted.class;
-            }
-        };
-
-        EventPublisher.instance().subscribe(subscriber);
-
         // When
         System.out.println("<Client> 주문 시작...");
         orderId = order.placeOrder();
@@ -181,11 +165,11 @@ public class SalesOrderIntegrationTest {
         Assert.assertTrue(StringUtils.isNotBlank(orderId));
 
         // 비동기 처리 대기
-        synchronized (subscriber) {
-            subscriber.wait(TimeUnit.SECONDS.toMillis(5));
-        }
-        Assert.assertTrue("이벤트 미 수신", eventAccepted);
+        Thread.currentThread().sleep(TimeUnit.SECONDS.toMillis(5));
 
+        OrderStatus actual = new OrderStatusAdapter().getStatus(orderId);
+        OrderStatus expected = OrderStatus.PURCHASE_ORDER_CREATED;
+        Assert.assertEquals(expected, actual);
         System.out.println("<Client> 주문 종료...");
     }
 }
