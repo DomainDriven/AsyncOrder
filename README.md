@@ -9,7 +9,7 @@
  - [RxJava](https://github.com/ReactiveX/RxJava) 1.1.6
 - MOM
  - [Apache Kafka](https://kafka.apache.org/) 0.10.1.0
-- Persistence
+- Persistence API
  - JPA/Hibernate 4.3.10.Final
 - Database
  - SQLite
