@@ -1,10 +1,10 @@
 package ymyoo.app.order.domain.workflow;
 
-import ymyoo.app.order.domain.so.SalesOrder;
+import ymyoo.app.order.domain.Order;
 
 /**
  * Created by 유영모 on 2016-10-24.
  */
 public interface OrderProcessManager {
-    void runWorkflow(SalesOrder salesOrder);
+    void runWorkflow(Order order);
 }

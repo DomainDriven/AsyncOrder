@@ -1,7 +1,7 @@
 package ymyoo.app.order.domain.workflow.activity.impl;
 
 import ymyoo.app.order.domain.po.*;
-import ymyoo.app.order.domain.so.SalesOrder;
+import ymyoo.app.order.domain.Order;
 import ymyoo.app.order.domain.workflow.activity.BusinessActivity;
 import ymyoo.app.order.adapter.messaging.PurchaseOrderChannelAdapter;
 import ymyoo.utility.PrettySystemOut;
@@ -10,10 +10,10 @@ import ymyoo.utility.PrettySystemOut;
  * Created by 유영모 on 2016-10-20.
  */
 public class PurchaseOrderBusinessActivity implements BusinessActivity<ApprovalOrderPayment, Void> {
-    private SalesOrder salesOrder;
+    private Order salesOrder;
 
-    public PurchaseOrderBusinessActivity(SalesOrder salesOrder) {
-        this.salesOrder = salesOrder;
+    public PurchaseOrderBusinessActivity(Order order) {
+        this.salesOrder = order;
     }
 
     @Override

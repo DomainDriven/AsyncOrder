@@ -3,7 +3,7 @@ package ymyoo.app.order.adapter.messaging;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import ymyoo.messaging.MessageChannels;
-import ymyoo.app.order.domain.so.SalesOrderItem;
+import ymyoo.app.order.domain.OrderItem;
 import ymyoo.messaging.Requester;
 
 import java.lang.reflect.Type;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class InventoryChannelAdapter {
 
-    public boolean checkAndReserveOrderItem(final SalesOrderItem orderItem) {
+    public boolean checkAndReserveOrderItem(final OrderItem orderItem) {
         // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("deliveryType", orderItem.getDeliveryType().name());

@@ -8,8 +8,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import ymyoo.messaging.MessageProducer;
 import ymyoo.app.order.domain.po.*;
-import ymyoo.app.order.domain.so.OrderItemDeliveryType;
-import ymyoo.app.order.domain.so.SalesOrderIdGenerator;
+import ymyoo.app.order.domain.OrderItemDeliveryType;
+import ymyoo.app.order.domain.OrderIdGenerator;
 import ymyoo.messaging.Requester;
 
 import static org.mockito.Mockito.mock;
@@ -38,7 +38,7 @@ public class PurchaseOrderChannelAdapterTest {
 
 
 
-        String orderId = SalesOrderIdGenerator.generate();
+        String orderId = OrderIdGenerator.generate();
         PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem("prd-12345", 3, OrderItemDeliveryType.AGENCY);
         PurchaseOrderPayment purchaseOrderPayment = new PurchaseOrderPayment("t1234");
         Purchaser purchaser = new Purchaser("유영모", "010-0000-0000");

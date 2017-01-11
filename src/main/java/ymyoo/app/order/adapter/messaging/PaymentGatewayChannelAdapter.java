@@ -3,7 +3,7 @@ package ymyoo.app.order.adapter.messaging;
 import com.google.gson.Gson;
 import ymyoo.messaging.MessageChannels;
 import ymyoo.app.order.domain.po.ApprovalOrderPayment;
-import ymyoo.app.order.domain.so.SalesOrderPayment;
+import ymyoo.app.order.domain.OrderPayment;
 import ymyoo.messaging.Requester;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by 유영모 on 2016-11-17.
  */
 public class PaymentGatewayChannelAdapter {
-    public ApprovalOrderPayment authenticateAndApproval(SalesOrderPayment orderPayment) {
+    public ApprovalOrderPayment authenticateAndApproval(OrderPayment orderPayment) {
         // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("creditCardNo", orderPayment.getCreditCardNo());

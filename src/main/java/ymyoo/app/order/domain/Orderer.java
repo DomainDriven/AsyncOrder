@@ -1,4 +1,4 @@
-package ymyoo.app.order.domain.so;
+package ymyoo.app.order.domain;
 
 /**
  * 주문자

@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import ymyoo.messaging.MessageChannels;
 import ymyoo.app.order.domain.po.*;
-import ymyoo.app.order.domain.so.OrderItemDeliveryType;
-import ymyoo.app.order.domain.so.SalesOrderIdGenerator;
+import ymyoo.app.order.domain.OrderItemDeliveryType;
+import ymyoo.app.order.domain.OrderIdGenerator;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -22,7 +22,7 @@ public class PurchaseOrderChannelAdapterIntegrationTest {
     @Test
     public void onPurchaseOrderCreated() throws Exception {
         // given
-        String orderId = SalesOrderIdGenerator.generate();
+        String orderId = OrderIdGenerator.generate();
         PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem("prd-12345", 3, OrderItemDeliveryType.AGENCY);
         PurchaseOrderPayment purchaseOrderPayment = new PurchaseOrderPayment("t1234");
         Purchaser purchaser = new Purchaser("유영모", "010-0000-0000");

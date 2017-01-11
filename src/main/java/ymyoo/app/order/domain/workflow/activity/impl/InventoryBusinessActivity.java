@@ -1,6 +1,6 @@
 package ymyoo.app.order.domain.workflow.activity.impl;
 
-import ymyoo.app.order.domain.so.SalesOrder;
+import ymyoo.app.order.domain.Order;
 import ymyoo.app.order.domain.workflow.activity.BusinessActivity;
 import ymyoo.app.order.adapter.messaging.InventoryChannelAdapter;
 
@@ -9,11 +9,11 @@ import ymyoo.app.order.adapter.messaging.InventoryChannelAdapter;
  *
  * Created by 유영모 on 2016-10-10.
  */
-public class InventoryBusinessActivity implements BusinessActivity<SalesOrder, Boolean> {
+public class InventoryBusinessActivity implements BusinessActivity<Order, Boolean> {
 
     @Override
-    public Boolean perform(SalesOrder salesOrder) {
+    public Boolean perform(Order order) {
         InventoryChannelAdapter channelAdapter = new InventoryChannelAdapter();
-        return channelAdapter.checkAndReserveOrderItem(salesOrder.getOrderItem());
+        return channelAdapter.checkAndReserveOrderItem(order.getOrderItem());
     }
 }

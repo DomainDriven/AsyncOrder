@@ -1,16 +1,14 @@
-package ymyoo.app.order.domain.so;
+package ymyoo.app.order.domain;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
-import ymyoo.app.order.adapter.OrderStatusAdapter;
 import ymyoo.app.order.domain.event.EventPublisher;
 import ymyoo.app.order.domain.event.EventSubscriber;
 import ymyoo.app.order.domain.event.OrderCompleted;
 import ymyoo.app.order.domain.event.OrderFailed;
-import ymyoo.app.order.domain.status.OrderStatus;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.MessageChannels;
 import ymyoo.messaging.ReplyMessageConsumer;
@@ -20,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 유영모 on 2016-10-07.
  */
-public class SalesOrderIntegrationTest {
+public class OrderIntegrationTest {
     private String orderId;
     private boolean eventAccepted;
 
@@ -61,9 +59,9 @@ public class SalesOrderIntegrationTest {
     @Test
     public void testPlaceOrder() throws Exception {
         // Given
-        SalesOrder order = SalesOrderFactory.create(new Orderer("유영모", "010-0000-0000"),
-                new SalesOrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),
-                new SalesOrderPayment(2000, "123-456-0789"));
+        Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000"),
+                new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),
+                new OrderPayment(2000, "123-456-0789"));
 
         // 주문 완료 이벤트 구독
         EventSubscriber subscriber = new EventSubscriber<OrderCompleted>() {
@@ -105,9 +103,9 @@ public class SalesOrderIntegrationTest {
     @Test
     public void testPlaceOrder_예외_재고_없음() throws Exception {
         // Given
-        SalesOrder order = SalesOrderFactory.create(new Orderer("유영모", "010-0000-0000"),
-                new SalesOrderItem("P0002", 2, OrderItemDeliveryType.AGENCY),
-                new SalesOrderPayment(2000, "123-456-0789"));
+        Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000"),
+                new OrderItem("P0002", 2, OrderItemDeliveryType.AGENCY),
+                new OrderPayment(2000, "123-456-0789"));
 
         // 주문 실패 이벤트 구독
         EventSubscriber subscriber = new EventSubscriber<OrderFailed>() {
@@ -151,9 +149,9 @@ public class SalesOrderIntegrationTest {
     @Test
     public void testPlaceOrder_자사배송상품() throws Exception {
         // Given
-        SalesOrder order = SalesOrderFactory.create(new Orderer("유영모", "010-0000-0000"),
-                new SalesOrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
-                new SalesOrderPayment(2000, "123-456-0789"));
+        Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000"),
+                new OrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
+                new OrderPayment(2000, "123-456-0789"));
 
         // When
         System.out.println("<Client> 주문 시작...");
@@ -167,9 +165,9 @@ public class SalesOrderIntegrationTest {
         // 비동기 처리 대기
         Thread.currentThread().sleep(TimeUnit.SECONDS.toMillis(5));
 
-        OrderStatus actual = new OrderStatusAdapter().getStatus(orderId);
-        OrderStatus expected = OrderStatus.PURCHASE_ORDER_CREATED;
-        Assert.assertEquals(expected, actual);
+        OrderStatus actual = order.getOrderStatus();
+        Assert.assertEquals(orderId, actual.getOrderId());
+        Assert.assertEquals(OrderStatus.Status.PURCHASE_ORDER_CREATED, actual.getStatus());
         System.out.println("<Client> 주문 종료...");
     }
 }

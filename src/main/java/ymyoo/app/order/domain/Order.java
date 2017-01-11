@@ -1,33 +1,38 @@
-package ymyoo.app.order.domain.so;
+package ymyoo.app.order.domain;
 
 import ymyoo.app.order.domain.workflow.OrderProcessManager;
 import ymyoo.app.order.domain.workflow.OrderProcessManagerFactory;
+import ymyoo.app.order.infrastructure.repository.OrderStatusRepository;
 
 /**
  * Created by 유영모 on 2016-10-07.
  */
-public class SalesOrder {
-    private Orderer orderer;
+public class Order {
     private String orderId;
-    private SalesOrderItem orderItem;
-    private SalesOrderPayment orderPayment;
+    private Orderer orderer;
+    private OrderItem orderItem;
+    private OrderPayment orderPayment;
 
     private OrderProcessManager processManager;
 
-    public SalesOrder(Orderer orderer, SalesOrderItem orderItem, SalesOrderPayment orderPayment) {
+    public Order(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public Order(Orderer orderer, OrderItem orderItem, OrderPayment orderPayment) {
         this.orderer = orderer;
         this.orderItem = orderItem;
         this.orderPayment = orderPayment;
-        this.orderId = SalesOrderIdGenerator.generate();
+        this.orderId = OrderIdGenerator.generate();
         this.processManager = OrderProcessManagerFactory.create(this);
     }
 
-    public SalesOrder(Orderer orderer, SalesOrderItem orderItem, SalesOrderPayment orderPayment,
-                      OrderProcessManager processManager) {
+    public Order(Orderer orderer, OrderItem orderItem, OrderPayment orderPayment,
+                 OrderProcessManager processManager) {
         this.orderer = orderer;
         this.orderItem = orderItem;
         this.orderPayment = orderPayment;
-        this.orderId = SalesOrderIdGenerator.generate();
+        this.orderId = OrderIdGenerator.generate();
         this.processManager = processManager;
     }
 
@@ -39,16 +44,21 @@ public class SalesOrder {
         return orderId;
     }
 
-    public SalesOrderItem getOrderItem() {
+    public OrderItem getOrderItem() {
         return orderItem;
     }
 
-    public SalesOrderPayment getOrderPayment() {
+    public OrderPayment getOrderPayment() {
         return orderPayment;
     }
 
     public String placeOrder() {
         processManager.runWorkflow(this);
         return orderId;
+    }
+
+    public OrderStatus getOrderStatus() {
+        OrderStatusRepository orderStatusRepository = new OrderStatusRepository();
+        return orderStatusRepository.find(this.getOrderId());
     }
 }
