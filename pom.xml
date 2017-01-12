@@ -88,6 +88,7 @@
         </dependency>
     </dependencies>
 
+    <!-- 회사에서 코딩할 때 회사 네트워크 특성상 HTTPS 통신이 오류가 발생하여 Maven 기본 설정을 HTTP 로 오버라이딩-->
     <repositories>
         <repository>
             <snapshots>
@@ -98,7 +99,6 @@
             <url>http://repo.maven.apache.org/maven2</url>
         </repository>
     </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <releases>
