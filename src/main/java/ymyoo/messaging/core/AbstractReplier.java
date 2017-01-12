@@ -1,4 +1,4 @@
-package ymyoo.messaging;
+package ymyoo.messaging.core;
 
 import java.util.List;
 

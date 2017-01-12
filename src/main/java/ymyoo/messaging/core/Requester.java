@@ -1,4 +1,4 @@
-package ymyoo.messaging;
+package ymyoo.messaging.core;
 
 /**
  * Created by 유영모 on 2016-12-20.

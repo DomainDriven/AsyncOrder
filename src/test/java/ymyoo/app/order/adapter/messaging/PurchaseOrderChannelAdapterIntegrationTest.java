@@ -6,7 +6,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.Assert;
 import org.junit.Test;
-import ymyoo.messaging.MessageChannels;
+import ymyoo.messaging.core.MessageChannels;
 import ymyoo.app.order.domain.po.*;
 import ymyoo.app.order.domain.OrderItemDeliveryType;
 import ymyoo.app.order.domain.OrderIdGenerator;

@@ -1,4 +1,4 @@
-package ymyoo.messaging;
+package ymyoo.messaging.core;
 
 import com.google.gson.Gson;
 import org.apache.kafka.clients.producer.Producer;

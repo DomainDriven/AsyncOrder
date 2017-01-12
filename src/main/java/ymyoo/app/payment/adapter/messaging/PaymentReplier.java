@@ -2,10 +2,10 @@ package ymyoo.app.payment.adapter.messaging;
 
 import com.google.gson.Gson;
 import ymyoo.app.payment.domain.ApprovalPayment;
-import ymyoo.messaging.AbstractReplier;
-import ymyoo.messaging.Message;
-import ymyoo.messaging.MessageChannels;
-import ymyoo.messaging.MessageProducer;
+import ymyoo.messaging.core.AbstractReplier;
+import ymyoo.messaging.core.Message;
+import ymyoo.messaging.core.MessageChannels;
+import ymyoo.messaging.core.MessageProducer;
 
 /**
  * Created by 유영모 on 2017-01-02.

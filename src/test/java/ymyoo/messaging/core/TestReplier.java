@@ -1,4 +1,7 @@
-package ymyoo.messaging;
+package ymyoo.messaging.core;
+
+import ymyoo.messaging.core.AbstractReplier;
+import ymyoo.messaging.core.Message;
 
 import java.util.ArrayList;
 import java.util.List;

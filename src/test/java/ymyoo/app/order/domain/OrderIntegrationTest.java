@@ -10,8 +10,8 @@ import ymyoo.app.order.domain.event.EventSubscriber;
 import ymyoo.app.order.domain.event.OrderCompleted;
 import ymyoo.app.order.domain.event.OrderFailed;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
-import ymyoo.messaging.MessageChannels;
-import ymyoo.messaging.ReplyMessageConsumer;
+import ymyoo.messaging.core.MessageChannels;
+import ymyoo.messaging.core.ReplyMessageConsumer;
 
 import java.util.concurrent.TimeUnit;
 

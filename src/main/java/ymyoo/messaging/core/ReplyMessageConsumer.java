@@ -1,4 +1,4 @@
-package ymyoo.messaging;
+package ymyoo.messaging.core;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

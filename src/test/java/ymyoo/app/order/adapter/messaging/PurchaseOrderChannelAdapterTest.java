@@ -6,11 +6,11 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import ymyoo.messaging.MessageProducer;
+import ymyoo.messaging.core.MessageProducer;
 import ymyoo.app.order.domain.po.*;
 import ymyoo.app.order.domain.OrderItemDeliveryType;
 import ymyoo.app.order.domain.OrderIdGenerator;
-import ymyoo.messaging.Requester;
+import ymyoo.messaging.core.Requester;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

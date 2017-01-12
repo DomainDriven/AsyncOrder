@@ -1,9 +1,9 @@
 package ymyoo.app.order.adapter.messaging;
 
 import com.google.gson.Gson;
-import ymyoo.messaging.MessageChannels;
+import ymyoo.messaging.core.MessageChannels;
 import ymyoo.app.order.domain.po.PurchaseOrder;
-import ymyoo.messaging.Requester;
+import ymyoo.messaging.core.Requester;
 
 /**
  * Created by 유영모 on 2016-12-15.

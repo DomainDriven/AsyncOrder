@@ -1,6 +1,7 @@
-package ymyoo.messaging;
+package ymyoo.messaging.core;
 
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import ymyoo.messaging.core.ReplyMessageConsumer;
 
 /**
  * Created by 유영모 on 2016-12-15.

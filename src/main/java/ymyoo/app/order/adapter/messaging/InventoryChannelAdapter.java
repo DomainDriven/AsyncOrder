@@ -2,9 +2,9 @@ package ymyoo.app.order.adapter.messaging;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import ymyoo.messaging.MessageChannels;
+import ymyoo.messaging.core.MessageChannels;
 import ymyoo.app.order.domain.OrderItem;
-import ymyoo.messaging.Requester;
+import ymyoo.messaging.core.Requester;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package ymyoo.messaging;
+package ymyoo.messaging.core;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;

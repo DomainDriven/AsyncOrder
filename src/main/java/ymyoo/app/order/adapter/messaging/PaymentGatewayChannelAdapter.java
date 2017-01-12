@@ -1,10 +1,10 @@
 package ymyoo.app.order.adapter.messaging;
 
 import com.google.gson.Gson;
-import ymyoo.messaging.MessageChannels;
+import ymyoo.messaging.core.MessageChannels;
 import ymyoo.app.order.domain.po.ApprovalOrderPayment;
 import ymyoo.app.order.domain.OrderPayment;
-import ymyoo.messaging.Requester;
+import ymyoo.messaging.core.Requester;
 
 import java.util.HashMap;
 import java.util.Map;

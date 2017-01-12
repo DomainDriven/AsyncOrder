@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import ymyoo.app.payment.domain.ApprovalPayment;
 import ymyoo.app.payment.domain.PaymentGatewayService;
 import ymyoo.app.payment.domain.TakingOrderPayment;
-import ymyoo.messaging.Message;
+import ymyoo.messaging.core.Message;
 
 /**
  * Created by 유영모 on 2017-01-02.

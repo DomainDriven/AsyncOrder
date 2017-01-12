@@ -1,4 +1,4 @@
-package ymyoo.messaging;
+package ymyoo.messaging.core;
 
 import org.junit.Assert;
 import org.junit.Test;
