@@ -1,7 +1,6 @@
 package ymyoo.app.order.infrastructure.repository;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
 import ymyoo.app.order.domain.OrderStatus;
 
 import javax.persistence.EntityManager;
@@ -13,17 +12,54 @@ import javax.persistence.Persistence;
  * Created by 유영모 on 2017-01-11.
  */
 public class OrderStatusRepositoryTest {
+    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("order");
+    String orderId = java.util.UUID.randomUUID().toString().toUpperCase();
+
+    @AfterClass
+    public static void tearDownAfterClass() {
+        emf.close();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        OrderStatus fixtureOrderStatus = getOrderStatusTestFixture();
+
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        em.persist(fixtureOrderStatus);
+
+        transaction.commit();
+        em.close();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        EntityManager em = emf.createEntityManager();
+
+        OrderStatus orderStatus = em.find(OrderStatus.class, orderId);
+
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        em.remove(orderStatus);
+
+        transaction.commit();
+        em.close();
+    }
+
+    private OrderStatus getOrderStatusTestFixture() {
+        return new OrderStatus(orderId, OrderStatus.Status.INVENTORY_CHECKED);
+    }
 
     @Test
     public void find() throws Exception {
         // given
-        String orderId = java.util.UUID.randomUUID().toString().toUpperCase();
         OrderStatus expectedOrderStatus = new OrderStatus(orderId, OrderStatus.Status.INVENTORY_CHECKED);
 
-        setUpFixture(expectedOrderStatus);
-
         // when
-        OrderStatusRepository repository = new OrderStatusRepository();
+        OrderStatusRepository repository = new OrderStatusRepository(emf);
         OrderStatus actualOrderStatus = repository.find(orderId);
 
         // then
@@ -31,20 +67,5 @@ public class OrderStatusRepositoryTest {
         Assert.assertEquals(expectedOrderStatus.getStatus(), actualOrderStatus.getStatus());
     }
 
-    private void setUpFixture(OrderStatus orderStatus) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("order");
-
-        EntityManager em = emf.createEntityManager();
-
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-
-        em.persist(orderStatus);
-
-        transaction.commit();
-        em.close();
-
-        emf.close();
-    }
 
 }

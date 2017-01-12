@@ -2,6 +2,7 @@ package ymyoo.app.order.domain;
 
 import ymyoo.app.order.domain.workflow.OrderProcessManager;
 import ymyoo.app.order.domain.workflow.OrderProcessManagerFactory;
+import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
 import ymyoo.app.order.infrastructure.repository.OrderStatusRepository;
 
 /**
@@ -58,7 +59,7 @@ public class Order {
     }
 
     public OrderStatus getOrderStatus() {
-        OrderStatusRepository orderStatusRepository = new OrderStatusRepository();
+        OrderStatusRepository orderStatusRepository = new OrderStatusRepository(OrderEntityManagerFactory.getEntityManagerFactory());
         return orderStatusRepository.find(this.getOrderId());
     }
 }
