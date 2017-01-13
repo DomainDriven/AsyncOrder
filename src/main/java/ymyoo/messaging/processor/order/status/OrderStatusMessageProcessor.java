@@ -1,5 +1,6 @@
 package ymyoo.messaging.processor.order.status;
 
+import com.google.gson.Gson;
 import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.MessageConsumer;
 
@@ -24,11 +25,7 @@ public class OrderStatusMessageProcessor implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 List<Message> messages = messageConsumer.poll();
                 for(Message message : messages) {
-                    System.out.println(message);
-                    final String orderId = message.getId();
-                    final OrderStatusEntity.Status orderStatus = OrderStatusEntity.Status.valueOf(message.getBody());
-
-                    repository.add(new OrderStatusEntity(orderId, orderStatus));
+                    repository.add(new Gson().fromJson(message.getBody(), OrderStatusEntity.class));
                 }
             }
         } finally {

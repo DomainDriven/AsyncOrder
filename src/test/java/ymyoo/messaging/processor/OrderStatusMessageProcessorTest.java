@@ -1,5 +1,6 @@
 package ymyoo.messaging.processor;
 
+import com.google.gson.Gson;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +13,8 @@ import ymyoo.messaging.processor.order.status.OrderStatusRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by 유영모 on 2017-01-12.
@@ -29,28 +32,31 @@ public class OrderStatusMessageProcessorTest extends KafkaIntegrationTest {
         // given
         final String channel = MessageChannels.LOG_ORDER_STATUS;
         final String messageId = generateId();
-        final String messageBody = OrderStatusEntity.Status.SALE_ORDER_CREATED.name();
-        sendMessage(channel, messageId, messageBody);
 
-        OrderStatusRepository repository = new OrderStatusRepository(emf);
+        Map<String, String> messageBody = new HashMap<>();
+        String orderId = generateId();
+        messageBody.put("orderId", orderId);
+        messageBody.put("status", "SALE_ORDER_CREATED");
+
+        sendMessage(channel, messageId, new Gson().toJson(messageBody));
 
         // when
+        OrderStatusRepository repository = new OrderStatusRepository(emf);
         Thread orderStatusMessageProcessor = new Thread(new OrderStatusMessageProcessor(channel, repository));
         orderStatusMessageProcessor.start();
 
         waitCurrentThread(5);
 
         // then
-        OrderStatusEntity orderStatus = getOrderStatus(messageId);
-        Assert.assertEquals(messageId, orderStatus.getOrderId());
-        Assert.assertEquals(OrderStatusEntity.Status.SALE_ORDER_CREATED, orderStatus.getStatus());
+        OrderStatusEntity actual = getOrderStatus(orderId);
+        Assert.assertEquals(orderId, actual.getOrderId());
+        Assert.assertEquals(OrderStatusEntity.Status.SALE_ORDER_CREATED, actual.getStatus());
     }
 
-    private OrderStatusEntity getOrderStatus(String messageId) {
+    private OrderStatusEntity getOrderStatus(String orderId) {
         EntityManager em = emf.createEntityManager();
-        OrderStatusEntity orderStatus = em.find(OrderStatusEntity.class, messageId);
+        OrderStatusEntity orderStatus = em.find(OrderStatusEntity.class, orderId);
         em.close();
         return orderStatus;
     }
-
 }

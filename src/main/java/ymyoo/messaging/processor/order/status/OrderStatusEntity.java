@@ -40,4 +40,12 @@ public class OrderStatusEntity {
     public Status getStatus() {
         return status;
     }
+
+    @Override
+    public String toString() {
+        return "OrderStatusEntity{" +
+                "orderId='" + orderId + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }
