@@ -2,6 +2,7 @@ package ymyoo.messaging.processor.order.status;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 
 /**
  * Created by 유영모 on 2017-01-11.
@@ -13,11 +14,15 @@ public class OrderStatusRepository {
         this.emf = emf;
     }
 
-    public OrderStatusEntity find(final String orderId) {
+    public void add(OrderStatusEntity aOrderStatus) {
         EntityManager em = emf.createEntityManager();
-        OrderStatusEntity orderStatus = em.find(OrderStatusEntity.class, orderId);
-        em.close();
 
-        return orderStatus;
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        em.persist(aOrderStatus);
+
+        transaction.commit();
+        em.close();
     }
 }

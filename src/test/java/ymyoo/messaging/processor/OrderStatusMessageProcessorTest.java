@@ -7,6 +7,7 @@ import ymyoo.messaging.core.KafkaIntegrationTest;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.processor.order.status.OrderStatusEntity;
 import ymyoo.messaging.processor.order.status.OrderStatusMessageProcessor;
+import ymyoo.messaging.processor.order.status.OrderStatusRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,11 +29,13 @@ public class OrderStatusMessageProcessorTest extends KafkaIntegrationTest {
         // given
         final String channel = MessageChannels.LOG_ORDER_STATUS;
         final String messageId = generateId();
-        final String messageBody = "SALE_ORDER_CREATED";
+        final String messageBody = OrderStatusEntity.Status.SALE_ORDER_CREATED.name();
         sendMessage(channel, messageId, messageBody);
 
+        OrderStatusRepository repository = new OrderStatusRepository(emf);
+
         // when
-        Thread orderStatusMessageProcessor = new Thread(new OrderStatusMessageProcessor());
+        Thread orderStatusMessageProcessor = new Thread(new OrderStatusMessageProcessor(channel, repository));
         orderStatusMessageProcessor.start();
 
         waitCurrentThread(5);
@@ -49,4 +52,5 @@ public class OrderStatusMessageProcessorTest extends KafkaIntegrationTest {
         em.close();
         return orderStatus;
     }
+
 }
