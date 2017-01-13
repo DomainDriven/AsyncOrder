@@ -9,9 +9,12 @@ import ymyoo.app.order.domain.event.EventPublisher;
 import ymyoo.app.order.domain.event.EventSubscriber;
 import ymyoo.app.order.domain.event.OrderCompleted;
 import ymyoo.app.order.domain.event.OrderFailed;
+import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.ReplyMessageConsumer;
+import ymyoo.messaging.processor.order.status.OrderStatusMessageProcessor;
+import ymyoo.messaging.processor.order.status.OrderStatusEntityRepository;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +30,8 @@ public class OrderIntegrationTest {
 
     Thread inventoryReplyMessageConsumer = null;
     Thread paymentReplyMessageConsumer = null;
+
+    Thread orderStatusMessageProcessor = null;
 
     @Before
     public void setUp() throws Exception {
@@ -46,6 +51,12 @@ public class OrderIntegrationTest {
 
         paymentReplyMessageConsumer = new Thread(new ReplyMessageConsumer(MessageChannels.PAYMENT_AUTH_APP_REPLY));
         paymentReplyMessageConsumer.start();
+
+        // setup OrderStatusMessageProcessor
+        OrderStatusEntityRepository orderStatusMessageProcessorRepositroy =
+                new OrderStatusEntityRepository(OrderEntityManagerFactory.getEntityManagerFactory());
+        orderStatusMessageProcessor = new Thread(new OrderStatusMessageProcessor(MessageChannels.LOG_ORDER_STATUS, orderStatusMessageProcessorRepositroy));
+        orderStatusMessageProcessor.start();
     }
 
     /**

@@ -1,20 +1,16 @@
-package ymyoo.messaging.processor;
+package ymyoo.messaging.processor.order.status;
 
 import com.google.gson.Gson;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
+import ymyoo.app.order.domain.OrderStatus;
 import ymyoo.messaging.core.KafkaIntegrationTest;
 import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.processor.order.status.OrderStatusEntity;
-import ymyoo.messaging.processor.order.status.OrderStatusMessageProcessor;
-import ymyoo.messaging.processor.order.status.OrderStatusRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by 유영모 on 2017-01-12.
@@ -33,15 +29,12 @@ public class OrderStatusMessageProcessorTest extends KafkaIntegrationTest {
         final String channel = MessageChannels.LOG_ORDER_STATUS;
         final String messageId = generateId();
 
-        Map<String, String> messageBody = new HashMap<>();
         String orderId = generateId();
-        messageBody.put("orderId", orderId);
-        messageBody.put("status", "SALE_ORDER_CREATED");
-
-        sendMessage(channel, messageId, new Gson().toJson(messageBody));
+        OrderStatus orderStatus = new OrderStatus(orderId, OrderStatus.Status.INVENTORY_CHECKED);
+        sendMessage(channel, messageId, new Gson().toJson(orderStatus));
 
         // when
-        OrderStatusRepository repository = new OrderStatusRepository(emf);
+        OrderStatusEntityRepository repository = new OrderStatusEntityRepository(emf);
         Thread orderStatusMessageProcessor = new Thread(new OrderStatusMessageProcessor(channel, repository));
         orderStatusMessageProcessor.start();
 
@@ -50,7 +43,7 @@ public class OrderStatusMessageProcessorTest extends KafkaIntegrationTest {
         // then
         OrderStatusEntity actual = getOrderStatus(orderId);
         Assert.assertEquals(orderId, actual.getOrderId());
-        Assert.assertEquals(OrderStatusEntity.Status.SALE_ORDER_CREATED, actual.getStatus());
+        Assert.assertEquals(OrderStatusEntity.Status.INVENTORY_CHECKED, actual.getStatus());
     }
 
     private OrderStatusEntity getOrderStatus(String orderId) {

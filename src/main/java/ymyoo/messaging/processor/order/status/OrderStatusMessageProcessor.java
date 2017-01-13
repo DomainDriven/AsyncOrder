@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class OrderStatusMessageProcessor implements Runnable {
     private final String channel;
-    private OrderStatusRepository repository;
+    private OrderStatusEntityRepository repository;
 
-    public OrderStatusMessageProcessor(String channel, OrderStatusRepository repository) {
+    public OrderStatusMessageProcessor(String channel, OrderStatusEntityRepository repository) {
         this.channel = channel;
         this.repository = repository;
     }
@@ -25,6 +25,7 @@ public class OrderStatusMessageProcessor implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 List<Message> messages = messageConsumer.poll();
                 for(Message message : messages) {
+                    System.out.println("OrderStatusMessageProcessor : "  + message.getBody());
                     repository.add(new Gson().fromJson(message.getBody(), OrderStatusEntity.class));
                 }
             }

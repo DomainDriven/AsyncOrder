@@ -6,6 +6,7 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
             <property name="hibernate.dialect" value="com.enigmabridge.hibernate.dialect.SQLiteDialect" />
+            <property name="hibernate.connection.foreign_keys" value="true" />
 
             <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
             <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/db.sqlite3" />
@@ -14,7 +15,7 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
 
             <property name="hibernate.show_sql" value="true" />
             <property name="format_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.hbm2ddl.auto" value="create" />
         </properties>
     </persistence-unit>
 </persistence>

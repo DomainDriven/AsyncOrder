@@ -12,8 +12,8 @@ public class LogOrderStatusChannelAdapter {
 
     public void logStatus(OrderStatus aOrderStatus) {
         String messageId =  java.util.UUID.randomUUID().toString().toUpperCase();
-        Requester requester = new Requester(MessageChannels.PURCHASE_ORDER_CREATED, messageId);
+        Requester requester = new Requester(MessageChannels.LOG_ORDER_STATUS, messageId);
 
-        requester.send(new Gson().toJson(new Gson().toJson(aOrderStatus)));
+        requester.send(new Gson().toJson(aOrderStatus));
     }
 }

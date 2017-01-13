@@ -3,17 +3,13 @@ package ymyoo.app.order.domain.workflow;
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
-import ymyoo.app.order.domain.event.EventPublisher;
-import ymyoo.app.inventory.domain.exception.StockOutException;
-import ymyoo.app.order.domain.event.OrderCompleted;
-import ymyoo.app.order.domain.event.OrderFailed;
-import ymyoo.app.order.domain.po.ApprovalOrderPayment;
 import ymyoo.app.order.domain.Order;
+import ymyoo.app.order.domain.OrderStatus;
+import ymyoo.app.order.domain.po.ApprovalOrderPayment;
 import ymyoo.app.order.domain.workflow.activity.BusinessActivity;
 import ymyoo.app.order.domain.workflow.activity.impl.InventoryBusinessActivity;
 import ymyoo.app.order.domain.workflow.activity.impl.PaymentGatewayBusinessActivity;
 import ymyoo.app.order.domain.workflow.activity.impl.PurchaseOrderBusinessActivity;
-import ymyoo.utility.PrettySystemOut;
 
 /**
  * 주문 기본 프로세스 Manager
@@ -34,6 +30,7 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
             BusinessActivity<Order, Boolean> activity = new InventoryBusinessActivity();
             activity.perform(order);
+            order.setOrderStatus(OrderStatus.Status.INVENTORY_CHECKED);
 
             subscriber.onCompleted();
         }).subscribeOn(Schedulers.computation());
@@ -42,6 +39,7 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
             BusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity();
             ApprovalOrderPayment approvalOrderPayment = activity.perform(order);
+            order.setOrderStatus(OrderStatus.Status.PAYMENT_DONE);
 
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
@@ -59,18 +57,14 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
         })).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
-                // 주문 성공 이벤트 게시
-                EventPublisher.instance().publish(new OrderCompleted(order.getOrderId()));
+                // 주문 성공
+                order.setOrderStatus(OrderStatus.Status.PURCHASE_ORDER_CREATED);
             }
 
             @Override
             public void onError(Throwable throwable) {
-                // 주문 실패 이벤트 게시
-                if (throwable.getCause() instanceof StockOutException) {
-                    PrettySystemOut.println(this.getClass(), "재고 없음 예외 발생");
-                    EventPublisher.instance().publish(new OrderFailed(order.getOrderId(), "Stockout"));
-                }
-                EventPublisher.instance().publish(new OrderFailed(order.getOrderId(), ""));
+                // 주문 실패
+                order.setOrderStatus(OrderStatus.Status.ORDER_FAILED);
             }
 
             @Override

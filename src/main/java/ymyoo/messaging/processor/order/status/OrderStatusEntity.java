@@ -1,8 +1,8 @@
 package ymyoo.messaging.processor.order.status;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by 유영모 on 2017-01-11.
@@ -12,7 +12,6 @@ import javax.persistence.Table;
 @Table(name="OrderStatus")
 public class OrderStatusEntity {
     public enum Status {
-        SALE_ORDER_CREATED,
         INVENTORY_CHECKED,
         PAYMENT_DONE,
         PURCHASE_ORDER_CREATED,
@@ -24,6 +23,9 @@ public class OrderStatusEntity {
 
     private Status status;
 
+    @OneToMany(mappedBy = "orderStatusEntity")
+    private List<OrderStatusHistory> histories;
+
     public OrderStatusEntity() {
     }
 
@@ -32,6 +34,17 @@ public class OrderStatusEntity {
         this.status = status;
     }
 
+    public void addHistory(OrderStatusHistory history) {
+        if(histories == null) {
+            histories = new ArrayList<>();
+        }
+
+        histories.add(history);
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public String getOrderId() {
         return orderId;
@@ -39,6 +52,10 @@ public class OrderStatusEntity {
 
     public Status getStatus() {
         return status;
+    }
+
+    public List<OrderStatusHistory> getHistories() {
+        return histories;
     }
 
     @Override

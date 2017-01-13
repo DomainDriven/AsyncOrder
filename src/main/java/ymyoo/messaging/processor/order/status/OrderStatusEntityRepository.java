@@ -7,20 +7,26 @@ import javax.persistence.EntityTransaction;
 /**
  * Created by 유영모 on 2017-01-11.
  */
-public class OrderStatusRepository {
+public class OrderStatusEntityRepository {
     private EntityManagerFactory emf;
 
-    public OrderStatusRepository(EntityManagerFactory emf) {
+    public OrderStatusEntityRepository(EntityManagerFactory emf) {
         this.emf = emf;
     }
 
     public void add(OrderStatusEntity aOrderStatus) {
         EntityManager em = emf.createEntityManager();
 
+        OrderStatusEntity find = em.find(OrderStatusEntity.class, aOrderStatus.getOrderId());
+
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
-        em.persist(aOrderStatus);
+        if(find == null) {
+            em.persist(aOrderStatus);
+        } else {
+            find.setStatus(aOrderStatus.getStatus());
+        }
 
         transaction.commit();
         em.close();
