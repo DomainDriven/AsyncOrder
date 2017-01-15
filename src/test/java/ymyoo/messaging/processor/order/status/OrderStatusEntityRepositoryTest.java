@@ -24,8 +24,56 @@ public class OrderStatusEntityRepositoryTest {
     public void add() throws Exception {
         // given
         String orderId = java.util.UUID.randomUUID().toString().toUpperCase();
-        OrderStatusEntity.Status status = OrderStatusEntity.Status.INVENTORY_CHECKED;
+        OrderStatusEntity orderStatusEntity = getOrderStatus(orderId, OrderStatusEntity.Status.INVENTORY_CHECKED);
 
+
+        // when
+        OrderStatusEntityRepository repository = new OrderStatusEntityRepository(emf);
+        repository.add(orderStatusEntity);
+
+        // then
+        EntityManager em = emf.createEntityManager();
+        OrderStatusEntity actual = em.find(OrderStatusEntity.class, orderStatusEntity.getOrderId());
+
+
+        Assert.assertEquals(orderStatusEntity.getOrderId(), actual.getOrderId());
+        Assert.assertEquals(orderStatusEntity.getStatus(), actual.getStatus());
+        Assert.assertEquals(1, actual.getHistories().size());
+        Assert.assertEquals(orderStatusEntity.getStatus(), actual.getHistories().get(0).getStatus());
+        Assert.assertNotNull(actual.getHistories().get(0).getCreatedDate());
+
+        em.close();
+    }
+
+    @Test
+    public void add_같은_아이디로_두번_추가_하였을때() {
+        // given
+        String orderId = java.util.UUID.randomUUID().toString().toUpperCase();
+        OrderStatusEntity inventoryCheckedOrderStatus = getOrderStatus(orderId, OrderStatusEntity.Status.INVENTORY_CHECKED);
+        OrderStatusEntity paymentDoneOrderStatus = getOrderStatus(orderId, OrderStatusEntity.Status.PAYMENT_DONE);
+
+        // when
+        OrderStatusEntityRepository repository = new OrderStatusEntityRepository(emf);
+        repository.add(inventoryCheckedOrderStatus);
+        repository.add(paymentDoneOrderStatus);
+
+        // then
+        EntityManager em = emf.createEntityManager();
+        OrderStatusEntity actual = em.find(OrderStatusEntity.class, orderId);
+
+
+        Assert.assertEquals(orderId, actual.getOrderId());
+        Assert.assertEquals(paymentDoneOrderStatus.getStatus(), actual.getStatus());
+        Assert.assertEquals(2, actual.getHistories().size());
+        Assert.assertEquals(inventoryCheckedOrderStatus.getStatus(), actual.getHistories().get(0).getStatus());
+        Assert.assertEquals(inventoryCheckedOrderStatus.getStatus(), actual.getHistories().get(0).getStatus());
+        Assert.assertEquals(paymentDoneOrderStatus.getStatus(), actual.getHistories().get(1).getStatus());
+        Assert.assertNotNull(actual.getHistories().get(1).getCreatedDate());
+
+        em.close();
+    }
+
+    private OrderStatusEntity getOrderStatus(String orderId, OrderStatusEntity.Status status) {
         OrderStatusHistory history = new OrderStatusHistory();
         history.setStatus(status);
         history.setCreatedDate(new Date());
@@ -35,23 +83,7 @@ public class OrderStatusEntityRepositoryTest {
         orderStatusEntity.setStatus(status);
         orderStatusEntity.addHistory(history);
 
-
-        // when
-        OrderStatusEntityRepository repository = new OrderStatusEntityRepository(emf);
-        repository.add(orderStatusEntity);
-
-        // then
-        EntityManager em = emf.createEntityManager();
-        OrderStatusEntity actual = em.find(OrderStatusEntity.class, orderId);
-
-
-        Assert.assertEquals(orderId, actual.getOrderId());
-        Assert.assertEquals(status, actual.getStatus());
-        Assert.assertEquals(1, actual.getHistories().size());
-        Assert.assertEquals(status, actual.getHistories().get(0).getStatus());
-        Assert.assertNotNull(actual.getHistories().get(0).getCreatedDate());
-
-        em.close();
+        return orderStatusEntity;
     }
 
 }
