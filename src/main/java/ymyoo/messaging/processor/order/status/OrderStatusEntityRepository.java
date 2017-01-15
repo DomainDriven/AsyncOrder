@@ -26,6 +26,9 @@ public class OrderStatusEntityRepository {
             em.persist(aOrderStatus);
         } else {
             find.setStatus(aOrderStatus.getStatus());
+            for(OrderStatusHistory history : aOrderStatus.getHistories()) {
+                find.addHistory(history);
+            }
         }
 
         transaction.commit();

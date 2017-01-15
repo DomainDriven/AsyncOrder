@@ -9,34 +9,53 @@ import java.util.Date;
  */
 @Entity
 public class OrderStatusHistory {
-    @EmbeddedId
-    private OrderStatusHistoryId id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    private OrderStatusEntity.Status status;
+
+    @ManyToOne
+    @JoinColumn(name = "orderId")
     private OrderStatusEntity orderStatusEntity;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    public OrderStatusHistory() {
-    }
-
-    public OrderStatusHistory(OrderStatusHistoryId id, Date createdDate) {
-        this.id = id;
-        this.createdDate = createdDate;
-    }
-
-    public OrderStatusHistoryId getId() {
+    public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public OrderStatusEntity.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatusEntity.Status status) {
+        this.status = status;
+    }
 
     public OrderStatusEntity getOrderStatusEntity() {
         return orderStatusEntity;
     }
 
+    public void setOrderStatusEntity(OrderStatusEntity orderStatusEntity) {
+        this.orderStatusEntity = orderStatusEntity;
+
+        if(!orderStatusEntity.getHistories().contains(this)) {
+            orderStatusEntity.getHistories().add(this);
+        }
+    }
+
     public Date getCreatedDate() {
         return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 }

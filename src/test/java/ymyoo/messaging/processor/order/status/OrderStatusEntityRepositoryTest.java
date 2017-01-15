@@ -26,8 +26,15 @@ public class OrderStatusEntityRepositoryTest {
         String orderId = java.util.UUID.randomUUID().toString().toUpperCase();
         OrderStatusEntity.Status status = OrderStatusEntity.Status.INVENTORY_CHECKED;
 
-        OrderStatusEntity orderStatusEntity = new OrderStatusEntity(orderId, status);
-        orderStatusEntity.addHistory(new OrderStatusHistory(new OrderStatusHistoryId(orderId, status), new Date()));
+        OrderStatusHistory history = new OrderStatusHistory();
+        history.setStatus(status);
+        history.setCreatedDate(new Date());
+
+        OrderStatusEntity orderStatusEntity = new OrderStatusEntity();
+        orderStatusEntity.setOrderId(orderId);
+        orderStatusEntity.setStatus(status);
+        orderStatusEntity.addHistory(history);
+
 
         // when
         OrderStatusEntityRepository repository = new OrderStatusEntityRepository(emf);
@@ -36,14 +43,15 @@ public class OrderStatusEntityRepositoryTest {
         // then
         EntityManager em = emf.createEntityManager();
         OrderStatusEntity actual = em.find(OrderStatusEntity.class, orderId);
-        em.close();
+
 
         Assert.assertEquals(orderId, actual.getOrderId());
         Assert.assertEquals(status, actual.getStatus());
         Assert.assertEquals(1, actual.getHistories().size());
-        Assert.assertEquals(orderId, actual.getHistories().get(0).getId().getOrderId());
-        Assert.assertEquals(status, actual.getHistories().get(0).getId().getStatus());
+        Assert.assertEquals(status, actual.getHistories().get(0).getStatus());
         Assert.assertNotNull(actual.getHistories().get(0).getCreatedDate());
+
+        em.close();
     }
 
 }

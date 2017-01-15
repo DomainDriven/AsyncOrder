@@ -23,46 +23,37 @@ public class OrderStatusEntity {
 
     private Status status;
 
-    @OneToMany(mappedBy = "orderStatusEntity")
-    private List<OrderStatusHistory> histories;
-
-    public OrderStatusEntity() {
-    }
-
-    public OrderStatusEntity(String orderId, Status status) {
-        this.orderId = orderId;
-        this.status = status;
-    }
-
-    public void addHistory(OrderStatusHistory history) {
-        if(histories == null) {
-            histories = new ArrayList<>();
-        }
-
-        histories.add(history);
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+    @OneToMany(mappedBy = "orderStatusEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<OrderStatusHistory> histories = new ArrayList<>();
 
     public String getOrderId() {
         return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public Status getStatus() {
         return status;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public List<OrderStatusHistory> getHistories() {
         return histories;
     }
 
-    @Override
-    public String toString() {
-        return "OrderStatusEntity{" +
-                "orderId='" + orderId + '\'' +
-                ", status=" + status +
-                '}';
+    public void setHistories(List<OrderStatusHistory> histories) {
+        this.histories = histories;
+    }
+
+    public void addHistory(OrderStatusHistory history) {
+        this.getHistories().add(history);
+        if(history.getOrderStatusEntity() != this) {
+            history.setOrderStatusEntity(this);
+        }
     }
 }
