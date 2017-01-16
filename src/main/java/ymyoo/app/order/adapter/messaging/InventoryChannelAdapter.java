@@ -17,9 +17,10 @@ import java.util.Map;
  */
 public class InventoryChannelAdapter {
 
-    public boolean checkAndReserveOrderItem(final OrderItem orderItem) {
+    public boolean checkAndReserveOrderItem(final String orderId, final OrderItem orderItem) {
         // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();
+        messageBody.put("orderId", orderId);
         messageBody.put("deliveryType", orderItem.getDeliveryType().name());
         messageBody.put("productId", orderItem.getProductId());
         messageBody.put("orderQty", String.valueOf(orderItem.getOrderQty()));

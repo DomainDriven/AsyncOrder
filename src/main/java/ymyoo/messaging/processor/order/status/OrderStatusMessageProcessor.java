@@ -1,9 +1,11 @@
 package ymyoo.messaging.processor.order.status;
 
 import com.google.gson.Gson;
+import ymyoo.app.order.domain.OrderStatus;
 import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.MessageConsumer;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +28,14 @@ public class OrderStatusMessageProcessor implements Runnable {
                 List<Message> messages = messageConsumer.poll();
                 for(Message message : messages) {
                     System.out.println("OrderStatusMessageProcessor : "  + message.getBody());
-                    repository.add(new Gson().fromJson(message.getBody(), OrderStatusEntity.class));
+
+                    OrderStatusEntity orderStatus = new Gson().fromJson(message.getBody(), OrderStatusEntity.class);
+                    OrderStatusHistory history = new OrderStatusHistory();
+                    history.setStatus(orderStatus.getStatus());
+                    history.setCreatedDate(new Date());
+                    orderStatus.addHistory(history);
+
+                    repository.add(orderStatus);
                 }
             }
         } finally {

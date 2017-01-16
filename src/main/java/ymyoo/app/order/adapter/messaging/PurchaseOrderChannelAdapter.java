@@ -14,6 +14,6 @@ public class PurchaseOrderChannelAdapter {
         // 구매 주문 생성 완료 이벤트 송신
         String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
         Requester requester = new Requester(MessageChannels.PURCHASE_ORDER_CREATED, correlationId);
-        requester.send(new Gson().toJson(new Gson().toJson(purchaseOrder)));
+        requester.send(new Gson().toJson(purchaseOrder));
     }
 }

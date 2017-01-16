@@ -15,6 +15,6 @@ public class PaymentGatewayBusinessActivity implements BusinessActivity<Order, A
     @Override
     public ApprovalOrderPayment perform(Order order) {
         PaymentGatewayChannelAdapter channelAdapter = new PaymentGatewayChannelAdapter();
-        return channelAdapter.authenticateAndApproval(order.getOrderPayment());
+        return channelAdapter.authenticateAndApproval(order.getOrderId(), order.getOrderPayment());
     }
 }

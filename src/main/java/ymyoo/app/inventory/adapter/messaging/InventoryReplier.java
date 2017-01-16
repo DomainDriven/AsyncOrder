@@ -24,6 +24,7 @@ public class InventoryReplier extends AbstractReplier {
 
         // 결과를 메시지로 전송
         Map<String, String> replyMessageBody = new HashMap<>();
+        replyMessageBody.put("orderId", getOrderId(message));
         replyMessageBody.put("validation", "SUCCESS");
 
         MessageProducer producer = new MessageProducer(replyChannel);

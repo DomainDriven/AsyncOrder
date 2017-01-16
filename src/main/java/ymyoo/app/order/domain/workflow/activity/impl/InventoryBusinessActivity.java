@@ -14,6 +14,6 @@ public class InventoryBusinessActivity implements BusinessActivity<Order, Boolea
     @Override
     public Boolean perform(Order order) {
         InventoryChannelAdapter channelAdapter = new InventoryChannelAdapter();
-        return channelAdapter.checkAndReserveOrderItem(order.getOrderItem());
+        return channelAdapter.checkAndReserveOrderItem(order.getOrderId(), order.getOrderItem());
     }
 }

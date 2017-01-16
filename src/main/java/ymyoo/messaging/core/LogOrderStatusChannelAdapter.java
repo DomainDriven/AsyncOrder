@@ -1,4 +1,4 @@
-package ymyoo.app.order.adapter.messaging;
+package ymyoo.messaging.core;
 
 import com.google.gson.Gson;
 import ymyoo.app.order.domain.OrderStatus;

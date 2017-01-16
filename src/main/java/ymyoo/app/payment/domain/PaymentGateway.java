@@ -22,6 +22,6 @@ public class PaymentGateway {
     public ApprovalPayment approve(TakingOrderPayment orderPayment) {
         try { Thread.sleep(250); } catch (InterruptedException e) {}
         PrettySystemOut.println(this.getClass(), "결제 승인-" + "결제 금액 " + orderPayment.getOrderAmount());
-        return new ApprovalPayment("10232");
+        return new ApprovalPayment("10232", orderPayment.getOrderId());
     }
 }

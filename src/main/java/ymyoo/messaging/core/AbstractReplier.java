@@ -1,6 +1,12 @@
 package ymyoo.messaging.core;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 유영모 on 2017-01-02.
@@ -42,5 +48,11 @@ public abstract class AbstractReplier implements Runnable {
         } else {
             return str;
         }
+    }
+
+    protected String getOrderId(Message message) {
+        Type type = new TypeToken<HashMap<String, Object>>() {}.getType();
+        Map<String, String> content = new Gson().fromJson(message.getBody(), type);
+        return content.get("orderId");
     }
 }

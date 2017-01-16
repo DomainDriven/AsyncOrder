@@ -30,7 +30,6 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
             BusinessActivity<Order, Boolean> activity = new InventoryBusinessActivity();
             activity.perform(order);
-            order.setOrderStatus(OrderStatus.Status.INVENTORY_CHECKED);
 
             subscriber.onCompleted();
         }).subscribeOn(Schedulers.computation());
@@ -39,7 +38,6 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
             BusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity();
             ApprovalOrderPayment approvalOrderPayment = activity.perform(order);
-            order.setOrderStatus(OrderStatus.Status.PAYMENT_DONE);
 
             subscriber.onNext(approvalOrderPayment);
             subscriber.onCompleted();
@@ -58,13 +56,12 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
             @Override
             public void onCompleted() {
                 // 주문 성공
-                order.setOrderStatus(OrderStatus.Status.PURCHASE_ORDER_CREATED);
             }
 
             @Override
             public void onError(Throwable throwable) {
                 // 주문 실패
-                order.setOrderStatus(OrderStatus.Status.ORDER_FAILED);
+                throw new RuntimeException("주문 실패...");
             }
 
             @Override

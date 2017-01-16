@@ -1,6 +1,6 @@
 package ymyoo.app.order.domain;
 
-import ymyoo.app.order.adapter.messaging.LogOrderStatusChannelAdapter;
+import ymyoo.messaging.core.LogOrderStatusChannelAdapter;
 import ymyoo.app.order.domain.workflow.OrderProcessManager;
 import ymyoo.app.order.domain.workflow.OrderProcessManagerFactory;
 import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
@@ -63,10 +63,5 @@ public class Order {
     public OrderStatus getOrderStatus() {
         OrderStatusRepository orderStatusRepository = new OrderStatusRepository(OrderEntityManagerFactory.getEntityManagerFactory());
         return orderStatusRepository.find(this.getOrderId());
-    }
-
-    public void setOrderStatus(OrderStatus.Status status) {
-        System.out.println("Order : " + status);
-        orderStatusChannelAdapter.logStatus(new OrderStatus(orderId, status));
     }
 }

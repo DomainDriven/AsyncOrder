@@ -9,7 +9,9 @@ import javax.persistence.Id;
 @Entity
 public class OrderStatus {
     public enum Status {
+        INVENTORY_CHECKED_REQUEST,
         INVENTORY_CHECKED,
+        PAYMENT_REQUEST,
         PAYMENT_DONE,
         PURCHASE_ORDER_CREATED,
         ORDER_FAILED

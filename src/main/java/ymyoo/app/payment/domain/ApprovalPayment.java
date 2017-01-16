@@ -9,18 +9,18 @@ public class ApprovalPayment {
     /** 승인 아이디 **/
     private String tid;
 
-    public ApprovalPayment(String tid) {
+    private String orderId;
+
+    public ApprovalPayment(String tid, String orderId) {
         this.tid = tid;
+        this.orderId = orderId;
     }
 
     public String getTid() {
         return tid;
     }
 
-    @Override
-    public String toString() {
-        return "ApprovalOrderPayment{" +
-                "tid='" + tid + '\'' +
-                '}';
+    public String getOrderId() {
+        return orderId;
     }
 }
