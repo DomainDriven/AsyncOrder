@@ -10,6 +10,6 @@
 - MOM
  - [Apache Kafka](https://kafka.apache.org/) 0.10.1.0
 - Persistence API
- - JPA2/Hibernate 4.3.10.Final
+ - [JPA2](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html)/[Hibernate](http://hibernate.org/) 4.3.10.Final
 - Database
- - SQLite
+ - [SQLite](https://sqlite.org/)
