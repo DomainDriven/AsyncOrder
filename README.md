@@ -1,6 +1,6 @@
 # AsyncOrder(비동기 주문)
 ## Overview
-![Overview](https://cloud.githubusercontent.com/assets/16472109/21830106/ec1d6246-d7dd-11e6-8010-3aae05e1e24b.png)
+![Overview](https://cloud.githubusercontent.com/assets/16472109/22089972/0dfd78f6-de32-11e6-9cad-d9812676d8df.png)
 
 ## 사용 기술
 - SDK
