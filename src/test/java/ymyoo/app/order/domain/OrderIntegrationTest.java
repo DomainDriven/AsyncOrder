@@ -8,7 +8,7 @@ import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
 import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.core.ReplyMessageConsumer;
+import ymyoo.messaging.core.PollingMessageConsumer;
 import ymyoo.messaging.processor.order.status.OrderStatusEntityRepository;
 import ymyoo.messaging.processor.order.status.OrderStatusMessageProcessor;
 
@@ -42,10 +42,10 @@ public class OrderIntegrationTest {
         paymentReplier.start();
 
         // setup ReplyMessage Consumer
-        inventoryReplyMessageConsumer = new Thread(new ReplyMessageConsumer(MessageChannels.INVENTORY_REPLY));
+        inventoryReplyMessageConsumer = new Thread(new PollingMessageConsumer(MessageChannels.INVENTORY_REPLY));
         inventoryReplyMessageConsumer.start();
 
-        paymentReplyMessageConsumer = new Thread(new ReplyMessageConsumer(MessageChannels.PAYMENT_AUTH_APP_REPLY));
+        paymentReplyMessageConsumer = new Thread(new PollingMessageConsumer(MessageChannels.PAYMENT_AUTH_APP_REPLY));
         paymentReplyMessageConsumer.start();
 
         // setup OrderStatusMessageProcessor

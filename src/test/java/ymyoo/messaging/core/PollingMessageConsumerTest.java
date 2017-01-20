@@ -18,18 +18,18 @@ import static org.mockito.Mockito.*;
 /**
  * Created by 유영모 on 2016-12-15.
  */
-public class ReplyMessageConsumerTest {
+public class PollingMessageConsumerTest {
 
     @Before
     public void setUp() throws Exception {
-        TestReplyMessageConsumer.clearListeners();
+        TestPollingMessageConsumer.clearListeners();
     }
 
     @Test
     public void registerListener() throws Exception {
         // given
         KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
-        TestReplyMessageConsumer consumer = new TestReplyMessageConsumer("testChannel", mockKafkaConsumer);
+        TestPollingMessageConsumer consumer = new TestPollingMessageConsumer("testChannel", mockKafkaConsumer);
 
         // when
         consumer.registerListener(new MessageListener() {
@@ -52,7 +52,7 @@ public class ReplyMessageConsumerTest {
     public void unregisterCallback() throws Exception {
         // given
         KafkaConsumer<String, String> mockKafkaConsumer = mock(KafkaConsumer.class);
-        TestReplyMessageConsumer consumer = new TestReplyMessageConsumer("testChannel", mockKafkaConsumer);
+        TestPollingMessageConsumer consumer = new TestPollingMessageConsumer("testChannel", mockKafkaConsumer);
         MessageListener listener = new MessageListener() {
             @Override
             public void onMessage(String message) {
@@ -85,7 +85,7 @@ public class ReplyMessageConsumerTest {
 
         when(mockKafkaConsumer.poll(100)).thenReturn(new ConsumerRecords(records));
 
-        ReplyMessageConsumer.registerListener(new MessageListener() {
+        PollingMessageConsumer.registerListener(new MessageListener() {
             @Override
             public void onMessage(String message) {
 
@@ -98,7 +98,7 @@ public class ReplyMessageConsumerTest {
         });
 
         // when
-        Thread messageConsumer = new Thread(new ReplyMessageConsumer("test-intergration", mockKafkaConsumer));
+        Thread messageConsumer = new Thread(new PollingMessageConsumer("test-intergration", mockKafkaConsumer));
         messageConsumer.start();
 
         Thread.sleep(1000);

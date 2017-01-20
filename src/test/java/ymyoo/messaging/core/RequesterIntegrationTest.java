@@ -74,7 +74,7 @@ public class RequesterIntegrationTest extends KafkaIntegrationTest {
     }
 
     private void onListener(String channel) {
-        new Thread(new ReplyMessageConsumer(channel)).start();
+        new Thread(new PollingMessageConsumer(channel)).start();
     }
 
     private void onFakeReplier(String correlationId) {

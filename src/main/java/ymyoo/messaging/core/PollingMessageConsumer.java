@@ -9,12 +9,12 @@ import java.util.*;
 /**
  * Created by 유영모 on 2016-12-06.
  */
-public class ReplyMessageConsumer implements Runnable {
+public class PollingMessageConsumer implements Runnable {
     private String channel;
     private KafkaConsumer<String, String> consumer;
     protected static List<MessageListener> listeners = Collections.synchronizedList(new ArrayList());
 
-    public ReplyMessageConsumer(String channel) {
+    public PollingMessageConsumer(String channel) {
         this.channel = channel;
 
         Properties props = new Properties();
@@ -28,7 +28,7 @@ public class ReplyMessageConsumer implements Runnable {
         this.consumer = new KafkaConsumer<>(props);
     }
 
-    public ReplyMessageConsumer(String channel, KafkaConsumer<String, String> consumer) {
+    public PollingMessageConsumer(String channel, KafkaConsumer<String, String> consumer) {
         this.channel = channel;
         this.consumer = consumer;
     }
@@ -44,7 +44,7 @@ public class ReplyMessageConsumer implements Runnable {
                     for(MessageListener listener : listeners) {
                         if( (listener.getCorrelationId().equals(record.key())) ) {
                             listener.onMessage(record.value());
-                            ReplyMessageConsumer.unregisterListener(listener);
+                            PollingMessageConsumer.unregisterListener(listener);
                             break;
                         }
                     }

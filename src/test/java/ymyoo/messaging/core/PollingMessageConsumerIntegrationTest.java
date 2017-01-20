@@ -7,19 +7,19 @@ import org.junit.Test;
 /**
  * Created by 유영모 on 2016-12-06.
  */
-public class ReplyMessageConsumerIntegrationTest extends KafkaIntegrationTest {
+public class PollingMessageConsumerIntegrationTest extends KafkaIntegrationTest {
 
     @Test
     public void testRun() throws InterruptedException {
         // given
         String channelName = "TEST-REPLY";
-        Thread r = new Thread(new ReplyMessageConsumer(channelName));
+        Thread r = new Thread(new PollingMessageConsumer(channelName));
         r.start();
 
         String callback1Key = "12345";
         String callback1Value = "hello";
 
-        ReplyMessageConsumer.registerListener(new MessageListener() {
+        PollingMessageConsumer.registerListener(new MessageListener() {
             @Override
             public void onMessage(String message) {
                 // then
@@ -35,7 +35,7 @@ public class ReplyMessageConsumerIntegrationTest extends KafkaIntegrationTest {
         String callback2Key = "67890";
         String callback2Value = "bye!";
 
-        ReplyMessageConsumer.registerListener(new MessageListener() {
+        PollingMessageConsumer.registerListener(new MessageListener() {
             @Override
             public void onMessage(String message) {
                 Assert.assertEquals(message, callback2Value);

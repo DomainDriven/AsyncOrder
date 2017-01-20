@@ -22,10 +22,10 @@ public abstract class AbstractReplier implements Runnable {
 
     @Override
     public void run() {
-        MessageConsumer messageConsumer = new MessageConsumer(channel);
+        EventDrivenMessageConsumer eventDrivenMessageConsumer = new EventDrivenMessageConsumer(channel);
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                List<Message> messages = messageConsumer.poll();
+                List<Message> messages = eventDrivenMessageConsumer.poll();
                 for(Message message : messages) {
                     String replyChannel = extractReplyChannel(message.getId());
                     message.setId(extractMessageId(message.getId()));
@@ -34,7 +34,7 @@ public abstract class AbstractReplier implements Runnable {
                 }
             }
         } finally {
-            messageConsumer.close();
+            eventDrivenMessageConsumer.close();
         }
     }
 

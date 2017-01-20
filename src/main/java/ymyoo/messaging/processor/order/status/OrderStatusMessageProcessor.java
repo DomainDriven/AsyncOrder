@@ -1,9 +1,8 @@
 package ymyoo.messaging.processor.order.status;
 
 import com.google.gson.Gson;
-import ymyoo.app.order.domain.OrderStatus;
 import ymyoo.messaging.core.Message;
-import ymyoo.messaging.core.MessageConsumer;
+import ymyoo.messaging.core.EventDrivenMessageConsumer;
 
 import java.util.Date;
 import java.util.List;
@@ -22,10 +21,10 @@ public class OrderStatusMessageProcessor implements Runnable {
 
     @Override
     public void run() {
-        MessageConsumer messageConsumer = new MessageConsumer(channel);
+        EventDrivenMessageConsumer eventDrivenMessageConsumer = new EventDrivenMessageConsumer(channel);
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                List<Message> messages = messageConsumer.poll();
+                List<Message> messages = eventDrivenMessageConsumer.poll();
                 for(Message message : messages) {
                     System.out.println("OrderStatusMessageProcessor : "  + message.getBody());
 
@@ -39,7 +38,7 @@ public class OrderStatusMessageProcessor implements Runnable {
                 }
             }
         } finally {
-            messageConsumer.close();
+            eventDrivenMessageConsumer.close();
         }
     }
 }

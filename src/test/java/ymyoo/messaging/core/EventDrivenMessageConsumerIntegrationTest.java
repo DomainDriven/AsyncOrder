@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by 유영모 on 2016-12-29.
  */
-public class MessageConsumerIntegrationTest extends KafkaIntegrationTest {
+public class EventDrivenMessageConsumerIntegrationTest extends KafkaIntegrationTest {
     public static boolean messageReceivedFlag = false;
 
     @Before
@@ -29,10 +29,10 @@ public class MessageConsumerIntegrationTest extends KafkaIntegrationTest {
 
         // then
         new Thread(() -> {
-            MessageConsumer messageConsumer = new MessageConsumer(channel);
+            EventDrivenMessageConsumer eventDrivenMessageConsumer = new EventDrivenMessageConsumer(channel);
             try {
                 while (!Thread.currentThread().isInterrupted()) {
-                    List<Message> messages = messageConsumer.poll();
+                    List<Message> messages = eventDrivenMessageConsumer.poll();
                     for(Message message : messages) {
                         if(message.getId().equals(messageId)) {
                             Assert.assertEquals(messageBody, message.getBody());
@@ -41,7 +41,7 @@ public class MessageConsumerIntegrationTest extends KafkaIntegrationTest {
                     }
                 }
             } finally {
-                messageConsumer.close();
+                eventDrivenMessageConsumer.close();
             }
         }).start();
 

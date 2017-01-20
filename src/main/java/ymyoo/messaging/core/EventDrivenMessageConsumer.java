@@ -12,11 +12,11 @@ import java.util.stream.StreamSupport;
 /**
  * Created by 유영모 on 2016-12-29.
  */
-public class MessageConsumer {
+public class EventDrivenMessageConsumer {
     private String channel;
     private KafkaConsumer<String, String> consumer;
 
-    public MessageConsumer(String channel) {
+    public EventDrivenMessageConsumer(String channel) {
         this.channel = channel;
         initKafka();
     }

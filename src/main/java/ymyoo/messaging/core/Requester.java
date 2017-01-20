@@ -26,7 +26,7 @@ public class Requester implements MessageListener {
     }
 
     public synchronized String receive() {
-        ReplyMessageConsumer.registerListener(this);
+        PollingMessageConsumer.registerListener(this);
 
         try {
             this.wait();
