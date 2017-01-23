@@ -1,12 +1,12 @@
 package ymyoo.app.order.adapter.messaging;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import ymyoo.messaging.core.MessageChannels;
 import ymyoo.app.order.domain.OrderItem;
+import ymyoo.messaging.core.Callback;
+import ymyoo.messaging.core.CallbackMessageConsumer;
+import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.Requester;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class InventoryChannelAdapter {
 
-    public boolean checkAndReserveOrderItem(final String orderId, final OrderItem orderItem) {
+    public void checkAndReserveOrderItem(final String correlationId, final String orderId, final OrderItem orderItem, Callback callback) {
         // 메시지 생성
         Map<String, String> messageBody = new HashMap<>();
         messageBody.put("orderId", orderId);
@@ -26,26 +26,12 @@ public class InventoryChannelAdapter {
         messageBody.put("orderQty", String.valueOf(orderItem.getOrderQty()));
 
         // 메시지 발신
-        String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
+        //String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
         Requester requester = new Requester(MessageChannels.INVENTORY_REQUEST, MessageChannels.INVENTORY_REPLY, correlationId);
 
         requester.send(new Gson().toJson(messageBody));
 
-        // 메시지 수신
-        String receivedMessage = requester.receive();
-
-        return MessageTranslator.translate(receivedMessage);
-    }
-
-    static class MessageTranslator {
-        public static boolean translate(String message) {
-            Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-            Map<String, String> content = new Gson().fromJson(message, type);
-            if(content.get("validation").equals("SUCCESS")) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        // 메시지 처리 후 응답 콜백 등록
+        CallbackMessageConsumer.registerCallback(callback);
     }
 }

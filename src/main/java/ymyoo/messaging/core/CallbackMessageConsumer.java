@@ -1,0 +1,69 @@
+package ymyoo.messaging.core;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+
+import java.util.*;
+
+/**
+ * Created by 유영모 on 2017-01-23.
+ */
+public class CallbackMessageConsumer implements Runnable {
+    private String channel;
+    private KafkaConsumer<String, String> consumer;
+    private static List<Callback> callbackList = Collections.synchronizedList(new ArrayList());
+
+    public CallbackMessageConsumer(String channel) {
+        this.channel = channel;
+
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "test");
+        props.put("enable.auto.commit", "true");
+        props.put("auto.commit.interval.ms", "1000");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+        this.consumer = new KafkaConsumer<>(props);
+    }
+
+    @Override
+    public void run() {
+        consumer.subscribe(Arrays.asList(channel));
+
+        try {
+            while (true) {
+                ConsumerRecords<String, String> records = consumer.poll(100);
+                for (ConsumerRecord<String, String> record : records) {
+                    //TODO : Java Stream API 변환해 보기
+                    for(Callback callback : callbackList) {
+                        if( (callback.getId().equals(record.key())) ) {
+                            Object translatedData = callback.translate(record.value());
+                            callback.call(translatedData);
+                            CallbackMessageConsumer.unregisterCallback(callback);
+                            break;
+                        }
+                    }
+                }
+            }
+        } finally {
+            consumer.close();
+        }
+
+    }
+
+    public static void registerCallback(Callback callback) {
+        synchronized (callbackList) {
+            callbackList.add(callback);
+        }
+
+    }
+
+    public static void unregisterCallback(Callback callback) {
+        synchronized (callbackList) {
+            callbackList.remove(callback);
+        }
+    }
+
+}
