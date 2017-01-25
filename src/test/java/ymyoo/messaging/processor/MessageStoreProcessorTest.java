@@ -1,4 +1,4 @@
-package ymyoo.messaging.processor.order.status;
+package ymyoo.messaging.processor;
 
 import com.google.gson.Gson;
 import org.junit.AfterClass;
@@ -7,6 +7,9 @@ import org.junit.Test;
 import ymyoo.app.order.domain.OrderStatus;
 import ymyoo.messaging.core.KafkaIntegrationTest;
 import ymyoo.messaging.core.MessageChannels;
+import ymyoo.messaging.processor.MessageStoreProcessor;
+import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
+import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,7 +18,7 @@ import javax.persistence.Persistence;
 /**
  * Created by 유영모 on 2017-01-12.
  */
-public class OrderStatusMessageProcessorTest extends KafkaIntegrationTest {
+public class MessageStoreProcessorTest extends KafkaIntegrationTest {
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("order");
 
     @AfterClass
@@ -35,7 +38,7 @@ public class OrderStatusMessageProcessorTest extends KafkaIntegrationTest {
 
         // when
         OrderStatusEntityRepository repository = new OrderStatusEntityRepository(emf);
-        Thread orderStatusMessageProcessor = new Thread(new OrderStatusMessageProcessor(channel, repository));
+        Thread orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(channel, repository));
         orderStatusMessageProcessor.start();
 
         waitCurrentThread(5);

@@ -1,8 +1,11 @@
-package ymyoo.messaging.processor.order.status;
+package ymyoo.messaging.processor;
 
 import com.google.gson.Gson;
 import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.EventDrivenMessageConsumer;
+import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
+import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
+import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
 
 import java.util.Date;
 import java.util.List;
@@ -10,11 +13,11 @@ import java.util.List;
 /**
  * Created by 유영모 on 2017-01-12.
  */
-public class OrderStatusMessageProcessor implements Runnable {
+public class MessageStoreProcessor implements Runnable {
     private final String channel;
     private OrderStatusEntityRepository repository;
 
-    public OrderStatusMessageProcessor(String channel, OrderStatusEntityRepository repository) {
+    public MessageStoreProcessor(String channel, OrderStatusEntityRepository repository) {
         this.channel = channel;
         this.repository = repository;
     }
@@ -26,8 +29,6 @@ public class OrderStatusMessageProcessor implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 List<Message> messages = eventDrivenMessageConsumer.poll();
                 for(Message message : messages) {
-                    System.out.println("OrderStatusMessageProcessor : "  + message.getBody());
-
                     OrderStatusEntity orderStatus = new Gson().fromJson(message.getBody(), OrderStatusEntity.class);
                     OrderStatusHistory history = new OrderStatusHistory();
                     history.setStatus(orderStatus.getStatus());

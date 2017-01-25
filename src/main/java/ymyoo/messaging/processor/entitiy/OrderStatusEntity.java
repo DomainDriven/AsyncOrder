@@ -1,4 +1,4 @@
-package ymyoo.messaging.processor.order.status;
+package ymyoo.messaging.processor.entitiy;
 
 import javax.persistence.*;
 import java.util.ArrayList;

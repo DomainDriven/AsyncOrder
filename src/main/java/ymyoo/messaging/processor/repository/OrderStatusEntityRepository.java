@@ -1,4 +1,7 @@
-package ymyoo.messaging.processor.order.status;
+package ymyoo.messaging.processor.repository;
+
+import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
+import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

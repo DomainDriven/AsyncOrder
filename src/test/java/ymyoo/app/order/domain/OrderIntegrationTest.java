@@ -5,13 +5,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
-import ymyoo.app.notification.domain.IncompleteBusinessActivity;
+import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.PollingMessageConsumer;
-import ymyoo.messaging.processor.order.status.OrderStatusEntityRepository;
-import ymyoo.messaging.processor.order.status.OrderStatusMessageProcessor;
+import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
+import ymyoo.messaging.processor.MessageStoreProcessor;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -46,10 +46,10 @@ public class OrderIntegrationTest {
         paymentReplyMessageConsumer = new Thread(new PollingMessageConsumer(MessageChannels.PAYMENT_AUTH_APP_REPLY));
         paymentReplyMessageConsumer.start();
 
-        // setup OrderStatusMessageProcessor
+        // setup MessageStoreProcessor
         OrderStatusEntityRepository orderStatusMessageProcessorRepositroy =
                 new OrderStatusEntityRepository(OrderEntityManagerFactory.getEntityManagerFactory());
-        orderStatusMessageProcessor = new Thread(new OrderStatusMessageProcessor(MessageChannels.LOG_ORDER_STATUS, orderStatusMessageProcessorRepositroy));
+        orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(MessageChannels.LOG_ORDER_STATUS, orderStatusMessageProcessorRepositroy));
         orderStatusMessageProcessor.start();
     }
 
@@ -80,7 +80,7 @@ public class OrderIntegrationTest {
     }
 
     @Test
-    public void placeOrder_주문_완료_알림_오류() throws InterruptedException {
+    public void placeOrder_주문_완료_알림_오류_휴대전화() throws InterruptedException {
         // given
         Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000"),
                 new OrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),

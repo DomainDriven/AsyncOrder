@@ -1,8 +1,11 @@
-package ymyoo.messaging.processor.order.status;
+package ymyoo.messaging.processor.repository;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
+import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
+import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
+import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

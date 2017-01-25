@@ -1,4 +1,4 @@
-package ymyoo.app.notification.domain;
+package ymyoo.messaging.processor.entitiy;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
