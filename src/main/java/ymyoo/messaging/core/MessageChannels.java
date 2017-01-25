@@ -12,5 +12,5 @@ public class MessageChannels {
 
     public static final String PURCHASE_ORDER_CREATED = "PURCHASE-ORDER-CREATED";
 
-    public static final String LOG_ORDER_STATUS = "LOG-ORDER-STATUS";
+    public static final String MESSAGE_STORE = "MESSAGE-STORE";
 }

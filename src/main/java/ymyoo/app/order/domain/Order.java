@@ -1,6 +1,6 @@
 package ymyoo.app.order.domain;
 
-import ymyoo.messaging.core.LogOrderStatusChannelAdapter;
+import ymyoo.messaging.adapter.MessageStoreChannelAdapter;
 import ymyoo.app.order.domain.workflow.OrderProcessManager;
 import ymyoo.app.order.domain.workflow.OrderProcessManagerFactory;
 import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
@@ -16,7 +16,7 @@ public class Order {
     private OrderPayment orderPayment;
 
     private OrderProcessManager processManager;
-    private LogOrderStatusChannelAdapter orderStatusChannelAdapter = new LogOrderStatusChannelAdapter();
+    private MessageStoreChannelAdapter orderStatusChannelAdapter = new MessageStoreChannelAdapter();
 
     public Order(String orderId) {
         this.orderId = orderId;

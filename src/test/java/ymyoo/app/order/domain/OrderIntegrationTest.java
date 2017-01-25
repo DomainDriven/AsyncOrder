@@ -49,7 +49,7 @@ public class OrderIntegrationTest {
         // setup MessageStoreProcessor
         OrderStatusEntityRepository orderStatusMessageProcessorRepositroy =
                 new OrderStatusEntityRepository(OrderEntityManagerFactory.getEntityManagerFactory());
-        orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(MessageChannels.LOG_ORDER_STATUS, orderStatusMessageProcessorRepositroy));
+        orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(MessageChannels.MESSAGE_STORE, orderStatusMessageProcessorRepositroy));
         orderStatusMessageProcessor.start();
     }
 

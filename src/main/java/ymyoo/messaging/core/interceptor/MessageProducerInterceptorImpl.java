@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.ProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import ymyoo.app.order.domain.OrderStatus;
-import ymyoo.messaging.core.LogOrderStatusChannelAdapter;
+import ymyoo.messaging.adapter.MessageStoreChannelAdapter;
 import ymyoo.messaging.core.MessageChannels;
 
 import java.lang.reflect.Type;
@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by 유영모 on 2017-01-16.
  */
 public class MessageProducerInterceptorImpl implements ProducerInterceptor {
-    private LogOrderStatusChannelAdapter adapter = new LogOrderStatusChannelAdapter();
+    private MessageStoreChannelAdapter adapter = new MessageStoreChannelAdapter();
 
     @Override
     public ProducerRecord onSend(ProducerRecord producerRecord) {

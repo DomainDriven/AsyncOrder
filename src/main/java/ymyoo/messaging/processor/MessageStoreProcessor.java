@@ -1,14 +1,19 @@
 package ymyoo.messaging.processor;
 
 import com.google.gson.Gson;
-import ymyoo.messaging.core.Message;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import ymyoo.messaging.core.EventDrivenMessageConsumer;
+import ymyoo.messaging.core.Message;
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
-import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
 import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
+import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
 
+import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 유영모 on 2017-01-12.
@@ -29,13 +34,24 @@ public class MessageStoreProcessor implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 List<Message> messages = eventDrivenMessageConsumer.poll();
                 for(Message message : messages) {
-                    OrderStatusEntity orderStatus = new Gson().fromJson(message.getBody(), OrderStatusEntity.class);
-                    OrderStatusHistory history = new OrderStatusHistory();
-                    history.setStatus(orderStatus.getStatus());
-                    history.setCreatedDate(new Date());
-                    orderStatus.addHistory(history);
+                    Type type = new TypeToken<HashMap<String, Object>>(){}.getType();
+                    Map<String, String> content = new Gson().fromJson(message.getBody(), type);
 
-                    repository.add(orderStatus);
+                    if(content.get("type").equals("ORDER-STATUS")) {
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        gsonBuilder.registerTypeAdapter(OrderStatusEntity.class, new OrderStatusEntityDeserializer());
+                        Gson gson = gsonBuilder.create();
+                        OrderStatusEntity orderStatus = gson.fromJson(message.getBody(), OrderStatusEntity.class);
+
+                        OrderStatusHistory history = new OrderStatusHistory();
+                        history.setStatus(orderStatus.getStatus());
+                        history.setCreatedDate(new Date());
+                        orderStatus.addHistory(history);
+                        repository.add(orderStatus);
+                    } else {
+                        //TODO 다른 메시지들....
+                    }
+
                 }
             }
         } finally {
