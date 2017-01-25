@@ -1,4 +1,4 @@
-package ymyoo.messaging.processor;
+package ymyoo.messaging.processor.deserializer;
 
 import com.google.gson.*;
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;

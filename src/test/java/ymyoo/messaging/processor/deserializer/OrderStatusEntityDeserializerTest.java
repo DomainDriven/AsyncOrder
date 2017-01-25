@@ -1,4 +1,4 @@
-package ymyoo.messaging.processor;
+package ymyoo.messaging.processor.deserializer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

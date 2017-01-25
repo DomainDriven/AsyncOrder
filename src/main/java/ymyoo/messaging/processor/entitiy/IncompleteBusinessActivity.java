@@ -19,6 +19,11 @@ public class IncompleteBusinessActivity {
     public IncompleteBusinessActivity() {
     }
 
+    public IncompleteBusinessActivity(String orderId, String activity) {
+        this.orderId = orderId;
+        this.activity = activity;
+    }
+
     public String getOrderId() {
         return orderId;
     }

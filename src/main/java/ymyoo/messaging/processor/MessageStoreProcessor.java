@@ -5,6 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import ymyoo.messaging.core.EventDrivenMessageConsumer;
 import ymyoo.messaging.core.Message;
+import ymyoo.messaging.processor.deserializer.IncompleteBusinessActivityDeserializer;
+import ymyoo.messaging.processor.deserializer.OrderStatusEntityDeserializer;
+import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
 import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
 import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
@@ -48,8 +51,12 @@ public class MessageStoreProcessor implements Runnable {
                         history.setCreatedDate(new Date());
                         orderStatus.addHistory(history);
                         repository.add(orderStatus);
-                    } else {
-                        //TODO 다른 메시지들....
+                    } else if(content.get("type").equals("INCOMPLETE-BUSINESS-ACTIVITY")) {
+                        GsonBuilder gsonBuilder = new GsonBuilder();
+                        gsonBuilder.registerTypeAdapter(IncompleteBusinessActivity.class, new IncompleteBusinessActivityDeserializer());
+                        Gson gson = gsonBuilder.create();
+                        IncompleteBusinessActivity incompleteBusinessActivity = gson.fromJson(message.getBody(), IncompleteBusinessActivity.class);
+
                     }
 
                 }
