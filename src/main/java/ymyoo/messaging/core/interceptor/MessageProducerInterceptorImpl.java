@@ -45,7 +45,7 @@ public class MessageProducerInterceptorImpl implements ProducerInterceptor {
         String orderId = content.get("orderId");
 
         OrderStatus orderStatus = new OrderStatus(orderId, inventoryCheckedRequest);
-        adapter.logStatus(orderStatus);
+        adapter.storeOrderStatus(orderStatus);
     }
 
     @Override
