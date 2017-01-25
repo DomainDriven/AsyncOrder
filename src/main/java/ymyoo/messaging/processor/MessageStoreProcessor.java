@@ -10,8 +10,10 @@ import ymyoo.messaging.processor.deserializer.OrderStatusEntityDeserializer;
 import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
 import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
+import ymyoo.messaging.processor.repository.IncompleteBusinessActivityRepository;
 import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
 
+import javax.persistence.EntityManagerFactory;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,11 +25,13 @@ import java.util.Map;
  */
 public class MessageStoreProcessor implements Runnable {
     private final String channel;
-    private OrderStatusEntityRepository repository;
+    private OrderStatusEntityRepository orderStatusRepository;
+    private IncompleteBusinessActivityRepository incompleteBusinessActivityRepository;
 
-    public MessageStoreProcessor(String channel, OrderStatusEntityRepository repository) {
+    public MessageStoreProcessor(String channel, EntityManagerFactory emf) {
         this.channel = channel;
-        this.repository = repository;
+        this.orderStatusRepository = new OrderStatusEntityRepository(emf);
+        this.incompleteBusinessActivityRepository = new IncompleteBusinessActivityRepository(emf);
     }
 
     @Override
@@ -50,13 +54,14 @@ public class MessageStoreProcessor implements Runnable {
                         history.setStatus(orderStatus.getStatus());
                         history.setCreatedDate(new Date());
                         orderStatus.addHistory(history);
-                        repository.add(orderStatus);
+                        orderStatusRepository.add(orderStatus);
                     } else if(content.get("type").equals("INCOMPLETE-BUSINESS-ACTIVITY")) {
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         gsonBuilder.registerTypeAdapter(IncompleteBusinessActivity.class, new IncompleteBusinessActivityDeserializer());
                         Gson gson = gsonBuilder.create();
-                        IncompleteBusinessActivity incompleteBusinessActivity = gson.fromJson(message.getBody(), IncompleteBusinessActivity.class);
 
+                        IncompleteBusinessActivity incompleteBusinessActivity = gson.fromJson(message.getBody(), IncompleteBusinessActivity.class);
+                        incompleteBusinessActivityRepository.add(incompleteBusinessActivity);
                     }
 
                 }

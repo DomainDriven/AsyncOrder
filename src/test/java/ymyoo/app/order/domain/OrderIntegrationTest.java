@@ -5,13 +5,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
-import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.PollingMessageConsumer;
-import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
 import ymyoo.messaging.processor.MessageStoreProcessor;
+import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -47,9 +46,9 @@ public class OrderIntegrationTest {
         paymentReplyMessageConsumer.start();
 
         // setup MessageStoreProcessor
-        OrderStatusEntityRepository orderStatusMessageProcessorRepositroy =
-                new OrderStatusEntityRepository(OrderEntityManagerFactory.getEntityManagerFactory());
-        orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(MessageChannels.MESSAGE_STORE, orderStatusMessageProcessorRepositroy));
+        orderStatusMessageProcessor = new Thread(
+                new MessageStoreProcessor(MessageChannels.MESSAGE_STORE,
+                        OrderEntityManagerFactory.getEntityManagerFactory()));
         orderStatusMessageProcessor.start();
     }
 
