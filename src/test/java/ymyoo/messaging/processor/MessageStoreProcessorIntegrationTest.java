@@ -37,7 +37,7 @@ public class MessageStoreProcessorIntegrationTest extends KafkaIntegrationTest {
 
         String orderId = generateId();
         Map<String, Object> messageBody = new HashMap<>();
-        messageBody.put("type", "ORDER-STATUS");
+        messageBody.put("type", MessageChannels.MESSAGE_STORE_TYPE_ORDER_STATUS);
         messageBody.put("message", new OrderStatus(orderId, OrderStatus.Status.INVENTORY_CHECKED));
         sendMessage(channel, messageId, new Gson().toJson(messageBody));
 
@@ -68,7 +68,7 @@ public class MessageStoreProcessorIntegrationTest extends KafkaIntegrationTest {
 
         String orderId = generateId();
         Map<String, Object> messageBody = new HashMap<>();
-        messageBody.put("type", "INCOMPLETE-BUSINESS-ACTIVITY");
+        messageBody.put("type", MessageChannels.MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY);
         IncompleteBusinessActivity incompleteBusinessActivity = new IncompleteBusinessActivity(orderId, "SENDING_CELL_PHONE");
         messageBody.put("message", incompleteBusinessActivity);
         sendMessage(channel, messageId, new Gson().toJson(messageBody));

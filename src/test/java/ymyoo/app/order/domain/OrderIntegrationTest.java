@@ -1,6 +1,7 @@
 package ymyoo.app.order.domain;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +56,11 @@ public class OrderIntegrationTest {
 
         notificationMessageConsumer = new Thread(new NotificationMessageConsumer(MessageChannels.PURCHASE_ORDER_CREATED));
         notificationMessageConsumer.start();
+    }
+
+    @AfterClass
+    public static void tearDownAfterClass() {
+        OrderEntityManagerFactory.closeEntityManagerFactory();
     }
 
     private void waitCurrentThread(int seconds) throws InterruptedException {

@@ -13,4 +13,6 @@ public class MessageChannels {
     public static final String PURCHASE_ORDER_CREATED = "PURCHASE-ORDER-CREATED";
 
     public static final String MESSAGE_STORE = "MESSAGE-STORE";
+    public static final String MESSAGE_STORE_TYPE_ORDER_STATUS = "ORDER-STATUS";
+    public static final String MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY = "INCOMPLETE-BUSINESS-ACTIVITY";
 }

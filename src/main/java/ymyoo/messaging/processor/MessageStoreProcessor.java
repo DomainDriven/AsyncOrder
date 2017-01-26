@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import ymyoo.messaging.core.EventDrivenMessageConsumer;
 import ymyoo.messaging.core.Message;
+import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.processor.deserializer.IncompleteBusinessActivityDeserializer;
 import ymyoo.messaging.processor.deserializer.OrderStatusEntityDeserializer;
 import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
@@ -44,7 +45,7 @@ public class MessageStoreProcessor implements Runnable {
                     Type type = new TypeToken<HashMap<String, Object>>(){}.getType();
                     Map<String, String> content = new Gson().fromJson(message.getBody(), type);
 
-                    if(content.get("type").equals("ORDER-STATUS")) {
+                    if(content.get("type").equals(MessageChannels.MESSAGE_STORE_TYPE_ORDER_STATUS)) {
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         gsonBuilder.registerTypeAdapter(OrderStatusEntity.class, new OrderStatusEntityDeserializer());
                         Gson gson = gsonBuilder.create();
@@ -55,7 +56,7 @@ public class MessageStoreProcessor implements Runnable {
                         history.setCreatedDate(new Date());
                         orderStatus.addHistory(history);
                         orderStatusRepository.add(orderStatus);
-                    } else if(content.get("type").equals("INCOMPLETE-BUSINESS-ACTIVITY")) {
+                    } else if(content.get("type").equals(MessageChannels.MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY)) {
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         gsonBuilder.registerTypeAdapter(IncompleteBusinessActivity.class, new IncompleteBusinessActivityDeserializer());
                         Gson gson = gsonBuilder.create();

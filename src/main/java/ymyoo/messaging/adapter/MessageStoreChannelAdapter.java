@@ -19,7 +19,7 @@ public class MessageStoreChannelAdapter {
         Requester requester = new Requester(MessageChannels.MESSAGE_STORE, messageId);
 
         Map<String, Object> messageBody = new HashMap<>();
-        messageBody.put("type", "ORDER-STATUS");
+        messageBody.put("type", MessageChannels.MESSAGE_STORE_TYPE_ORDER_STATUS);
         messageBody.put("message", aOrderStatus);
 
         requester.send(new Gson().toJson(messageBody));
@@ -30,7 +30,7 @@ public class MessageStoreChannelAdapter {
         Requester requester = new Requester(MessageChannels.MESSAGE_STORE, messageId);
 
         Map<String, Object> messageBody = new HashMap<>();
-        messageBody.put("type", "INCOMPLETE-BUSINESS-ACTIVITY");
+        messageBody.put("type", MessageChannels.MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY);
         messageBody.put("message", activity);
 
         requester.send(new Gson().toJson(messageBody));

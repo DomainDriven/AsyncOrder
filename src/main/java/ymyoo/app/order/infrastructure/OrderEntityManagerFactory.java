@@ -12,4 +12,8 @@ public class OrderEntityManagerFactory {
     public static EntityManagerFactory getEntityManagerFactory() {
         return emf;
     }
+
+    public static void closeEntityManagerFactory() {
+        emf.close();
+    }
 }
