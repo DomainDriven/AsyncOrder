@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
+import ymyoo.app.notification.adapter.messaging.NotificationMessageConsumer;
 import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.core.MessageChannels;
@@ -26,8 +27,9 @@ public class OrderIntegrationTest {
 
     Thread inventoryReplyMessageConsumer = null;
     Thread paymentReplyMessageConsumer = null;
+    Thread notificationMessageConsumer = null;
 
-    Thread orderStatusMessageProcessor = null;
+    Thread messageStoreProcessor = null;
 
     @Before
     public void setUp() throws Exception {
@@ -46,10 +48,13 @@ public class OrderIntegrationTest {
         paymentReplyMessageConsumer.start();
 
         // setup MessageStoreProcessor
-        orderStatusMessageProcessor = new Thread(
+        messageStoreProcessor = new Thread(
                 new MessageStoreProcessor(MessageChannels.MESSAGE_STORE,
                         OrderEntityManagerFactory.getEntityManagerFactory()));
-        orderStatusMessageProcessor.start();
+        messageStoreProcessor.start();
+
+        notificationMessageConsumer = new Thread(new NotificationMessageConsumer(MessageChannels.PURCHASE_ORDER_CREATED));
+        notificationMessageConsumer.start();
     }
 
     private void waitCurrentThread(int seconds) throws InterruptedException {
@@ -59,7 +64,7 @@ public class OrderIntegrationTest {
     @Test
     public void placeOrder() throws Exception {
         // Given
-        Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000"),
+        Order order = OrderFactory.create(new Orderer("유영모", "010-1111-2222", "gigamadness@gmail.com"),
                 new OrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
                 new OrderPayment(2000, "123-456-0789"));
 
@@ -81,7 +86,7 @@ public class OrderIntegrationTest {
     @Test
     public void placeOrder_주문_완료_알림_오류_휴대전화() throws InterruptedException {
         // given
-        Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000"),
+        Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000", "gigamadness@gmail.com"),
                 new OrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
                 new OrderPayment(2000, "123-456-0789"));
 

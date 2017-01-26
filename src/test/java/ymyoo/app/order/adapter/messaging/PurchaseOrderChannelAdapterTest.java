@@ -26,22 +26,10 @@ public class PurchaseOrderChannelAdapterTest {
         // given
         Requester requester = PowerMockito.mock(Requester.class);
 
-
-
-
-
-
-
-
-
-
-
-
-
         String orderId = OrderIdGenerator.generate();
         PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem("prd-12345", 3, OrderItemDeliveryType.AGENCY);
         PurchaseOrderPayment purchaseOrderPayment = new PurchaseOrderPayment("t1234");
-        Purchaser purchaser = new Purchaser("유영모", "010-0000-0000");
+        Purchaser purchaser = new Purchaser("유영모", "010-0000-0000", "gigamadness@gmail.com");
         PurchaseOrder purchaseOrder = PurchaseOrderFactory.create(orderId,purchaser, purchaseOrderItem, purchaseOrderPayment);
 
         MessageProducer mockMessageProducer = mock(MessageProducer.class);

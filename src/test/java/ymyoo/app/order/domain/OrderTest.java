@@ -16,7 +16,7 @@ public class OrderTest {
         // given
         OrderProcessManager mockOrderProcessManager = mock(OrderProcessManager.class);
 
-        Order order = new Order(new Orderer("유영모", "010-0000-0000"),
+        Order order = new Order(new Orderer("유영모", "010-0000-0000", "gigamadness@gmail.com"),
                 new OrderItem("P0001", 2, OrderItemDeliveryType.AGENCY),
                 new OrderPayment(2000, "123-456-0789"),
                 mockOrderProcessManager);
