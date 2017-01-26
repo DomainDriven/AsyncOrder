@@ -1,6 +1,7 @@
 package ymyoo.app.notification.adapter.messaging;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ymyoo.app.notification.domain.NotificationService;
 import ymyoo.app.notification.domain.PurchaseNotification;
 
@@ -10,14 +11,19 @@ import ymyoo.app.notification.domain.PurchaseNotification;
 public class NotificationChannelAdapter {
     private NotificationService notificationService = new NotificationService();
 
-    public void notifyToPurchaser(PurchaseNotification purchaseNotification) throws Exception {
-        notificationService.sendEmail(purchaseNotification.getEmail());
-        notificationService.sendMMS(purchaseNotification.getCellPhone());
+    public void notifyToPurchaser(String message) throws Exception {
+        PurchaseNotification purchaseNotification = NotificationMessageTranslator.translate(message);
+        notificationService.sendEmail(purchaseNotification);
+        notificationService.sendMMS(purchaseNotification);
     }
 
     static class NotificationMessageTranslator {
         public static PurchaseNotification translate(String data) {
-            return new Gson().fromJson(data, PurchaseNotification.class);
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(PurchaseNotification.class, new PurchaseNotificationDeserializer());
+            Gson gson = gsonBuilder.create();
+
+            return gson.fromJson(data, PurchaseNotification.class);
         }
     }
 }

@@ -16,9 +16,12 @@ public class Orderer {
      */
     private String contactNumber;
 
-    public Orderer(String name, String contactNumber) {
+    private String email;
+
+    public Orderer(String name, String contactNumber, String email) {
         this.name = name;
         this.contactNumber = contactNumber;
+        this.email = email;
     }
 
     public String getName() {
@@ -27,5 +30,9 @@ public class Orderer {
 
     public String getContactNumber() {
         return contactNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

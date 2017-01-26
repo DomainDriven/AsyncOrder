@@ -52,6 +52,14 @@ public class OrderStatusEntity {
         this.histories = histories;
     }
 
+    public OrderStatusEntity() {
+    }
+
+    public OrderStatusEntity(String orderId, Status status) {
+        this.orderId = orderId;
+        this.status = status;
+    }
+
     public void addHistory(OrderStatusHistory history) {
         this.getHistories().add(history);
         if(history.getOrderStatusEntity() != this) {

@@ -1,8 +1,10 @@
 package ymyoo.app.notification.adapter.messaging;
 
 import ymyoo.app.notification.domain.PurchaseNotification;
+import ymyoo.messaging.adapter.MessageStoreChannelAdapter;
 import ymyoo.messaging.core.EventDrivenMessageConsumer;
 import ymyoo.messaging.core.Message;
+import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 
 import java.util.List;
 
@@ -23,16 +25,20 @@ public class NotificationMessageConsumer implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 List<Message> messages = eventDrivenMessageConsumer.poll();
                 for(Message message : messages) {
-                    PurchaseNotification purchaseNotification =
-                            NotificationChannelAdapter.NotificationMessageTranslator.translate(message.getBody());
-
                     NotificationChannelAdapter adapter = new NotificationChannelAdapter();
                     try {
-                        adapter.notifyToPurchaser(purchaseNotification);
+                        adapter.notifyToPurchaser(message.getBody());
                     } catch (Exception e) {
                         // 오류 시 MessageStore 채널로 내용 전송
-                        //MessageProducer producer = new MessageProducer(replyChannel);
-                        //producer.send(message.getId(), new Gson().toJson(replyMessageBody));
+                        PurchaseNotification purchaseNotification =
+                                NotificationChannelAdapter.NotificationMessageTranslator.translate(message.getBody());
+                        String activity = e.getMessage();
+
+                        IncompleteBusinessActivity incompleteBusinessActivity =
+                                new IncompleteBusinessActivity(purchaseNotification.getOrderId(), activity);
+
+                        MessageStoreChannelAdapter messageStoreChannelAdapter = new MessageStoreChannelAdapter();
+                        messageStoreChannelAdapter.storeIncompleteActvity(incompleteBusinessActivity);
                     }
                 }
             }

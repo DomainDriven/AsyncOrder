@@ -8,6 +8,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import ymyoo.app.order.domain.OrderStatus;
 import ymyoo.messaging.adapter.MessageStoreChannelAdapter;
 import ymyoo.messaging.core.MessageChannels;
+import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class MessageProducerInterceptorImpl implements ProducerInterceptor {
         Map<String, String> content = new Gson().fromJson(producerRecord.value().toString(), type);
         String orderId = content.get("orderId");
 
-        OrderStatus orderStatus = new OrderStatus(orderId, inventoryCheckedRequest);
+        OrderStatusEntity orderStatus = new OrderStatusEntity(orderId, OrderStatusEntity.Status.valueOf(inventoryCheckedRequest.name()));
         adapter.storeOrderStatus(orderStatus);
     }
 
