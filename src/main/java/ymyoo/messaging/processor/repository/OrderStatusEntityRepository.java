@@ -2,6 +2,7 @@ package ymyoo.messaging.processor.repository;
 
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
 import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
+import ymyoo.persistence.GlobalEntityManagerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,13 +12,9 @@ import javax.persistence.EntityTransaction;
  * Created by 유영모 on 2017-01-11.
  */
 public class OrderStatusEntityRepository {
-    private EntityManagerFactory emf;
-
-    public OrderStatusEntityRepository(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
 
     public void add(OrderStatusEntity aOrderStatus) {
+        EntityManagerFactory emf = GlobalEntityManagerFactory.getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
         OrderStatusEntity find = em.find(OrderStatusEntity.class, aOrderStatus.getOrderId());

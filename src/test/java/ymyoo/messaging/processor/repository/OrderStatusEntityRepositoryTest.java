@@ -5,22 +5,19 @@ import org.junit.Assert;
 import org.junit.Test;
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
 import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
-import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
+import ymyoo.persistence.GlobalEntityManagerFactory;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.Date;
 
 /**
  * Created by 유영모 on 2017-01-13.
  */
 public class OrderStatusEntityRepositoryTest {
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("order");
 
     @AfterClass
     public static void tearDownAfterClass() {
-        emf.close();
+        GlobalEntityManagerFactory.closeEntityManagerFactory();
     }
 
     @Test
@@ -31,11 +28,11 @@ public class OrderStatusEntityRepositoryTest {
 
 
         // when
-        OrderStatusEntityRepository repository = new OrderStatusEntityRepository(emf);
+        OrderStatusEntityRepository repository = new OrderStatusEntityRepository();
         repository.add(orderStatusEntity);
 
         // then
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
         OrderStatusEntity actual = em.find(OrderStatusEntity.class, orderStatusEntity.getOrderId());
 
 
@@ -56,12 +53,12 @@ public class OrderStatusEntityRepositoryTest {
         OrderStatusEntity paymentDoneOrderStatus = getOrderStatus(orderId, OrderStatusEntity.Status.PAYMENT_DONE);
 
         // when
-        OrderStatusEntityRepository repository = new OrderStatusEntityRepository(emf);
+        OrderStatusEntityRepository repository = new OrderStatusEntityRepository();
         repository.add(inventoryCheckedOrderStatus);
         repository.add(paymentDoneOrderStatus);
 
         // then
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
         OrderStatusEntity actual = em.find(OrderStatusEntity.class, orderId);
 
 

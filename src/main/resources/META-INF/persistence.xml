@@ -12,10 +12,12 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
             <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database/db.sqlite3" />
             <property name="javax.persistence.jdbc.user" value="" />
             <property name="javax.persistence.jdbc.password" value="" />
+            <property name="javax.persistence.lock.timeout" value="1000"/>
 
             <property name="hibernate.show_sql" value="true" />
             <property name="format_sql" value="true" />
             <property name="hibernate.hbm2ddl.auto" value="create" />
+
         </properties>
     </persistence-unit>
 </persistence>

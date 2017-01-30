@@ -14,7 +14,6 @@ import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
 import ymyoo.messaging.processor.repository.IncompleteBusinessActivityRepository;
 import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
 
-import javax.persistence.EntityManagerFactory;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,10 +28,10 @@ public class MessageStoreProcessor implements Runnable {
     private OrderStatusEntityRepository orderStatusRepository;
     private IncompleteBusinessActivityRepository incompleteBusinessActivityRepository;
 
-    public MessageStoreProcessor(String channel, EntityManagerFactory emf) {
+    public MessageStoreProcessor(String channel) {
         this.channel = channel;
-        this.orderStatusRepository = new OrderStatusEntityRepository(emf);
-        this.incompleteBusinessActivityRepository = new IncompleteBusinessActivityRepository(emf);
+        this.orderStatusRepository = new OrderStatusEntityRepository();
+        this.incompleteBusinessActivityRepository = new IncompleteBusinessActivityRepository();
     }
 
     @Override

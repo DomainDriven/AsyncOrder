@@ -9,10 +9,9 @@ import ymyoo.messaging.core.KafkaIntegrationTest;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
+import ymyoo.persistence.GlobalEntityManagerFactory;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +21,9 @@ import java.util.Map;
  * Created by 유영모 on 2017-01-12.
  */
 public class MessageStoreProcessorIntegrationTest extends KafkaIntegrationTest {
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("order");
-
     @AfterClass
     public static void tearDownAfterClass() {
-        emf.close();
+        GlobalEntityManagerFactory.closeEntityManagerFactory();
     }
 
     @Test
@@ -42,7 +39,7 @@ public class MessageStoreProcessorIntegrationTest extends KafkaIntegrationTest {
         sendMessage(channel, messageId, new Gson().toJson(messageBody));
 
         // when
-        Thread orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(channel, emf));
+        Thread orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(channel));
         orderStatusMessageProcessor.start();
 
         waitCurrentThread(5);
@@ -54,7 +51,7 @@ public class MessageStoreProcessorIntegrationTest extends KafkaIntegrationTest {
     }
 
     private OrderStatusEntity getOrderStatus(String orderId) {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
         OrderStatusEntity orderStatus = em.find(OrderStatusEntity.class, orderId);
         em.close();
         return orderStatus;
@@ -74,13 +71,13 @@ public class MessageStoreProcessorIntegrationTest extends KafkaIntegrationTest {
         sendMessage(channel, messageId, new Gson().toJson(messageBody));
 
         // when
-        Thread orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(channel, emf));
+        Thread orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(channel));
         orderStatusMessageProcessor.start();
 
         waitCurrentThread(5);
 
         // then
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
 
         TypedQuery<IncompleteBusinessActivity> query =
                 em.createQuery("select iba from IncompleteBusinessActivity iba where iba.orderId = :orderId"

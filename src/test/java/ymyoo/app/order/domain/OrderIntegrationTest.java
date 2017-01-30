@@ -1,13 +1,10 @@
 package ymyoo.app.order.domain;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
 import ymyoo.app.notification.adapter.messaging.NotificationMessageConsumer;
-import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
+import ymyoo.persistence.GlobalEntityManagerFactory;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.PollingMessageConsumer;
@@ -50,17 +47,16 @@ public class OrderIntegrationTest {
 
         // setup MessageStoreProcessor
         messageStoreProcessor = new Thread(
-                new MessageStoreProcessor(MessageChannels.MESSAGE_STORE,
-                        OrderEntityManagerFactory.getEntityManagerFactory()));
+                new MessageStoreProcessor(MessageChannels.MESSAGE_STORE));
         messageStoreProcessor.start();
 
         notificationMessageConsumer = new Thread(new NotificationMessageConsumer(MessageChannels.PURCHASE_ORDER_CREATED));
         notificationMessageConsumer.start();
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() {
-        OrderEntityManagerFactory.closeEntityManagerFactory();
+    @After
+    public void tearDown() throws Exception {
+        GlobalEntityManagerFactory.closeEntityManagerFactory();
     }
 
     private void waitCurrentThread(int seconds) throws InterruptedException {
@@ -112,7 +108,7 @@ public class OrderIntegrationTest {
         Assert.assertEquals(OrderStatus.Status.PURCHASE_ORDER_CREATED, actual.getStatus());
 
         // 주문 완료 알림 오류 확인
-        EntityManager em = OrderEntityManagerFactory.getEntityManagerFactory().createEntityManager();
+        EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
 
         TypedQuery<IncompleteBusinessActivity> query =
                 em.createQuery("select iba from IncompleteBusinessActivity iba where iba.orderId = :orderId"

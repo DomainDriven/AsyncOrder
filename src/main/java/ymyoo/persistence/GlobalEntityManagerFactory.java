@@ -1,4 +1,4 @@
-package ymyoo.app.order.infrastructure;
+package ymyoo.persistence;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -6,10 +6,14 @@ import javax.persistence.Persistence;
 /**
  * Created by 유영모 on 2017-01-12.
  */
-public class OrderEntityManagerFactory {
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("order");
+public class GlobalEntityManagerFactory {
+    private static EntityManagerFactory emf = null;
 
     public static EntityManagerFactory getEntityManagerFactory() {
+        if(emf == null || emf.isOpen() == false) {
+            emf = Persistence.createEntityManagerFactory("order");
+        }
+
         return emf;
     }
 

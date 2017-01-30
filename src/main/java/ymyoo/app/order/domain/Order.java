@@ -1,9 +1,7 @@
 package ymyoo.app.order.domain;
 
-import ymyoo.messaging.adapter.MessageStoreChannelAdapter;
 import ymyoo.app.order.domain.workflow.OrderProcessManager;
 import ymyoo.app.order.domain.workflow.OrderProcessManagerFactory;
-import ymyoo.app.order.infrastructure.OrderEntityManagerFactory;
 import ymyoo.app.order.infrastructure.repository.OrderStatusRepository;
 
 /**
@@ -14,9 +12,7 @@ public class Order {
     private Orderer orderer;
     private OrderItem orderItem;
     private OrderPayment orderPayment;
-
     private OrderProcessManager processManager;
-    private MessageStoreChannelAdapter orderStatusChannelAdapter = new MessageStoreChannelAdapter();
 
     public Order(String orderId) {
         this.orderId = orderId;
@@ -61,7 +57,7 @@ public class Order {
     }
 
     public OrderStatus getOrderStatus() {
-        OrderStatusRepository orderStatusRepository = new OrderStatusRepository(OrderEntityManagerFactory.getEntityManagerFactory());
+        OrderStatusRepository orderStatusRepository = new OrderStatusRepository();
         return orderStatusRepository.find(this.getOrderId());
     }
 }

@@ -2,29 +2,27 @@ package ymyoo.app.order.infrastructure.repository;
 
 import org.junit.*;
 import ymyoo.app.order.domain.OrderStatus;
+import ymyoo.persistence.GlobalEntityManagerFactory;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
 /**
  * Created by 유영모 on 2017-01-11.
  */
 public class OrderStatusRepositoryTest {
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("order");
     String orderId = java.util.UUID.randomUUID().toString().toUpperCase();
 
     @AfterClass
     public static void tearDownAfterClass() {
-        emf.close();
+        GlobalEntityManagerFactory.getEntityManagerFactory().close();
     }
 
     @Before
     public void setUp() throws Exception {
         OrderStatus fixtureOrderStatus = getOrderStatusTestFixture();
 
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
@@ -36,7 +34,7 @@ public class OrderStatusRepositoryTest {
 
     @After
     public void tearDown() throws Exception {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
 
         OrderStatus orderStatus = em.find(OrderStatus.class, orderId);
 
@@ -59,7 +57,7 @@ public class OrderStatusRepositoryTest {
         OrderStatus expectedOrderStatus = new OrderStatus(orderId, OrderStatus.Status.INVENTORY_CHECKED);
 
         // when
-        OrderStatusRepository repository = new OrderStatusRepository(emf);
+        OrderStatusRepository repository = new OrderStatusRepository();
         OrderStatus actualOrderStatus = repository.find(orderId);
 
         // then
