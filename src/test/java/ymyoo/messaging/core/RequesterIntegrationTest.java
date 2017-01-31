@@ -32,17 +32,16 @@ public class RequesterIntegrationTest extends KafkaIntegrationTest {
     @Test
     public void send() throws InterruptedException {
         // given
-        String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
         Map<String, String> message = new HashMap<>();
         message.put("productId", "prd-1234");
         message.put("orderQty", "2");
 
         // when
-        Requester requester = new Requester(TEST_REQUEST_CHANNEL, TEST_REPLY_CHANNEL, correlationId);
+        Requester requester = new Requester(TEST_REQUEST_CHANNEL, TEST_REPLY_CHANNEL);
         requester.send(new Gson().toJson(message));
 
         // then
-        assertSendingMessage(TEST_REQUEST_CHANNEL, correlationId + "::" + TEST_REPLY_CHANNEL, new Gson().toJson(message));
+        assertSendingMessage(TEST_REQUEST_CHANNEL, requester.getCorrelationId() + "::" + TEST_REPLY_CHANNEL, new Gson().toJson(message));
     }
 
     @Test
@@ -57,7 +56,7 @@ public class RequesterIntegrationTest extends KafkaIntegrationTest {
         message.put("productId", "prd-1234");
         message.put("orderQty", "2");
 
-        Requester requester = new Requester(TEST_REQUEST_CHANNEL, TEST_REPLY_CHANNEL, correlationId);
+        Requester requester = new Requester(TEST_REQUEST_CHANNEL, TEST_REPLY_CHANNEL);
         requester.send(new Gson().toJson(message));
 
         //  - Reply Message 송신자 대기..

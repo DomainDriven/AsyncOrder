@@ -4,25 +4,28 @@ package ymyoo.messaging.core;
  * Created by 유영모 on 2016-12-20.
  */
 public class Requester implements MessageListener {
-    private String requestChannel;
-    private String replyChannel = "";
-    private String correlationId;
+    final private String requestChannel;
+    final private String replyChannel;
+    final private String messageId = generateMessageId();
     private String replyMessage = "";
 
-    public Requester(String requestChannel, String correlationId) {
-        this.requestChannel = requestChannel;
-        this.correlationId = correlationId;
+    private String generateMessageId() {
+        return java.util.UUID.randomUUID().toString().toUpperCase();
     }
 
-    public Requester(String requestChannel, String replyChannel, String correlationId) {
+    public Requester(String requestChannel) {
+        this.requestChannel = requestChannel;
+        this.replyChannel = "";
+    }
+
+    public Requester(String requestChannel, String replyChannel) {
         this.requestChannel = requestChannel;
         this.replyChannel = replyChannel;
-        this.correlationId = correlationId;
     }
 
     public void send(String message) {
         MessageProducer producer = new MessageProducer(requestChannel, replyChannel);
-        producer.send(correlationId, message);
+        producer.send(messageId, message);
     }
 
     public synchronized String receive() {
@@ -44,6 +47,6 @@ public class Requester implements MessageListener {
 
     @Override
     public String getCorrelationId() {
-        return correlationId;
+        return messageId;
     }
 }

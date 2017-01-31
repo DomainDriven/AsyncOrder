@@ -26,9 +26,7 @@ public class InventoryChannelAdapter {
         messageBody.put("orderQty", String.valueOf(orderItem.getOrderQty()));
 
         // 메시지 발신
-        String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
-        Requester requester = new Requester(MessageChannels.INVENTORY_REQUEST, MessageChannels.INVENTORY_REPLY, correlationId);
-
+        Requester requester = new Requester(MessageChannels.INVENTORY_REQUEST, MessageChannels.INVENTORY_REPLY);
         requester.send(new Gson().toJson(messageBody));
 
         // 메시지 수신

@@ -100,7 +100,7 @@ public class OrderIntegrationTest {
         Assert.assertTrue(StringUtils.isNotBlank(orderId));
 
         // 비동기 처리 대기
-        waitCurrentThread(5);
+        waitCurrentThread(8);
 
         // 주문 상태 확인
         OrderStatus actual = order.getOrderStatus();

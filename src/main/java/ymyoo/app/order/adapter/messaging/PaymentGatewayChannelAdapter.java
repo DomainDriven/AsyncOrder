@@ -23,8 +23,7 @@ public class PaymentGatewayChannelAdapter {
         messageBody.put("orderAmount", String.valueOf(orderPayment.getOrderAmount()));
 
         // 메시지 발신
-        String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
-        Requester requester = new Requester(MessageChannels.PAYMENT_AUTH_APP_REQUEST, MessageChannels.PAYMENT_AUTH_APP_REPLY, correlationId);
+        Requester requester = new Requester(MessageChannels.PAYMENT_AUTH_APP_REQUEST, MessageChannels.PAYMENT_AUTH_APP_REPLY);
         requester.send(new Gson().toJson(messageBody));
 
         // 메시지 수신

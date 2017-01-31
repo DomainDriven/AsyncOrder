@@ -38,7 +38,7 @@ public class NotificationMessageConsumer implements Runnable {
                                 new IncompleteBusinessActivity(purchaseNotification.getOrderId(), activity);
 
                         MessageStoreChannelAdapter messageStoreChannelAdapter = new MessageStoreChannelAdapter();
-                        messageStoreChannelAdapter.storeIncompleteActvity(incompleteBusinessActivity);
+                        messageStoreChannelAdapter.storeIncompleteActivity(incompleteBusinessActivity);
                     }
                 }
             }

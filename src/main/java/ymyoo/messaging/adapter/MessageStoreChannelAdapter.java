@@ -15,8 +15,7 @@ import java.util.Map;
 public class MessageStoreChannelAdapter {
 
     public void storeOrderStatus(OrderStatusEntity aOrderStatus) {
-        String messageId =  java.util.UUID.randomUUID().toString().toUpperCase();
-        Requester requester = new Requester(MessageChannels.MESSAGE_STORE, messageId);
+        Requester requester = new Requester(MessageChannels.MESSAGE_STORE);
 
         Map<String, Object> messageBody = new HashMap<>();
         messageBody.put("type", MessageChannels.MESSAGE_STORE_TYPE_ORDER_STATUS);
@@ -25,9 +24,8 @@ public class MessageStoreChannelAdapter {
         requester.send(new Gson().toJson(messageBody));
     }
 
-    public void storeIncompleteActvity(IncompleteBusinessActivity activity) {
-        String messageId =  java.util.UUID.randomUUID().toString().toUpperCase();
-        Requester requester = new Requester(MessageChannels.MESSAGE_STORE, messageId);
+    public void storeIncompleteActivity(IncompleteBusinessActivity activity) {
+        Requester requester = new Requester(MessageChannels.MESSAGE_STORE);
 
         Map<String, Object> messageBody = new HashMap<>();
         messageBody.put("type", MessageChannels.MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY);
