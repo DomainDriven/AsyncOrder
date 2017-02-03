@@ -66,4 +66,12 @@ public class OrderStatusEntity {
             history.setOrderStatusEntity(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "OrderStatusEntity{" +
+                "orderId='" + orderId + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

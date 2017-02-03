@@ -1,11 +1,10 @@
 package ymyoo.messaging.core;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.gson.Gson;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -14,26 +13,10 @@ import java.util.Properties;
  * Created by 유영모 on 2016-12-05.
  */
 public class MessageProducer {
-    private String requestChannel;
-    private String replyChannel;
     private Producer<String, String> producer;
 
-    public MessageProducer(String requestChannel) {
-        this.requestChannel = requestChannel;
+    public MessageProducer() {
         initKafkaProducer();
-    }
-
-    public MessageProducer(String requestChannel, String replyChannel) {
-        this.requestChannel = requestChannel;
-        this.replyChannel = replyChannel;
-
-        initKafkaProducer();
-    }
-
-    public MessageProducer(String requestChannel, String replyChannel, Producer<String, String> producer) {
-        this.requestChannel = requestChannel;
-        this.replyChannel = replyChannel;
-        this.producer = producer;
     }
 
     private void initKafkaProducer() {
@@ -51,14 +34,8 @@ public class MessageProducer {
         this.producer = new KafkaProducer<>(props);
     }
 
-    public void send(final String messageId, final String messageBody) {
-        String messageKey = messageId;
-
-        if(StringUtils.isNoneBlank(replyChannel)) {
-            messageKey = String.join("::",  Arrays.asList(messageId, replyChannel));
-        }
-
-        producer.send(new ProducerRecord<>(requestChannel, messageKey, messageBody));
+    public void send(final String channel, final Message message) {
+        producer.send(new ProducerRecord<>(channel, message.getMessageId(), new Gson().toJson(message)));
         producer.close();
     }
 }

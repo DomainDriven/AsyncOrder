@@ -19,13 +19,13 @@ public class AbstractReplierTest extends KafkaIntegrationTest {
         new Thread(testReplier).start();
 
         // when
-        sendMessage(requestChannel, requestMessageId, requestMessageBody);
+        sendMessage(requestChannel, new Message(requestMessageId, requestMessageBody));
         waitCurrentThread(5);
 
         // then
         boolean receivedMessageFlag = false;
         for(Message message : testReplier.getMessageList()) {
-            if(message.getId().equals(requestMessageId)) {
+            if(message.getMessageId().equals(requestMessageId)) {
                 Assert.assertEquals(requestMessageBody, message.getBody());
                 receivedMessageFlag = true;
             }

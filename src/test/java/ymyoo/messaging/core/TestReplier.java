@@ -1,8 +1,5 @@
 package ymyoo.messaging.core;
 
-import ymyoo.messaging.core.AbstractReplier;
-import ymyoo.messaging.core.Message;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +13,7 @@ public class TestReplier extends AbstractReplier {
     }
 
     @Override
-    public void onMessage(String replyChannel, Message message) {
+    public void onMessage(Message message) {
         messageList.add(message);
     }
 

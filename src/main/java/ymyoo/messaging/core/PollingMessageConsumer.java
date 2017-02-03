@@ -1,5 +1,6 @@
 package ymyoo.messaging.core;
 
+import com.google.gson.Gson;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -41,9 +42,11 @@ public class PollingMessageConsumer implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 ConsumerRecords<String, String> records = consumer.poll(100);
                 for (ConsumerRecord<String, String> record : records) {
+                    Message message = new Gson().fromJson(record.value(), Message.class);
                     for(MessageListener listener : listeners) {
-                        if( (listener.getCorrelationId().equals(record.key())) ) {
-                            listener.onMessage(record.value());
+                        final String correlationId = message.getHeaders().get("correlationId");
+                        if( (listener.getCorrelationId().equals(correlationId)) ) {
+                            listener.onMessage(message);
                             PollingMessageConsumer.unregisterListener(listener);
                             break;
                         }

@@ -15,22 +15,27 @@ public class TakingOrderItem {
     private String productId;
     private int orderQty;
 
-
-    public TakingOrderItem(DeliveryType deliveryType, String productId, int orderQty) {
-        this.deliveryType = deliveryType;
-        this.productId = productId;
-        this.orderQty = orderQty;
-    }
-
     public DeliveryType getDeliveryType() {
         return deliveryType;
+    }
+
+    public void setDeliveryType(DeliveryType deliveryType) {
+        this.deliveryType = deliveryType;
     }
 
     public String getProductId() {
         return productId;
     }
 
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
     public int getOrderQty() {
         return orderQty;
+    }
+
+    public void setOrderQty(int orderQty) {
+        this.orderQty = orderQty;
     }
 }

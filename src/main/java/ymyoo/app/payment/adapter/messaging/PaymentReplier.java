@@ -1,11 +1,9 @@
 package ymyoo.app.payment.adapter.messaging;
 
-import com.google.gson.Gson;
 import ymyoo.app.payment.domain.ApprovalPayment;
 import ymyoo.messaging.core.AbstractReplier;
-import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.core.MessageProducer;
+import ymyoo.messaging.core.Message;
 
 /**
  * Created by 유영모 on 2017-01-02.
@@ -16,12 +14,13 @@ public class PaymentReplier extends AbstractReplier {
     }
 
     @Override
-    public void onMessage(String replyChannel, Message message) {
+    public void onMessage(Message receivedMessage) {
         PaymentChannelAdapter channelAdapter = new PaymentChannelAdapter();
-        ApprovalPayment approvalPayment = channelAdapter.authenticateAndApproval(message);
+        ApprovalPayment approvalPayment = channelAdapter.authenticateAndApproval(receivedMessage);
 
         // 결과를 메시지로 전송
-        MessageProducer producer = new MessageProducer(replyChannel);
-        producer.send(message.getId(), new Gson().toJson(approvalPayment));
+        final String channel = receivedMessage.getHeaders().get("replyChannel");
+        final String correlationId = receivedMessage.getMessageId();
+        sendMessage(channel, correlationId, approvalPayment);
     }
 }

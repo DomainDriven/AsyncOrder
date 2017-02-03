@@ -1,7 +1,6 @@
 package ymyoo.messaging.core;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -9,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,16 +30,20 @@ public class RequesterIntegrationTest extends KafkaIntegrationTest {
     @Test
     public void send() throws InterruptedException {
         // given
-        Map<String, String> message = new HashMap<>();
-        message.put("productId", "prd-1234");
-        message.put("orderQty", "2");
+        Map<String, String> messageBody = new HashMap<>();
+        messageBody.put("productId", "prd-1234");
+        messageBody.put("orderQty", "2");
 
         // when
         Requester requester = new Requester(TEST_REQUEST_CHANNEL, TEST_REPLY_CHANNEL);
-        requester.send(new Gson().toJson(message));
+        requester.send(messageBody);
 
         // then
-        assertSendingMessage(TEST_REQUEST_CHANNEL, requester.getCorrelationId() + "::" + TEST_REPLY_CHANNEL, new Gson().toJson(message));
+        assertSendingMessage(TEST_REQUEST_CHANNEL, requester.getCorrelationId(), message -> {
+            Assert.assertEquals(TEST_REPLY_CHANNEL, message.getHeaders().get("replyChannel"));
+            Assert.assertEquals(messageBody.get("productId"), ((Map)message.getBody()).get("productId"));
+            Assert.assertEquals(messageBody.get("orderQty"), ((Map)message.getBody()).get("orderQty"));
+        });
     }
 
     @Test
@@ -51,32 +53,28 @@ public class RequesterIntegrationTest extends KafkaIntegrationTest {
         onListener(TEST_REPLY_CHANNEL);
 
         //  - 메시지 송신
-        String correlationId =  java.util.UUID.randomUUID().toString().toUpperCase();
         Map<String, String> message = new HashMap<>();
         message.put("productId", "prd-1234");
         message.put("orderQty", "2");
 
         Requester requester = new Requester(TEST_REQUEST_CHANNEL, TEST_REPLY_CHANNEL);
-        requester.send(new Gson().toJson(message));
+        requester.send(message);
 
         //  - Reply Message 송신자 대기..
-        onFakeReplier(correlationId);
+        onFakeReplier(requester.getCorrelationId());
 
         // when
-        String replyMessage = requester.receive();
+        Message replyMessage = requester.receive();
 
         // then
-        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-        Map<String, String> content = new Gson().fromJson(replyMessage, type);
-
-        Assert.assertEquals(content.get("validation"), "SUCCESS");
+        Assert.assertEquals("SUCCESS", ((Map)replyMessage.getBody()).get("validation"));
     }
 
     private void onListener(String channel) {
         new Thread(new PollingMessageConsumer(channel)).start();
     }
 
-    private void onFakeReplier(String correlationId) {
+    private void onFakeReplier(String messageId) {
         new Thread(() -> {
             Properties props = new Properties();
             props.put("bootstrap.servers", "localhost:9092");
@@ -92,12 +90,20 @@ public class RequesterIntegrationTest extends KafkaIntegrationTest {
                 while (!Thread.currentThread().isInterrupted()) {
                     ConsumerRecords<String, String> records = consumer.poll(100);
                     for (ConsumerRecord<String, String> record : records) {
-                        if(record.key().equals(correlationId + "::" + TEST_REPLY_CHANNEL)) {
+                        Message receivedMessage = new Gson().fromJson(record.value(), Message.class);
+                        if(receivedMessage.getMessageId().equals(messageId)) {
                             // Reply Message
-                            Map<String, String> replyMessage = new HashMap<>();
-                            replyMessage.put("validation", "SUCCESS");
-                            MessageProducer producer = new MessageProducer(TEST_REPLY_CHANNEL);
-                            producer.send(correlationId,  new Gson().toJson(replyMessage));
+                            Map<String, String> headers = new HashMap<>();
+                            headers.put("correlationId", receivedMessage.getMessageId());
+
+                            Map<String, String> body = new HashMap<>();
+                            body.put("validation", "SUCCESS");
+
+                            String sendMessageId = generateId();
+                            Message sendMessage = new Message(sendMessageId, headers, body);
+
+                            MessageProducer producer = new MessageProducer();
+                            producer.send(receivedMessage.getHeaders().get("replyChannel"), sendMessage);
                         }
                     }
                 }

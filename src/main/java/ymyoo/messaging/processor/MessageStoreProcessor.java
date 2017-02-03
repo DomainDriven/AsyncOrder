@@ -1,22 +1,19 @@
 package ymyoo.messaging.processor;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import ymyoo.messaging.core.EventDrivenMessageConsumer;
-import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.processor.deserializer.IncompleteBusinessActivityDeserializer;
-import ymyoo.messaging.processor.deserializer.OrderStatusEntityDeserializer;
+import ymyoo.messaging.core.Message;
 import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
 import ymyoo.messaging.processor.entitiy.OrderStatusHistory;
 import ymyoo.messaging.processor.repository.IncompleteBusinessActivityRepository;
 import ymyoo.messaging.processor.repository.OrderStatusEntityRepository;
 
-import java.lang.reflect.Type;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,27 +38,44 @@ public class MessageStoreProcessor implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 List<Message> messages = eventDrivenMessageConsumer.poll();
                 for(Message message : messages) {
-                    Type type = new TypeToken<HashMap<String, Object>>(){}.getType();
-                    Map<String, String> content = new Gson().fromJson(message.getBody(), type);
+                    String messageType = message.getHeaders().get("type");
+                    if(messageType.equals(MessageChannels.MESSAGE_STORE_TYPE_ORDER_STATUS)) {
+                        OrderStatusEntity orderStatus = new OrderStatusEntity();
 
-                    if(content.get("type").equals(MessageChannels.MESSAGE_STORE_TYPE_ORDER_STATUS)) {
-                        GsonBuilder gsonBuilder = new GsonBuilder();
-                        gsonBuilder.registerTypeAdapter(OrderStatusEntity.class, new OrderStatusEntityDeserializer());
-                        Gson gson = gsonBuilder.create();
-                        OrderStatusEntity orderStatus = gson.fromJson(message.getBody(), OrderStatusEntity.class);
+                        try {
+                            BeanUtilsBean beanUtilsBean = new BeanUtilsBean(new ConvertUtilsBean() {
+                                @Override
+                                public Object convert(String value, Class clazz) {
+                                    if (clazz.isEnum()){
+                                        return Enum.valueOf(clazz, value);
+                                    }else{
+                                        return super.convert(value, clazz);
+                                    }
+                                }
+                            });
+                            beanUtilsBean.populate(orderStatus, (Map)message.getBody());
+
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
 
                         OrderStatusHistory history = new OrderStatusHistory();
                         history.setStatus(orderStatus.getStatus());
                         history.setCreatedDate(new Date());
                         orderStatus.addHistory(history);
                         orderStatusRepository.add(orderStatus);
-                    } else if(content.get("type").equals(MessageChannels.MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY)) {
-                        GsonBuilder gsonBuilder = new GsonBuilder();
-                        gsonBuilder.registerTypeAdapter(IncompleteBusinessActivity.class, new IncompleteBusinessActivityDeserializer());
-                        Gson gson = gsonBuilder.create();
-
-                        IncompleteBusinessActivity incompleteBusinessActivity = gson.fromJson(message.getBody(), IncompleteBusinessActivity.class);
-                        incompleteBusinessActivityRepository.add(incompleteBusinessActivity);
+                    } else if(messageType.equals(MessageChannels.MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY)) {
+                        IncompleteBusinessActivity activity = new IncompleteBusinessActivity();
+                        try {
+                            BeanUtils.populate(activity, (Map)message.getBody());
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                        incompleteBusinessActivityRepository.add(activity);
                     }
 
                 }

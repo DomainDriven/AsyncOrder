@@ -6,7 +6,9 @@ import ymyoo.messaging.core.EventDrivenMessageConsumer;
 import ymyoo.messaging.core.Message;
 import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 유영모 on 2017-01-25.
@@ -27,11 +29,18 @@ public class NotificationMessageConsumer implements Runnable {
                 for(Message message : messages) {
                     NotificationChannelAdapter adapter = new NotificationChannelAdapter();
                     try {
-                        adapter.notifyToPurchaser(message.getBody());
+                        adapter.notifyToPurchaser(message);
                     } catch (Exception e) {
                         // 오류 시 MessageStore 채널로 내용 전송
-                        PurchaseNotification purchaseNotification =
-                                NotificationChannelAdapter.NotificationMessageTranslator.translate(message.getBody());
+                        PurchaseNotification purchaseNotification = null;
+                        try {
+                            purchaseNotification = NotificationChannelAdapter.NotificationMessageTranslator.translate((Map)message.getBody());
+                        } catch (InvocationTargetException e1) {
+                            e1.printStackTrace();
+                        } catch (IllegalAccessException e1) {
+                            e1.printStackTrace();
+                        }
+
                         String activity = e.getMessage();
 
                         IncompleteBusinessActivity incompleteBusinessActivity =

@@ -1,8 +1,7 @@
 package ymyoo.app.order.adapter.messaging;
 
-import com.google.gson.Gson;
-import ymyoo.messaging.core.MessageChannels;
 import ymyoo.app.order.domain.po.PurchaseOrder;
+import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.Requester;
 
 /**
@@ -13,6 +12,6 @@ public class PurchaseOrderChannelAdapter {
     public void onPurchaseOrderCreated(PurchaseOrder purchaseOrder) {
         // 구매 주문 생성 완료 이벤트 송신
         Requester requester = new Requester(MessageChannels.PURCHASE_ORDER_CREATED);
-        requester.send(new Gson().toJson(purchaseOrder));
+        requester.send(purchaseOrder);
     }
 }

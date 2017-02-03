@@ -1,9 +1,5 @@
 package ymyoo.messaging.core;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +14,7 @@ public abstract class AbstractReplier implements Runnable {
         this.channel = channel;
     }
 
-    public abstract void onMessage(String replyChannel, Message message);
+    public abstract void onMessage(Message message);
 
     @Override
     public void run() {
@@ -27,10 +23,7 @@ public abstract class AbstractReplier implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 List<Message> messages = eventDrivenMessageConsumer.poll();
                 for(Message message : messages) {
-                    String replyChannel = extractReplyChannel(message.getId());
-                    message.setId(extractMessageId(message.getId()));
-
-                    onMessage(replyChannel, message);
+                    onMessage(message);
                 }
             }
         } finally {
@@ -38,21 +31,21 @@ public abstract class AbstractReplier implements Runnable {
         }
     }
 
-    private String extractReplyChannel(String str) {
-        return str.substring(str.indexOf("::") + 2, str.length());
-    }
-
-    private String extractMessageId(String str) {
-        if(str.contains("::")) {
-            return str.substring(0, str.indexOf("::"));
-        } else {
-            return str;
-        }
-    }
-
     protected String getOrderId(Message message) {
-        Type type = new TypeToken<HashMap<String, Object>>() {}.getType();
-        Map<String, String> content = new Gson().fromJson(message.getBody(), type);
-        return content.get("orderId");
+        return (String)((Map)message.getBody()).get("orderId");
+    }
+
+    private String generateMessageId() {
+        return java.util.UUID.randomUUID().toString().toUpperCase();
+    }
+
+    protected void sendMessage(final String channel, final String correlationId, final Object body) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("correlationId", correlationId);
+
+        final String messageId = generateMessageId();
+        Message message = new Message(messageId, headers, body);
+        MessageProducer producer = new MessageProducer();
+        producer.send(channel, message);
     }
 }

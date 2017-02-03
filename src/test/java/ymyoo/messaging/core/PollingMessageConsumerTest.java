@@ -34,7 +34,7 @@ public class PollingMessageConsumerTest {
         // when
         consumer.registerListener(new MessageListener() {
             @Override
-            public void onMessage(String message) {
+            public void onMessage(Message message) {
 
             }
 
@@ -55,7 +55,7 @@ public class PollingMessageConsumerTest {
         TestPollingMessageConsumer consumer = new TestPollingMessageConsumer("testChannel", mockKafkaConsumer);
         MessageListener listener = new MessageListener() {
             @Override
-            public void onMessage(String message) {
+            public void onMessage(Message message) {
 
             }
 
@@ -87,7 +87,7 @@ public class PollingMessageConsumerTest {
 
         PollingMessageConsumer.registerListener(new MessageListener() {
             @Override
-            public void onMessage(String message) {
+            public void onMessage(Message message) {
 
             }
 

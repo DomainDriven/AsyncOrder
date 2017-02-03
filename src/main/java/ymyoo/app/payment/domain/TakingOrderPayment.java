@@ -11,22 +11,27 @@ public class TakingOrderPayment {
     /** 신용 카드 번호 **/
     private String creditCardNo;
 
-
-    public TakingOrderPayment(String orderId, int orderAmount, String creditCardNo) {
-        this.orderId = orderId;
-        this.orderAmount = orderAmount;
-        this.creditCardNo = creditCardNo;
-    }
-
     public String getOrderId() {
         return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public int getOrderAmount() {
         return orderAmount;
     }
 
+    public void setOrderAmount(int orderAmount) {
+        this.orderAmount = orderAmount;
+    }
+
     public String getCreditCardNo() {
         return creditCardNo;
+    }
+
+    public void setCreditCardNo(String creditCardNo) {
+        this.creditCardNo = creditCardNo;
     }
 }

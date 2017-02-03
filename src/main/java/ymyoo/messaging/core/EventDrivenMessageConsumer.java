@@ -1,5 +1,6 @@
 package ymyoo.messaging.core;
 
+import com.google.gson.Gson;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
@@ -38,7 +39,7 @@ public class EventDrivenMessageConsumer {
     public List<Message> poll() {
         ConsumerRecords<String, String> records = consumer.poll(100);
         return StreamSupport.stream(records.spliterator(), false)
-                .map(record -> new Message(record.key(), record.value())).collect(Collectors.toList());
+                .map(record -> new Gson().fromJson(record.value(), Message.class)).collect(Collectors.toList());
     }
 
     public void close() {

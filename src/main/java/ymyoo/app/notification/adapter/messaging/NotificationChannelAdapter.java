@@ -1,9 +1,11 @@
 package ymyoo.app.notification.adapter.messaging;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import ymyoo.app.notification.domain.NotificationService;
 import ymyoo.app.notification.domain.PurchaseNotification;
+import ymyoo.messaging.core.Message;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 /**
  * Created by 유영모 on 2017-01-25.
@@ -11,19 +13,23 @@ import ymyoo.app.notification.domain.PurchaseNotification;
 public class NotificationChannelAdapter {
     private NotificationService notificationService = new NotificationService();
 
-    public void notifyToPurchaser(String message) throws Exception {
-        PurchaseNotification purchaseNotification = NotificationMessageTranslator.translate(message);
+    public void notifyToPurchaser(Message message) throws Exception {
+        PurchaseNotification purchaseNotification = NotificationMessageTranslator.translate((Map)message.getBody());
+
         notificationService.sendEmail(purchaseNotification);
         notificationService.sendMMS(purchaseNotification);
     }
 
     static class NotificationMessageTranslator {
-        public static PurchaseNotification translate(String data) {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(PurchaseNotification.class, new PurchaseNotificationDeserializer());
-            Gson gson = gsonBuilder.create();
+        public static PurchaseNotification translate(Map data) throws InvocationTargetException, IllegalAccessException {
+            PurchaseNotification purchaseNotification = new PurchaseNotification();
+            purchaseNotification.setOrderId((String)data.get("orderId"));
 
-            return gson.fromJson(data, PurchaseNotification.class);
+            Map purchaser = (Map)data.get("purchaser");
+            purchaseNotification.setCellPhone((String)purchaser.get("contactNumber"));
+            purchaseNotification.setEmail((String)purchaser.get("email"));
+
+            return purchaseNotification;
         }
     }
 }

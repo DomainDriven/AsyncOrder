@@ -1,5 +1,6 @@
 package ymyoo.messaging.core;
 
+import com.google.gson.Gson;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class KafkaIntegrationTest {
     public static boolean messageReceivedFlag = false;
 
-    protected void sendMessage(String channel, String messageId, String messageBody) {
+    protected void sendMessage(String channel, Message message) {
         Properties producerProps = new Properties();
         producerProps.put("bootstrap.servers", "localhost:9092");
         producerProps.put("acks", "all");
@@ -31,7 +32,7 @@ public class KafkaIntegrationTest {
 
         Producer<String, String> producer = new KafkaProducer<>(producerProps);
 
-        producer.send(new ProducerRecord<>(channel, messageId, messageBody));
+        producer.send(new ProducerRecord<>(channel, message.getMessageId(), new Gson().toJson(message)));
         producer.close();
     }
 
@@ -47,7 +48,7 @@ public class KafkaIntegrationTest {
 
     }
 
-    protected  void assertSendingMessage(String channel, String id, String body) {
+    protected void assertSendingMessage(String channel, String id, MessageAssert messageAssert) {
         new Thread(() -> {
             Properties props = new Properties();
             props.put("bootstrap.servers", "localhost:9092");
@@ -64,7 +65,8 @@ public class KafkaIntegrationTest {
                     ConsumerRecords<String, String> records = consumer.poll(100);
                     for (ConsumerRecord<String, String> record : records) {
                         if(record.key().equals(id)) {
-                            Assert.assertEquals(body, record.value());
+                            Message message = new Gson().fromJson(record.value(), Message.class);
+                            messageAssert.assertMessage(message);
                             KafkaIntegrationTest.messageReceivedFlag = true;
                         }
                     }
@@ -75,7 +77,7 @@ public class KafkaIntegrationTest {
         }).start();
 
         // 비동기 대기
-        waitCurrentThread(7);
+        waitCurrentThread(5);
         Assert.assertTrue(KafkaIntegrationTest.messageReceivedFlag);
     }
 

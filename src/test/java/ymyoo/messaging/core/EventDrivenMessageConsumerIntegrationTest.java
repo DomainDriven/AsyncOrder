@@ -24,8 +24,10 @@ public class EventDrivenMessageConsumerIntegrationTest extends KafkaIntegrationT
         final String messageId = java.util.UUID.randomUUID().toString().toUpperCase();
         final String messageBody = "test";
 
+        final Message message = new Message(messageId, messageBody);
+
         // when
-        sendMessage(channel, messageId, messageBody);
+        sendMessage(channel, message);
 
         // then
         new Thread(() -> {
@@ -33,9 +35,9 @@ public class EventDrivenMessageConsumerIntegrationTest extends KafkaIntegrationT
             try {
                 while (!Thread.currentThread().isInterrupted()) {
                     List<Message> messages = eventDrivenMessageConsumer.poll();
-                    for(Message message : messages) {
-                        if(message.getId().equals(messageId)) {
-                            Assert.assertEquals(messageBody, message.getBody());
+                    for(Message receivedMessage : messages) {
+                        if(receivedMessage.getMessageId().equals(messageId)) {
+                            Assert.assertEquals(messageBody, receivedMessage.getBody());
                             messageReceivedFlag = true;
                         }
                     }

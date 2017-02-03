@@ -1,11 +1,13 @@
 package ymyoo.app.order.adapter.messaging;
 
-import com.google.gson.Gson;
-import ymyoo.messaging.core.MessageChannels;
-import ymyoo.app.order.domain.po.ApprovalOrderPayment;
+import org.apache.commons.beanutils.BeanUtils;
 import ymyoo.app.order.domain.OrderPayment;
+import ymyoo.app.order.domain.po.ApprovalOrderPayment;
+import ymyoo.messaging.core.MessageChannels;
+import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.Requester;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,16 +26,28 @@ public class PaymentGatewayChannelAdapter {
 
         // 메시지 발신
         Requester requester = new Requester(MessageChannels.PAYMENT_AUTH_APP_REQUEST, MessageChannels.PAYMENT_AUTH_APP_REPLY);
-        requester.send(new Gson().toJson(messageBody));
+        requester.send(messageBody);
 
         // 메시지 수신
-        String receivedMessage = requester.receive();
-        return MessageTranslator.translate(receivedMessage);
+        Message receivedMessage = requester.receive();
+        try {
+            ApprovalOrderPayment approvalOrderPayment = MessageTranslator.translate(receivedMessage);
+            return approvalOrderPayment;
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     static class MessageTranslator {
-        public static ApprovalOrderPayment translate(String message) {
-            return new Gson().fromJson(message, ApprovalOrderPayment.class);
+        public static ApprovalOrderPayment translate(Message message) throws InvocationTargetException, IllegalAccessException {
+            ApprovalOrderPayment approvalOrderPayment = new ApprovalOrderPayment();
+            BeanUtils.populate(approvalOrderPayment, ((Map)message.getBody()));
+
+            return approvalOrderPayment;
         }
     }
 }

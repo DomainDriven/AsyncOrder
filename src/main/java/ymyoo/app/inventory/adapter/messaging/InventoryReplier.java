@@ -1,10 +1,8 @@
 package ymyoo.app.inventory.adapter.messaging;
 
-import com.google.gson.Gson;
 import ymyoo.messaging.core.AbstractReplier;
-import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.core.MessageProducer;
+import ymyoo.messaging.core.Message;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,16 +16,17 @@ public class InventoryReplier extends AbstractReplier {
     }
 
     @Override
-    public void onMessage(String replyChannel, Message message) {
+    public void onMessage(Message receivedMessage) {
         InventoryChannelAdapter channelAdapter = new InventoryChannelAdapter();
-        channelAdapter.checkAndReserve(message);
+        channelAdapter.checkAndReserve(receivedMessage);
 
         // 결과를 메시지로 전송
         Map<String, String> replyMessageBody = new HashMap<>();
-        replyMessageBody.put("orderId", getOrderId(message));
+        replyMessageBody.put("orderId", getOrderId(receivedMessage));
         replyMessageBody.put("validation", "SUCCESS");
 
-        MessageProducer producer = new MessageProducer(replyChannel);
-        producer.send(message.getId(), new Gson().toJson(replyMessageBody));
+        final String channel = receivedMessage.getHeaders().get("replyChannel");
+        final String correlationId = receivedMessage.getMessageId();
+        sendMessage(channel, correlationId, replyMessageBody);
     }
 }

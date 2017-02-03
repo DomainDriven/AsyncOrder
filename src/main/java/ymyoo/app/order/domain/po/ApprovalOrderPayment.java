@@ -9,6 +9,9 @@ public class ApprovalOrderPayment {
     /** 승인 아이디 **/
     private String tid;
 
+    public ApprovalOrderPayment() {
+    }
+
     public ApprovalOrderPayment(String tid) {
         this.tid = tid;
     }

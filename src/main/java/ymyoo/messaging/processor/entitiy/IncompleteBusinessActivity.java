@@ -24,11 +24,28 @@ public class IncompleteBusinessActivity {
         this.activity = activity;
     }
 
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
+    }
+
     public String getOrderId() {
         return orderId;
     }
 
     public String getActivity() {
         return activity;
+    }
+
+    @Override
+    public String toString() {
+        return "IncompleteBusinessActivity{" +
+                "id=" + id +
+                ", orderId='" + orderId + '\'' +
+                ", activity='" + activity + '\'' +
+                '}';
     }
 }

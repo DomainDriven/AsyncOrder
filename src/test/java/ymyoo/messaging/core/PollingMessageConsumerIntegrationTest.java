@@ -21,9 +21,9 @@ public class PollingMessageConsumerIntegrationTest extends KafkaIntegrationTest 
 
         PollingMessageConsumer.registerListener(new MessageListener() {
             @Override
-            public void onMessage(String message) {
+            public void onMessage(Message message) {
                 // then
-                Assert.assertEquals(message, callback1Value);
+                Assert.assertEquals(message.getBody(), callback1Value);
             }
 
             @Override
@@ -37,8 +37,8 @@ public class PollingMessageConsumerIntegrationTest extends KafkaIntegrationTest 
 
         PollingMessageConsumer.registerListener(new MessageListener() {
             @Override
-            public void onMessage(String message) {
-                Assert.assertEquals(message, callback2Value);
+            public void onMessage(Message message) {
+                Assert.assertEquals(message.getBody(), callback2Value);
             }
 
             @Override
@@ -48,8 +48,8 @@ public class PollingMessageConsumerIntegrationTest extends KafkaIntegrationTest 
         });
 
         // when
-        sendMessage("TEST-REPLY", callback1Key, callback1Value);
-        sendMessage("TEST-REPLY", callback2Key, callback2Value);
+        sendMessage("TEST-REPLY", new Message(callback1Key, callback1Value));
+        sendMessage("TEST-REPLY", new Message(callback2Key, callback2Value));
 
         // 비동기 처리 대기
         waitCurrentThread(5);

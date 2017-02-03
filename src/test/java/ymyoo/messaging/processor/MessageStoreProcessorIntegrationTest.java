@@ -1,12 +1,11 @@
 package ymyoo.messaging.processor;
 
-import com.google.gson.Gson;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
-import ymyoo.app.order.domain.OrderStatus;
 import ymyoo.messaging.core.KafkaIntegrationTest;
 import ymyoo.messaging.core.MessageChannels;
+import ymyoo.messaging.core.Message;
 import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
 import ymyoo.messaging.processor.entitiy.OrderStatusEntity;
 import ymyoo.persistence.GlobalEntityManagerFactory;
@@ -31,14 +30,14 @@ public class MessageStoreProcessorIntegrationTest extends KafkaIntegrationTest {
         // given
         final String channel = MessageChannels.MESSAGE_STORE;
         final String messageId = generateId();
+        Map<String, String> messageHeader = new HashMap<>();
+        messageHeader.put("type", MessageChannels.MESSAGE_STORE_TYPE_ORDER_STATUS);
 
         String orderId = generateId();
-        Map<String, Object> messageBody = new HashMap<>();
-        messageBody.put("type", MessageChannels.MESSAGE_STORE_TYPE_ORDER_STATUS);
-        messageBody.put("message", new OrderStatus(orderId, OrderStatus.Status.INVENTORY_CHECKED));
-        sendMessage(channel, messageId, new Gson().toJson(messageBody));
+        OrderStatusEntity orderStatus = new OrderStatusEntity(orderId, OrderStatusEntity.Status.INVENTORY_CHECKED);
 
         // when
+        sendMessage(channel, new Message(messageId, messageHeader, orderStatus));
         Thread orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(channel));
         orderStatusMessageProcessor.start();
 
@@ -64,11 +63,10 @@ public class MessageStoreProcessorIntegrationTest extends KafkaIntegrationTest {
         final String messageId = generateId();
 
         String orderId = generateId();
-        Map<String, Object> messageBody = new HashMap<>();
-        messageBody.put("type", MessageChannels.MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY);
+        Map<String, String> messageHeader = new HashMap<>();
+        messageHeader.put("type", MessageChannels.MESSAGE_STORE_TYPE_INCOMPLETE_BUSINESS_ACTIVITY);;
         IncompleteBusinessActivity incompleteBusinessActivity = new IncompleteBusinessActivity(orderId, "SENDING_CELL_PHONE");
-        messageBody.put("message", incompleteBusinessActivity);
-        sendMessage(channel, messageId, new Gson().toJson(messageBody));
+        sendMessage(channel, new Message(messageId, messageHeader, incompleteBusinessActivity));
 
         // when
         Thread orderStatusMessageProcessor = new Thread(new MessageStoreProcessor(channel));

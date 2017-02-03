@@ -8,21 +8,37 @@ public class PurchaseNotification {
     private String email;
     private String cellPhone;
 
-    public PurchaseNotification(String orderId, String email, String cellPhone) {
-        this.orderId = orderId;
-        this.email = email;
-        this.cellPhone = cellPhone;
-    }
 
     public String getOrderId() {
         return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getCellPhone() {
         return cellPhone;
+    }
+
+    public void setCellPhone(String cellPhone) {
+        this.cellPhone = cellPhone;
+    }
+
+    @Override
+    public String toString() {
+        return "PurchaseNotification{" +
+                "orderId='" + orderId + '\'' +
+                ", email='" + email + '\'' +
+                ", cellPhone='" + cellPhone + '\'' +
+                '}';
     }
 }

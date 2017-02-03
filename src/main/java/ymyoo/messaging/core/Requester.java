@@ -1,5 +1,8 @@
 package ymyoo.messaging.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by 유영모 on 2016-12-20.
  */
@@ -7,7 +10,7 @@ public class Requester implements MessageListener {
     final private String requestChannel;
     final private String replyChannel;
     final private String messageId = generateMessageId();
-    private String replyMessage = "";
+    private Message replyMessage;
 
     private String generateMessageId() {
         return java.util.UUID.randomUUID().toString().toUpperCase();
@@ -23,12 +26,22 @@ public class Requester implements MessageListener {
         this.replyChannel = replyChannel;
     }
 
-    public void send(String message) {
-        MessageProducer producer = new MessageProducer(requestChannel, replyChannel);
-        producer.send(messageId, message);
+    public void send(Object messageBody) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("replyChannel", replyChannel);
+
+        Message message = new Message(messageId, headers, messageBody);
+        MessageProducer producer = new MessageProducer();
+        producer.send(requestChannel, message);
     }
 
-    public synchronized String receive() {
+    public void send(Map<String, String> headers, Object messageBody) {
+        Message message = new Message(messageId, headers, messageBody);
+        MessageProducer producer = new MessageProducer();
+        producer.send(requestChannel, message);
+    }
+
+    public synchronized Message receive() {
         PollingMessageConsumer.registerListener(this);
 
         try {
@@ -40,7 +53,7 @@ public class Requester implements MessageListener {
     }
 
     @Override
-    public synchronized void onMessage(String message) {
+    public synchronized void onMessage(Message message) {
         replyMessage = message;
         this.notify();
     }
