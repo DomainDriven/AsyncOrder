@@ -1,15 +1,19 @@
 package ymyoo.app.order.domain;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import ymyoo.app.inventory.ProductInventory;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
 import ymyoo.app.notification.adapter.messaging.NotificationMessageConsumer;
-import ymyoo.persistence.GlobalEntityManagerFactory;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.PollingMessageConsumer;
 import ymyoo.messaging.processor.MessageStoreProcessor;
 import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
+import ymyoo.persistence.GlobalEntityManagerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -118,5 +122,46 @@ public class OrderIntegrationTest {
         List<IncompleteBusinessActivity> incompleteBusinessActivities = query.getResultList();
         Assert.assertEquals(1, incompleteBusinessActivities.size());
         Assert.assertEquals("SENDING_CELL_PHONE", incompleteBusinessActivities.get(0).getActivity());
+    }
+
+    @Test
+    public void placeOrder_상품_재고_확보는_되었으나_결제_승인이_실패한_경우() throws InterruptedException {
+        // given
+        final String invalidCreditCardNo = "222-3333-4444";
+        final String productId = "P0003";
+        Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000", "gigamadness@gmail.com"),
+                new OrderItem(productId, 1, OrderItemDeliveryType.DIRECTING),
+                new OrderPayment(2000, invalidCreditCardNo));
+
+        final int beforeProductAvailableInventory = getProductAvailableInventory(productId);
+
+        // when
+        String orderId = order.placeOrder();
+
+        // then
+        // 주문 ID 반환 확인(Synchronized)
+        Assert.assertTrue(StringUtils.isNotBlank(orderId));
+
+        // 비동기 처리 대기
+        waitCurrentThread(8);
+
+        // 주문 상태 확인
+        OrderStatus actual = order.getOrderStatus();
+        Assert.assertEquals(orderId, actual.getOrderId());
+        Assert.assertEquals(OrderStatus.Status.ORDER_FAILED, actual.getStatus());
+
+        // 주문 실패에 대한 상품 재고 Transaction 롤백 확인
+        // 초기 재고 수량과 주문 실패 후 재고 수량은 같아야 한다.
+        int afterProductAvailableInventory = getProductAvailableInventory(productId);
+        Assert.assertEquals(beforeProductAvailableInventory, afterProductAvailableInventory);
+    }
+
+    private int getProductAvailableInventory(final String productId) {
+        EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
+        ProductInventory productInventory = em.find(ProductInventory.class, productId);
+        final int productAvailableInventory = productInventory.getAvailableInventory();
+        em.close();
+
+        return productAvailableInventory;
     }
 }
