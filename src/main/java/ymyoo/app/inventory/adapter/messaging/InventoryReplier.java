@@ -25,7 +25,7 @@ public class InventoryReplier extends AbstractReplier {
         replyMessageBody.put("orderId", getOrderId(receivedMessage));
         replyMessageBody.put("validation", "SUCCESS");
 
-        final String channel = receivedMessage.getHeaders().get("replyChannel");
+        final String channel = receivedMessage.getHeaders().get("returnAddress");
         final String correlationId = receivedMessage.getMessageId();
         sendMessage(channel, correlationId, replyMessageBody);
     }

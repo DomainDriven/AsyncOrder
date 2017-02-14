@@ -40,7 +40,7 @@ public class RequesterIntegrationTest extends KafkaIntegrationTest {
 
         // then
         assertSendingMessage(TEST_REQUEST_CHANNEL, requester.getCorrelationId(), message -> {
-            Assert.assertEquals(TEST_REPLY_CHANNEL, message.getHeaders().get("replyChannel"));
+            Assert.assertEquals(TEST_REPLY_CHANNEL, message.getHeaders().get("returnAddress"));
             Assert.assertEquals(messageBody.get("productId"), ((Map)message.getBody()).get("productId"));
             Assert.assertEquals(messageBody.get("orderQty"), ((Map)message.getBody()).get("orderQty"));
         });
@@ -103,7 +103,7 @@ public class RequesterIntegrationTest extends KafkaIntegrationTest {
                             Message sendMessage = new Message(sendMessageId, headers, body);
 
                             MessageProducer producer = new MessageProducer();
-                            producer.send(receivedMessage.getHeaders().get("replyChannel"), sendMessage);
+                            producer.send(receivedMessage.getHeaders().get("returnAddress"), sendMessage);
                         }
                     }
                 }

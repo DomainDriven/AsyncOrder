@@ -19,7 +19,7 @@ public class PaymentReplier extends AbstractReplier {
         ApprovalPayment approvalPayment = channelAdapter.authenticateAndApproval(receivedMessage);
 
         // 결과를 메시지로 전송
-        final String channel = receivedMessage.getHeaders().get("replyChannel");
+        final String channel = receivedMessage.getHeaders().get("returnAddress");
         final String correlationId = receivedMessage.getMessageId();
         sendMessage(channel, correlationId, approvalPayment);
     }

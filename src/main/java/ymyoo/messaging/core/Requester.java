@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class Requester implements MessageListener {
     final private String requestChannel;
-    final private String replyChannel;
+    final private String returnAddress;
     final private String messageId = generateMessageId();
     private Message replyMessage;
 
@@ -18,17 +18,17 @@ public class Requester implements MessageListener {
 
     public Requester(String requestChannel) {
         this.requestChannel = requestChannel;
-        this.replyChannel = "";
+        this.returnAddress = "";
     }
 
-    public Requester(String requestChannel, String replyChannel) {
+    public Requester(String requestChannel, String returnAddress) {
         this.requestChannel = requestChannel;
-        this.replyChannel = replyChannel;
+        this.returnAddress = returnAddress;
     }
 
     public void send(Object messageBody) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("replyChannel", replyChannel);
+        headers.put("returnAddress", returnAddress);
 
         Message message = new Message(messageId, headers, messageBody);
         MessageProducer producer = new MessageProducer();
