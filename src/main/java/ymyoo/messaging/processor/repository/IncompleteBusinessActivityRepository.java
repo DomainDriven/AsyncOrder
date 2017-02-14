@@ -1,25 +1,18 @@
 package ymyoo.messaging.processor.repository;
 
 import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
-import ymyoo.persistence.GlobalEntityManagerFactory;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
+import ymyoo.persistence.TransactionJpaTemplate;
 
 /**
  * Created by 유영모 on 2017-01-25.
  */
 public class IncompleteBusinessActivityRepository {
     public void add(IncompleteBusinessActivity incompleteBusinessActivity) {
-        EntityManagerFactory emf = GlobalEntityManagerFactory.getEntityManagerFactory();
-        EntityManager em = emf.createEntityManager();
+        TransactionJpaTemplate transactionTemplate = new TransactionJpaTemplate();
 
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        em.persist(incompleteBusinessActivity);
-
-        transaction.commit();
-        em.close();
+        transactionTemplate.execute((em) -> {
+            em.persist(incompleteBusinessActivity);
+            return null;
+        });
     }
 }
