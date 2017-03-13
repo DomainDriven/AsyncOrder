@@ -1,6 +1,6 @@
 package ymyoo.app.order.adapter.messaging;
 
-import ymyoo.app.order.domain.OrderItem;
+import ymyoo.app.order.domain.command.OrderItem;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.Requester;

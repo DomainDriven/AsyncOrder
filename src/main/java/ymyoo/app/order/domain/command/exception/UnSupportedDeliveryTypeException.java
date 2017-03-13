@@ -1,4 +1,4 @@
-package ymyoo.app.order.domain.exception;
+package ymyoo.app.order.domain.command.exception;
 
 /**
  * 지원하지 않는 배송 유형 예외

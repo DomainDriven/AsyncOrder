@@ -1,4 +1,4 @@
-package ymyoo.app.order.domain.po;
+package ymyoo.app.order.domain.command.po;
 
 /**
  * 결제 후 결제사로 부터 반환 받은 승인 정보

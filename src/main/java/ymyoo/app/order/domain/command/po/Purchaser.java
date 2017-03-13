@@ -1,4 +1,4 @@
-package ymyoo.app.order.domain.po;
+package ymyoo.app.order.domain.command.po;
 
 /**
  * 구매자

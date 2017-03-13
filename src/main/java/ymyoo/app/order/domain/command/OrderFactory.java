@@ -1,4 +1,4 @@
-package ymyoo.app.order.domain;
+package ymyoo.app.order.domain.command;
 
 /**
  * 결제 전 주문(Order)을 만드는 팩토리

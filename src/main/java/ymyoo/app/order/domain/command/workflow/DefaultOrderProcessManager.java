@@ -1,15 +1,14 @@
-package ymyoo.app.order.domain.workflow;
+package ymyoo.app.order.domain.command.workflow;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
-import ymyoo.app.order.domain.Order;
-import ymyoo.app.order.domain.OrderStatus;
-import ymyoo.app.order.domain.po.ApprovalOrderPayment;
-import ymyoo.app.order.domain.workflow.activity.BusinessActivity;
-import ymyoo.app.order.domain.workflow.activity.impl.InventoryBusinessActivity;
-import ymyoo.app.order.domain.workflow.activity.impl.PaymentGatewayBusinessActivity;
-import ymyoo.app.order.domain.workflow.activity.impl.PurchaseOrderBusinessActivity;
+import ymyoo.app.order.domain.command.Order;
+import ymyoo.app.order.domain.command.po.ApprovalOrderPayment;
+import ymyoo.app.order.domain.command.workflow.activity.BusinessActivity;
+import ymyoo.app.order.domain.command.workflow.activity.impl.InventoryBusinessActivity;
+import ymyoo.app.order.domain.command.workflow.activity.impl.PaymentGatewayBusinessActivity;
+import ymyoo.app.order.domain.command.workflow.activity.impl.PurchaseOrderBusinessActivity;
 
 /**
  * 주문 기본 프로세스 Manager

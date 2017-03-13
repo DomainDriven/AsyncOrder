@@ -1,8 +1,8 @@
-package ymyoo.app.order.domain.workflow.activity.impl;
+package ymyoo.app.order.domain.command.workflow.activity.impl;
 
-import ymyoo.app.order.domain.po.*;
-import ymyoo.app.order.domain.Order;
-import ymyoo.app.order.domain.workflow.activity.BusinessActivity;
+import ymyoo.app.order.domain.command.po.*;
+import ymyoo.app.order.domain.command.Order;
+import ymyoo.app.order.domain.command.workflow.activity.BusinessActivity;
 import ymyoo.app.order.adapter.messaging.PurchaseOrderChannelAdapter;
 import ymyoo.utility.PrettySystemOut;
 

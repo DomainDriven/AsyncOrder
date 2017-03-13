@@ -1,4 +1,4 @@
-package ymyoo.app.order.domain.po;
+package ymyoo.app.order.domain.command.po;
 
 /**
  * Created by 유영모 on 2016-12-15.

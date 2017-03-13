@@ -1,6 +1,6 @@
-package ymyoo.app.order.domain.po;
+package ymyoo.app.order.domain.command.po;
 
-import ymyoo.app.order.domain.OrderItemDeliveryType;
+import ymyoo.app.order.domain.command.OrderItemDeliveryType;
 
 /**
  * Created by 유영모 on 2016-12-15.
@@ -19,5 +19,17 @@ public class PurchaseOrderItem {
         this.productId = productId;
         this.orderQty = orderQty;
         this.deliveryType = deliveryType;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public int getOrderQty() {
+        return orderQty;
+    }
+
+    public OrderItemDeliveryType getDeliveryType() {
+        return deliveryType;
     }
 }

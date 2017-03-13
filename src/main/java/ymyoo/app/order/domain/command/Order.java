@@ -1,7 +1,7 @@
-package ymyoo.app.order.domain;
+package ymyoo.app.order.domain.command;
 
-import ymyoo.app.order.domain.workflow.OrderProcessManager;
-import ymyoo.app.order.domain.workflow.OrderProcessManagerFactory;
+import ymyoo.app.order.domain.command.workflow.OrderProcessManager;
+import ymyoo.app.order.domain.command.workflow.OrderProcessManagerFactory;
 import ymyoo.app.order.infrastructure.repository.OrderStatusRepository;
 
 /**

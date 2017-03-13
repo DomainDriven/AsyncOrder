@@ -1,4 +1,4 @@
-package ymyoo.app.order.domain;
+package ymyoo.app.order.domain.command;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

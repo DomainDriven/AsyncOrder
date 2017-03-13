@@ -1,13 +1,13 @@
 package ymyoo.app.order.domain;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import ymyoo.app.inventory.ProductInventory;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
 import ymyoo.app.notification.adapter.messaging.NotificationMessageConsumer;
+import ymyoo.app.order.domain.command.*;
+import ymyoo.app.order.domain.query.PurchaseOrderQueryProcessor;
+import ymyoo.app.order.domain.query.dto.CustomerPurchaseOrder;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.PollingMessageConsumer;
@@ -115,8 +115,8 @@ public class OrderIntegrationTest {
         EntityManager em = GlobalEntityManagerFactory.getEntityManagerFactory().createEntityManager();
 
         TypedQuery<IncompleteBusinessActivity> query =
-                em.createQuery("select iba from IncompleteBusinessActivity iba where iba.orderId = :orderId"
-                        ,IncompleteBusinessActivity.class);
+        em.createQuery("select iba from IncompleteBusinessActivity iba where iba.orderId = :orderId"
+                ,IncompleteBusinessActivity.class);
         query.setParameter("orderId", orderId);
 
         List<IncompleteBusinessActivity> incompleteBusinessActivities = query.getResultList();
@@ -124,6 +124,36 @@ public class OrderIntegrationTest {
         Assert.assertEquals("SENDING_CELL_PHONE", incompleteBusinessActivities.get(0).getActivity());
     }
 
+    @Test
+    public void placeOrder_with_CQRS_Command_Query_Responsibility_Segregation() throws InterruptedException {
+        // given
+        Order order = OrderFactory.create(new Orderer("유영모", "010-0000-0000", "gigamadness@gmail.com"),
+                new OrderItem("P0003", 1, OrderItemDeliveryType.DIRECTING),
+                new OrderPayment(2000, "123-456-0789"));
+
+        // when - Command
+        // 주문
+        String orderId = order.placeOrder();
+
+        // 주문 ID 반환 확인(Synchronized)
+        Assert.assertTrue(StringUtils.isNotBlank(orderId));
+
+        // 비동기 처리 대기
+        waitCurrentThread(8);
+
+        // then - Query
+        // 구매 주문 조회
+        PurchaseOrderQueryProcessor purchaseOrderQueryProcessor = new PurchaseOrderQueryProcessor();
+        CustomerPurchaseOrder cpo = purchaseOrderQueryProcessor.getCustomerPurchaseOrder(orderId);
+        Assert.assertNotNull(cpo);
+        Assert.assertEquals(orderId, cpo.getOrderId());
+        Assert.assertEquals(order.getOrderItem().getProductId(), cpo.getProductId());
+        Assert.assertEquals(order.getOrderItem().getOrderQty(), cpo.getOrderQty());
+        Assert.assertEquals(order.getOrderPayment().getOrderAmount(), cpo.getOrderAmount());
+        Assert.assertEquals(order.getOrderPayment().getCreditCardNo(), cpo.getCreditCardNo());
+    }
+
+    @Ignore("TCC 테스트 케이스 - 아직 TCC 도입 전이기 떄문에 Ignore 처리")
     @Test
     public void placeOrder_상품_재고_확보는_되었으나_결제_승인이_실패한_경우() throws InterruptedException {
         // given

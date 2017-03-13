@@ -1,6 +1,6 @@
 package ymyoo.app.order.adapter.messaging;
 
-import ymyoo.app.order.domain.po.PurchaseOrder;
+import ymyoo.app.order.domain.command.po.PurchaseOrder;
 import ymyoo.messaging.core.MessageChannels;
 import ymyoo.messaging.core.Requester;
 

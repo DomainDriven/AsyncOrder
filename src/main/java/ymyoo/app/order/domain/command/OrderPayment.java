@@ -1,4 +1,4 @@
-package ymyoo.app.order.domain;
+package ymyoo.app.order.domain.command;
 
 /**
  * 사용자가 입력한 결제 정보

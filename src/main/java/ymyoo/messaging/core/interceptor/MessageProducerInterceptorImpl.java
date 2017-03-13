@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.apache.kafka.clients.producer.ProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import ymyoo.app.order.domain.OrderStatus;
+import ymyoo.app.order.domain.command.OrderStatus;
 import ymyoo.messaging.adapter.MessageStoreChannelAdapter;
 import ymyoo.messaging.core.Message;
 import ymyoo.messaging.core.MessageChannels;
