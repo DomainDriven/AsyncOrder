@@ -19,8 +19,10 @@ public class PurchaseOrderBusinessActivity implements BusinessActivity<ApprovalO
     @Override
     public Void perform(ApprovalOrderPayment approvalOrderPayment) {
         // 구매 주문 생성
-        PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem(order.getOrderItem().getProductId(), order.getOrderItem().getOrderQty(), order.getOrderItem().getDeliveryType());
-        PurchaseOrderPayment purchaseOrderPayment = new PurchaseOrderPayment(approvalOrderPayment.getTid());
+        PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem(order.getOrderItem().getProductId(),
+                order.getOrderItem().getOrderQty(), order.getOrderItem().getDeliveryType());
+        PurchaseOrderPayment purchaseOrderPayment = new PurchaseOrderPayment(approvalOrderPayment.getTid(),
+                order.getOrderPayment().getOrderAmount(), order.getOrderPayment().getCreditCardNo());
         Purchaser purchaser = new Purchaser(order.getOrderer().getName(), order.getOrderer().getContactNumber(), order.getOrderer().getEmail());
 
         PurchaseOrder purchaseOrder = PurchaseOrderFactory.create(order.getOrderId(),purchaser, purchaseOrderItem, purchaseOrderPayment);

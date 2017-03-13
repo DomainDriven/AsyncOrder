@@ -23,6 +23,7 @@ public class TransactionJpaTemplate {
             tx.commit();
             return returnValue;
         } catch (Exception e) {
+            e.printStackTrace();
             if (tx != null) {
                 tx.rollback();
             }
