@@ -4,6 +4,7 @@ import ymyoo.app.order.domain.command.po.*;
 import ymyoo.app.order.domain.command.Order;
 import ymyoo.app.order.domain.command.workflow.activity.BusinessActivity;
 import ymyoo.app.order.adapter.messaging.PurchaseOrderChannelAdapter;
+import ymyoo.app.order.infrastructure.repository.PurchaseOrderRepository;
 import ymyoo.utility.PrettySystemOut;
 
 /**
@@ -26,6 +27,9 @@ public class PurchaseOrderBusinessActivity implements BusinessActivity<ApprovalO
         Purchaser purchaser = new Purchaser(order.getOrderer().getName(), order.getOrderer().getContactNumber(), order.getOrderer().getEmail());
 
         PurchaseOrder purchaseOrder = PurchaseOrderFactory.create(order.getOrderId(),purchaser, purchaseOrderItem, purchaseOrderPayment);
+
+        PurchaseOrderRepository repository = new PurchaseOrderRepository();
+        repository.add(purchaseOrder);
 
         PrettySystemOut.println(order.getClass(), "주문 완료....");
 
