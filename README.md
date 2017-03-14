@@ -12,4 +12,4 @@
 - Persistence API
  - [JPA2](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html)/[Hibernate](http://hibernate.org/) 4.3.10.Final
 - Database
- - [SQLite](https://sqlite.org/)
+ - [H2 Database](http://www.h2database.com/html/main.html)
