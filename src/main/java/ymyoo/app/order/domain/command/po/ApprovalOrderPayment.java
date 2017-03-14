@@ -20,6 +20,10 @@ public class ApprovalOrderPayment {
         return tid;
     }
 
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
+
     @Override
     public String toString() {
         return "ApprovalOrderPayment{" +
