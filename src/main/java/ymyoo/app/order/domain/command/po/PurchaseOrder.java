@@ -6,20 +6,22 @@ import javax.persistence.*;
  * Created by 유영모 on 2016-12-15.
  */
 @Entity
+@Table(name = "PURCHASE_ORDER")
 public class PurchaseOrder {
     @Id
+    @Column(name = "ORDER_ID")
     private String orderId;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "purchaserId")
+    @JoinColumn(name = "PURCHASER_ID")
     private Purchaser purchaser;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "purchaseOrderItemId")
+    @JoinColumn(name = "PURCHASE_ORDER_ITEM_ID")
     private PurchaseOrderItem orderItem;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "purchaseOrderPaymentId")
+    @JoinColumn(name = "PURCHASE_ORDER_PAYMENT_ID")
     private PurchaseOrderPayment orderPayment;
 
     public PurchaseOrder() {

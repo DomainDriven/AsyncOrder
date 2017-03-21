@@ -1,28 +1,28 @@
 package ymyoo.app.order.domain.command.po;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by 유영모 on 2016-12-15.
  */
 
 @Entity
+@Table(name = "PURCHASE_ORDER_PAYMENT")
 public class PurchaseOrderPayment {
 
     @Id @GeneratedValue
-    @Column(name = "purchaseOrderPaymentId")
+    @Column(name = "PURCHASE_ORDER_PAYMENT_ID")
     private Long id;
 
     /** 승인 아이디 **/
     private String tid;
 
     /** 결제 금액 **/
+    @Column(name = "ORDER_AMOUNT")
     private int orderAmount = 0;
 
     /** 신용 카드 번호 **/
+    @Column(name = "CREDIT_CARD_NO")
     private String creditCardNo;
 
 

@@ -1,11 +1,10 @@
-package ymyoo.app.order.domain;
+package ymyoo.app.order.domain.command;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.*;
 import ymyoo.app.inventory.ProductInventory;
 import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
 import ymyoo.app.notification.adapter.messaging.NotificationMessageConsumer;
-import ymyoo.app.order.domain.command.*;
 import ymyoo.app.order.domain.query.PurchaseOrderQueryProcessor;
 import ymyoo.app.order.domain.query.dto.CustomerPurchaseOrder;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;

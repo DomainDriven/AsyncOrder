@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Purchaser {
 
     @Id @GeneratedValue
-    @Column(name = "purchaserId")
+    @Column(name = "PURCHASER_ID")
     private Long id;
 
     /**

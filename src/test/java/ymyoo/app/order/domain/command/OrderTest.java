@@ -1,8 +1,7 @@
-package ymyoo.app.order.domain;
+package ymyoo.app.order.domain.command;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ymyoo.app.order.domain.command.*;
 import ymyoo.app.order.domain.command.workflow.OrderProcessManager;
 
 import static org.mockito.Mockito.mock;

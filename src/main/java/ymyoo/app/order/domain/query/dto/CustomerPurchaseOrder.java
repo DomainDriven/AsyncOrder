@@ -10,6 +10,9 @@ public class CustomerPurchaseOrder {
     private int orderAmount;
     private String creditCardNo;
 
+    public CustomerPurchaseOrder() {
+    }
+
     public CustomerPurchaseOrder(String orderId, String productId, int orderQty, int orderAmount, String creditCardNo) {
         this.orderId = orderId;
         this.productId = productId;
@@ -56,5 +59,16 @@ public class CustomerPurchaseOrder {
 
     public void setCreditCardNo(String creditCardNo) {
         this.creditCardNo = creditCardNo;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerPurchaseOrder{" +
+                "orderId='" + orderId + '\'' +
+                ", productId='" + productId + '\'' +
+                ", orderQty=" + orderQty +
+                ", orderAmount=" + orderAmount +
+                ", creditCardNo='" + creditCardNo + '\'' +
+                '}';
     }
 }
