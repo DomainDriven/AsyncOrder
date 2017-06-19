@@ -6,14 +6,30 @@
 
     <groupId>ymyoo</groupId>
     <artifactId>async.order</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>order-service</module>
+        <module>inventory-service</module>
+        <module>payment-service</module>
+        <module>notification-service</module>
+    </modules>
+
+    <properties>
+        <jdk.version>1.8</jdk.version>
+        <rxjava.version>1.1.6</rxjava.version>
+        <kafka.version>0.10.1.0</kafka.version>
+        <hibernate.version>4.3.10.Final</hibernate.version>
+        <h2.database.version>1.4.196</h2.database.version>
+    </properties>
 
     <dependencies>
         <!-- RxJava -->
         <dependency>
             <groupId>io.reactivex</groupId>
             <artifactId>rxjava</artifactId>
-            <version>1.1.6</version>
+            <version>${rxjava.version}</version>
         </dependency>
 
         <!-- JSON -->
@@ -41,7 +57,7 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
-            <version>0.10.1.0</version>
+            <version>${kafka.version}</version>
         </dependency>
 
         <dependency>
@@ -54,21 +70,21 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.3.10.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
 
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.196</version>
+            <version>${h2.database.version}</version>
         </dependency>
 
         <!-- Database Connection Pool -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-c3p0</artifactId>
-            <version>4.3.10.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
 
         <!-- 테스트 -->
@@ -107,8 +123,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
                 </configuration>
             </plugin>
         </plugins>
