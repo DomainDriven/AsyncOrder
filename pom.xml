@@ -57,17 +57,11 @@
             <version>4.3.10.Final</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.enigmabridge</groupId>
-            <artifactId>hibernate4-sqlite-dialect</artifactId>
-            <version>0.1.2</version>
-        </dependency>
-
         <!-- Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.193</version>
+            <version>1.4.196</version>
         </dependency>
 
         <!-- Database Connection Pool -->
@@ -106,31 +100,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <!-- 회사에서 코딩할 때 회사 네트워크 특성상 HTTPS 통신이 오류가 발생하여 Maven 기본 설정을 HTTP 로 오버라이딩-->
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>http://repo.maven.apache.org/maven2</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>http://repo.maven.apache.org/maven2</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <build>
         <plugins>
