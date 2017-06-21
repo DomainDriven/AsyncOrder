@@ -1,7 +1,7 @@
 package ymyoo.app.order.infrastructure.repository;
 
 import ymyoo.app.order.domain.command.OrderStatus;
-import ymyoo.persistence.TransactionJpaTemplate;
+import ymyoo.infra.persistence.TransactionJpaTemplate;
 
 /**
  * Created by 유영모 on 2017-01-11.

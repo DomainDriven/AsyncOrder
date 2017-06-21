@@ -7,7 +7,7 @@ import ymyoo.app.order.domain.command.po.PurchaseOrderItem;
 import ymyoo.app.order.domain.command.po.PurchaseOrderPayment;
 import ymyoo.app.order.domain.command.po.Purchaser;
 import ymyoo.app.order.domain.query.dto.CustomerPurchaseOrder;
-import ymyoo.persistence.GlobalEntityManagerFactory;
+import ymyoo.infra.persistence.GlobalEntityManagerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

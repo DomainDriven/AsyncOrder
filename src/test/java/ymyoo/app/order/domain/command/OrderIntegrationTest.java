@@ -8,11 +8,11 @@ import ymyoo.app.notification.adapter.messaging.NotificationMessageConsumer;
 import ymyoo.app.order.domain.query.PurchaseOrderQueryProcessor;
 import ymyoo.app.order.domain.query.dto.CustomerPurchaseOrder;
 import ymyoo.app.payment.adapter.messaging.PaymentReplier;
-import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.core.PollingMessageConsumer;
-import ymyoo.messaging.processor.MessageStoreProcessor;
-import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
-import ymyoo.persistence.GlobalEntityManagerFactory;
+import ymyoo.infra.messaging.core.MessageChannels;
+import ymyoo.infra.messaging.core.PollingMessageConsumer;
+import ymyoo.infra.messaging.processor.MessageStoreProcessor;
+import ymyoo.infra.messaging.processor.entitiy.IncompleteBusinessActivity;
+import ymyoo.infra.persistence.GlobalEntityManagerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

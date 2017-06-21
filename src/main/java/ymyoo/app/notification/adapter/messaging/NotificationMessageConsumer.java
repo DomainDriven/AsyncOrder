@@ -1,10 +1,10 @@
 package ymyoo.app.notification.adapter.messaging;
 
 import ymyoo.app.notification.domain.PurchaseNotification;
-import ymyoo.messaging.adapter.MessageStoreChannelAdapter;
-import ymyoo.messaging.core.EventDrivenMessageConsumer;
-import ymyoo.messaging.core.Message;
-import ymyoo.messaging.processor.entitiy.IncompleteBusinessActivity;
+import ymyoo.infra.messaging.adapter.MessageStoreChannelAdapter;
+import ymyoo.infra.messaging.core.EventDrivenMessageConsumer;
+import ymyoo.infra.messaging.core.Message;
+import ymyoo.infra.messaging.processor.entitiy.IncompleteBusinessActivity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

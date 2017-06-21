@@ -1,7 +1,7 @@
 package ymyoo.app.order.infrastructure.repository;
 
 import ymyoo.app.order.domain.query.dto.CustomerPurchaseOrder;
-import ymyoo.persistence.TransactionJpaTemplate;
+import ymyoo.infra.persistence.TransactionJpaTemplate;
 
 import javax.persistence.Query;
 

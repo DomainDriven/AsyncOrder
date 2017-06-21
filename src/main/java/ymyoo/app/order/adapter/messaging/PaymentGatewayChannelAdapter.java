@@ -3,9 +3,9 @@ package ymyoo.app.order.adapter.messaging;
 import org.apache.commons.beanutils.BeanUtils;
 import ymyoo.app.order.domain.command.OrderPayment;
 import ymyoo.app.order.domain.command.po.ApprovalOrderPayment;
-import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.core.Message;
-import ymyoo.messaging.core.Requester;
+import ymyoo.infra.messaging.core.MessageChannels;
+import ymyoo.infra.messaging.core.Message;
+import ymyoo.infra.messaging.core.Requester;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

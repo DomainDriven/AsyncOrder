@@ -2,7 +2,7 @@ package ymyoo.app.notification.adapter.messaging;
 
 import ymyoo.app.notification.domain.NotificationService;
 import ymyoo.app.notification.domain.PurchaseNotification;
-import ymyoo.messaging.core.Message;
+import ymyoo.infra.messaging.core.Message;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;

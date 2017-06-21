@@ -1,8 +1,8 @@
 package ymyoo.app.inventory.adapter.messaging;
 
-import ymyoo.messaging.core.AbstractReplier;
-import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.core.Message;
+import ymyoo.infra.messaging.core.AbstractReplier;
+import ymyoo.infra.messaging.core.MessageChannels;
+import ymyoo.infra.messaging.core.Message;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -4,7 +4,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import ymyoo.app.payment.domain.ApprovalPayment;
 import ymyoo.app.payment.domain.PaymentGatewayService;
 import ymyoo.app.payment.domain.TakingOrderPayment;
-import ymyoo.messaging.core.Message;
+import ymyoo.infra.messaging.core.Message;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;

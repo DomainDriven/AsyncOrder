@@ -1,11 +1,10 @@
 package ymyoo.app.inventory.adapter.messaging;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import ymyoo.app.inventory.domain.InventoryService;
 import ymyoo.app.inventory.domain.TakingOrderItem;
-import ymyoo.messaging.core.Message;
+import ymyoo.infra.messaging.core.Message;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;

@@ -2,7 +2,7 @@ package ymyoo.app.order.infrastructure.repository;
 
 import org.junit.*;
 import ymyoo.app.order.domain.command.OrderStatus;
-import ymyoo.persistence.GlobalEntityManagerFactory;
+import ymyoo.infra.persistence.GlobalEntityManagerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

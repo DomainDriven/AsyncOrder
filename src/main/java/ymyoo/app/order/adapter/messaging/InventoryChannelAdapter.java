@@ -1,9 +1,9 @@
 package ymyoo.app.order.adapter.messaging;
 
 import ymyoo.app.order.domain.command.OrderItem;
-import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.core.Message;
-import ymyoo.messaging.core.Requester;
+import ymyoo.infra.messaging.core.MessageChannels;
+import ymyoo.infra.messaging.core.Message;
+import ymyoo.infra.messaging.core.Requester;
 
 import java.util.HashMap;
 import java.util.Map;

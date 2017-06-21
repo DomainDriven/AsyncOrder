@@ -1,9 +1,9 @@
 package ymyoo.app.payment.adapter.messaging;
 
 import ymyoo.app.payment.domain.ApprovalPayment;
-import ymyoo.messaging.core.AbstractReplier;
-import ymyoo.messaging.core.MessageChannels;
-import ymyoo.messaging.core.Message;
+import ymyoo.infra.messaging.core.AbstractReplier;
+import ymyoo.infra.messaging.core.MessageChannels;
+import ymyoo.infra.messaging.core.Message;
 
 /**
  * Created by 유영모 on 2017-01-02.
