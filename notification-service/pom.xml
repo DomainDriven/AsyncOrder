@@ -17,4 +17,17 @@
     <version>1.0-SNAPSHOT</version>
     <name>Notification Service</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>ymyoo</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>ymyoo</groupId>
+            <artifactId>infra.messaging</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>
