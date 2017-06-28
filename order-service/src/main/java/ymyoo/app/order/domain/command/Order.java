@@ -3,7 +3,6 @@ package ymyoo.app.order.domain.command;
 
 import ymyoo.app.order.domain.command.workflow.OrderProcessManager;
 import ymyoo.app.order.domain.command.workflow.OrderProcessManagerFactory;
-import ymyoo.app.order.infrastructure.repository.OrderStatusRepository;
 
 /**
  * Created by 유영모 on 2016-10-07.
@@ -14,6 +13,7 @@ public class Order {
     private OrderItem orderItem;
     private OrderPayment orderPayment;
     private OrderProcessManager processManager;
+    private OrderStatus status = OrderStatus.ORDER_READY;
 
     public Order(String orderId) {
         this.orderId = orderId;
@@ -57,8 +57,11 @@ public class Order {
         return orderId;
     }
 
-    public OrderStatus getOrderStatus() {
-        OrderStatusRepository orderStatusRepository = new OrderStatusRepository();
-        return orderStatusRepository.find(this.getOrderId());
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }

@@ -30,7 +30,7 @@ public class EventDrivenMessageConsumer {
         props.put("auto.commit.interval.ms", "1000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("interceptor.classes", "ymyoo.infra.messaging.core.interceptor.MessageConsumerInterceptorImpl");
+//        props.put("interceptor.classes", "ymyoo.infra.messaging.core.interceptor.MessageConsumerInterceptorImpl");
 
         this.consumer = new KafkaConsumer<>(props);
         this.consumer.subscribe(Arrays.asList(channel));

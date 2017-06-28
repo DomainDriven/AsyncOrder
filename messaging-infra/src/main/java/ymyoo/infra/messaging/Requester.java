@@ -32,6 +32,7 @@ public class Requester implements MessageListener {
 
         Message message = new Message(messageId, headers, messageBody);
         MessageProducer producer = new MessageProducer();
+
         producer.send(requestChannel, message);
     }
 

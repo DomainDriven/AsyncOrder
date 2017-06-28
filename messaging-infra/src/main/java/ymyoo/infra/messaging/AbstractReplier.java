@@ -45,6 +45,7 @@ public abstract class AbstractReplier implements Runnable {
 
         final String messageId = generateMessageId();
         Message message = new Message(messageId, headers, body);
+
         MessageProducer producer = new MessageProducer();
         producer.send(channel, message);
     }
