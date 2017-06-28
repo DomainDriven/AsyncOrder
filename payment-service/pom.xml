@@ -13,7 +13,7 @@
 
     <groupId>ymyoo</groupId>
     <artifactId>payment-service</artifactId>
-    <packaging>web</packaging>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>Payment Service</name>
 
