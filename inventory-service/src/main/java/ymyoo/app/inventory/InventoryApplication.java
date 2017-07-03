@@ -12,10 +12,6 @@ import ymyoo.app.inventory.adapter.messaging.InventoryReplier;
  */
 @SpringBootApplication
 public class InventoryApplication {
-//    public static void main(String[] args) {
-//        Thread inventoryReplier = new Thread(new InventoryReplier());
-//        inventoryReplier.start();
-//    }
 
     public static void main(String[] args) {
         SpringApplication.run(InventoryApplication.class, args);
