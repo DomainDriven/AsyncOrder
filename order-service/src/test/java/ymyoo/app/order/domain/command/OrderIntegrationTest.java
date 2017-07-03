@@ -32,7 +32,6 @@ public class OrderIntegrationTest {
         // Then
         // 주문 ID 반환 확인(Synchronized)
         Assert.assertTrue(StringUtils.isNotBlank(orderId));
-        System.out.println(orderId);
 
         // 비동기 처리 대기
         waitCurrentThread(5);

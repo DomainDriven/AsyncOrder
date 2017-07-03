@@ -29,10 +29,6 @@ public class InventoryChannelAdapter {
 
         // 메시지 수신
         Message receivedMessage = requester.receive();
-
-        System.out.println("InventoryChannelAdapter Message");
-        System.out.println(receivedMessage);
-
         return MessageTranslator.translate(receivedMessage);
     }
 
