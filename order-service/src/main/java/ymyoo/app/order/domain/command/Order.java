@@ -13,7 +13,6 @@ public class Order {
     private OrderItem orderItem;
     private OrderPayment orderPayment;
     private OrderProcessManager processManager;
-    private OrderStatus status = OrderStatus.ORDER_READY;
 
     public Order(String orderId) {
         this.orderId = orderId;
@@ -57,11 +56,4 @@ public class Order {
         return orderId;
     }
 
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
 }

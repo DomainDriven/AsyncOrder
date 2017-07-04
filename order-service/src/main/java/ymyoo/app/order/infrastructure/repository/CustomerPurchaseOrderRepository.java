@@ -1,5 +1,6 @@
 package ymyoo.app.order.infrastructure.repository;
 
+import org.springframework.stereotype.Repository;
 import ymyoo.app.order.domain.query.dto.CustomerPurchaseOrder;
 
 import javax.persistence.Query;
