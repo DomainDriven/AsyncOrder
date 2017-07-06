@@ -11,10 +11,11 @@ import java.util.List;
 @Table(name="ORDER_STATUS")
 public class OrderStatus {
     public enum Status {
-      INVENTORY_CHECKED_REQUEST,
+      INVENTORY_REQUEST,
       INVENTORY_CHECKED,
       PAYMENT_REQUEST,
       PAYMENT_DONE,
+      PURCHASE_ORDER_REQUEST,
       PURCHASE_ORDER_CREATED,
       ORDER_FAILED,
       ORDER_READY

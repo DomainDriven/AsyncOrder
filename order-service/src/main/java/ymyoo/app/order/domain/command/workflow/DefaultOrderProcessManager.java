@@ -21,7 +21,6 @@ import java.util.Date;
  * Created by 유영모 on 2016-10-24.
  */
 public class DefaultOrderProcessManager implements OrderProcessManager {
-    private OrderStatusRepository orderStatusRepository = new OrderStatusRepository();
 
     @Override
     public void runWorkflow(Order order) {
@@ -31,16 +30,19 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
          * 1. 재고 확인/예약 작업과 결제 인증/승인 작업 동시 실행
          * 2. 두개 작업 완료 시 구매 주문 생성 실행
          */
-        OrderStatus orderStatus = new OrderStatus(order.getOrderId(), OrderStatus.Status.ORDER_READY);
+        OrderStatus status = new OrderStatus(order.getOrderId(), OrderStatus.Status.ORDER_READY);
+        OrderStatusRepository orderStatusRepository = new OrderStatusRepository();
+
         OrderStatusHistory history = new OrderStatusHistory();
-        history.setStatus(OrderStatus.Status.ORDER_READY);
+        history.setStatus(status.getStatus());
         history.setCreatedDate(new Date());
-        orderStatus.addHistory(history);
-        orderStatusRepository.add(orderStatus);
+        status.addHistory(history);
+
+        orderStatusRepository.add(status);
 
         // 재고 확인/예약 작업
         Observable inventorySequenceActivityObs = Observable.create((subscriber) -> {
-            BusinessActivity<Order, Boolean> activity = new InventoryBusinessActivity();
+            BusinessActivity<Order, Boolean> activity = new InventoryBusinessActivity(order.getOrderId());
             activity.perform(order);
 
             subscriber.onCompleted();
@@ -48,7 +50,7 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
 
         // 결제 인증/승인 작업
         Observable<Object> paymentGatewaySequenceActivityObs = Observable.create(subscriber -> {
-            BusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity();
+            BusinessActivity<Order, ApprovalOrderPayment> activity = new PaymentGatewayBusinessActivity(order.getOrderId());
             ApprovalOrderPayment approvalOrderPayment = activity.perform(order);
 
             subscriber.onNext(approvalOrderPayment);
@@ -68,27 +70,11 @@ public class DefaultOrderProcessManager implements OrderProcessManager {
             @Override
             public void onCompleted() {
                 // 주문 성공
-//        order.setStatus(OrderStatus.PURCHASE_ORDER_CREATED);
-                OrderStatus orderStatus = new OrderStatus(order.getOrderId(), OrderStatus.Status.PURCHASE_ORDER_CREATED);
-                OrderStatusHistory history = new OrderStatusHistory();
-                history.setStatus(OrderStatus.Status.PURCHASE_ORDER_CREATED);
-                history.setCreatedDate(new Date());
-                orderStatus.addHistory(history);
-
-                orderStatusRepository.add(orderStatus);
             }
 
             @Override
             public void onError(Throwable throwable) {
                 // 주문 실패
-                OrderStatus orderStatus = new OrderStatus(order.getOrderId(), OrderStatus.Status.PURCHASE_ORDER_CREATED);
-                OrderStatusHistory history = new OrderStatusHistory();
-                history.setStatus(OrderStatus.Status.ORDER_FAILED);
-                history.setCreatedDate(new Date());
-                orderStatus.addHistory(history);
-
-                orderStatusRepository.add(orderStatus);
-
                 throw new RuntimeException("주문 실패...");
             }
 

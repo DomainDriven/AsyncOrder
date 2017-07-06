@@ -12,6 +12,11 @@ public class PlacingOrderStatusQueryProcessor {
         OrderStatusRepository repository = new OrderStatusRepository();
         OrderStatus orderStatus = repository.find(orderId);
 
-        return PlacingOrderStatus.valueOf(orderStatus.getStatus().name());
+        if(orderStatus == null) {
+            return PlacingOrderStatus.ORDER_READY;
+        } else {
+            return PlacingOrderStatus.valueOf(orderStatus.getStatus().name());
+        }
+
     }
 }

@@ -7,6 +7,7 @@ import java.util.Date;
  * Created by yooyoung-mo on 2017. 7. 4..
  */
 @Entity
+@Table(name="ORDER_STATUS_HISTORY")
 public class OrderStatusHistory {
 
     @Id
