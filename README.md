@@ -1,6 +1,33 @@
 # AsyncOrder(비동기 주문)
 ## Overview
-![Overview](https://cloud.githubusercontent.com/assets/16472109/22089972/0dfd78f6-de32-11e6-9cad-d9812676d8df.png)
+![Overview](https://user-images.githubusercontent.com/16472109/28051397-08a48ff8-663f-11e7-87e7-c8f5b14c0631.png)
+![Overview2](https://user-images.githubusercontent.com/16472109/28051418-2084df10-663f-11e7-8259-b436c64a4a0f.png)
+
+## Getting Start
+
+* Inventory Service 실행 
+```java
+# inventory-service module
+mvn clean spring-boot:run
+```
+
+* Payment Service 실행
+```java
+# payment-service module
+mvn clean spring-boot:run
+```
+
+* Notification Service 실행
+```java
+# notification-service module
+mvn clean spring-boot:run
+```
+
+* Order Service 실행
+```java
+# order-service module
+mvn clean spring-boot:run
+```
 
 ## 사용 기술
 * SDK
